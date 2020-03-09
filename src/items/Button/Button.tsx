@@ -11,17 +11,6 @@ export interface ButtonProps {
   fontWeight: 'normal' | 'bold';
 }
 
-export const defaultData = {
-  backgroundColor: '#1890ff',
-  borderColor: '#1890ff',
-  borderWidth: 1,
-  color: '#fff',
-  textAlign: 'center',
-  textContent: '按钮',
-  fontWeight: 'normal',
-  disabled: false,
-};
-
 function Button({
   backgroundColor,
   borderColor,
@@ -40,6 +29,8 @@ function Button({
     textAlign,
     fontWeight,
   };
+
+  console.log('render-button');
 
   return (
     <button type="button" disabled={disabled} style={style}>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Collapse, Input } from 'antd';
 import { RowFlex } from 'my-react-common';
-import { ButtonProps } from './index';
+import { ButtonProps } from './Button';
 import { DetailPanelComponent } from '@/editor/DetailPanel';
 
 const { Panel } = Collapse;

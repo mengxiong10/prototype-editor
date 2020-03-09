@@ -1,18 +1,20 @@
 import React from 'react';
-import { Position } from './Editor';
+
+export type DropDoneHandler = (v: { x: number; y: number; data: string }) => void;
 
 export interface DropZoneProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
-  onDropDone: (type: string, position: Position) => void;
+  onDropDone: DropDoneHandler;
+  format?: string;
 }
 
-function DropZone({ onDropDone, children, ...rest }: DropZoneProps) {
+function DropZone({ onDropDone, children, format = 'type', ...rest }: DropZoneProps) {
   const handleDrop = (evt: React.DragEvent<HTMLDivElement>) => {
-    const type = evt.dataTransfer.getData('type');
+    const data = evt.dataTransfer.getData(format);
     const rect = evt.currentTarget.getBoundingClientRect();
-    const top = evt.clientY - rect.top - 20;
-    const left = evt.clientX - rect.left - 20;
-    onDropDone(type, { top, left });
+    const y = evt.clientY - rect.top;
+    const x = evt.clientX - rect.left;
+    onDropDone({ x, y, data });
   };
 
   const handleDragOver = (evt: React.DragEvent<HTMLDivElement>) => {

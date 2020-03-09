@@ -56,6 +56,13 @@ module.exports = {
         html: false,
       },
     ],
+    'react/sort-comp': [
+      1,
+      {
+        order: ['everything-else', 'render'],
+      },
+    ],
+    'react/static-property-placement': ['warn', 'static public field'],
     'jsx-a11y/no-static-element-interactions': 0,
     'jsx-a11y/anchor-is-valid': 0,
     'jsx-a11y/click-events-have-key-events': 0,

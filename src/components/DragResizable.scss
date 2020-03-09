@@ -1,0 +1,66 @@
+$handle-width: 18px;
+
+.drag-resizable {
+  position: absolute;
+}
+
+.resizable-handle {
+  position: absolute;
+  width: $handle-width;
+  height: $handle-width;
+  box-sizing: border-box;
+  border-radius: 50%;
+  border: 4px solid transparent;
+  background-color: #007dfc;
+  background-clip: content-box;
+}
+
+.resizable-handle-nw {
+  top: -$handle-width / 2;
+  left: -$handle-width / 2;
+  cursor: nwse-resize;
+}
+
+.resizable-handle-n {
+  top: -$handle-width / 2;
+  left: 50%;
+  margin-left: -$handle-width / 2;
+  cursor: ns-resize;
+}
+
+.resizable-handle-ne {
+  top: -$handle-width / 2;
+  right: -$handle-width / 2;
+  cursor: nesw-resize;
+}
+
+.resizable-handle-e {
+  right: -$handle-width / 2;
+  top: 50%;
+  margin-top: -$handle-width / 2;
+  cursor: ew-resize;
+}
+
+.resizable-handle-se {
+  right: -$handle-width / 2;
+  bottom: -$handle-width / 2;
+  cursor: nwse-resize;
+}
+.resizable-handle-s {
+  bottom: -$handle-width / 2;
+  left: 50%;
+  margin-left: -$handle-width / 2;
+  cursor: ns-resize;
+}
+
+.resizable-handle-sw {
+  left: -$handle-width / 2;
+  bottom: -$handle-width / 2;
+  cursor: nesw-resize;
+}
+.resizable-handle-w {
+  left: -$handle-width / 2;
+  top: 50%;
+  margin-top: -$handle-width / 2;
+  cursor: ew-resize;
+}
