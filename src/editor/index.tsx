@@ -104,13 +104,48 @@ class Editor extends React.PureComponent<EditorProps, EditorState> {
     this.setState(prevState => {
       const components = prevState.components.map(v => {
         if (ids.indexOf(v.id) !== -1) {
-          // data 和 posision 都是spread传入组件，所以没有必要判断 data: data ? {...v.data, ...data} : v.data
-          return { ...v, data: { ...v.data, ...data }, position: { ...v.position, ...position } };
+          return {
+            ...v,
+            data: data ? { ...v.data, ...data } : v.data,
+            position: position ? { ...v.position, ...position } : v.position,
+          };
         }
         return v;
       });
       return { components };
     });
+  }
+
+  sort({ id, key }: { id: string; key: 'forward' | 'backward' | 'top' | 'bottom' }) {
+    const { components } = this.state;
+    const index = components.findIndex(v => v.id === id);
+    if (index === -1) return;
+    const max = components.length - 1;
+    let nextIndex = index;
+    switch (key) {
+      // 向下一层index - 1
+      case 'backward':
+        nextIndex -= 1;
+        break;
+      case 'forward':
+        nextIndex += 1;
+        break;
+      case 'top':
+        nextIndex = max;
+        break;
+      case 'bottom':
+        nextIndex = 0;
+        break;
+      default:
+        nextIndex = index;
+        break;
+    }
+    if (nextIndex === index || nextIndex < 0 || nextIndex > max) {
+      return;
+    }
+    const nextComponents = components.slice();
+    nextComponents.splice(nextIndex, 0, nextComponents.splice(index, 1)[0]);
+    this.setState({ components: nextComponents });
   }
 
   render() {

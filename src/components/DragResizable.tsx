@@ -11,19 +11,23 @@ export interface ResizableProps {
   height: number;
   left: number;
   top: number;
+  active: boolean;
   minHeight?: number;
   minWidth?: number;
   resizeHandles?: ResizeHandle[];
   bound?: boolean; // 默认 true 限制在父元素里面, 暂时只支持父元素
+  onStop?: (v: ResizableState) => void;
   children: React.ReactElement;
 }
 
-interface ResizableState {
+export interface ResizableState {
   width: number;
   height: number;
   left: number;
   top: number;
 }
+
+const defaultResizeHandles = ['n', 'e', 's', 'w', 'nw', 'ne', 'se', 'sw'];
 
 export default class Resizable extends React.Component<ResizableProps, ResizableState> {
   slackX = 0;
@@ -100,7 +104,9 @@ export default class Resizable extends React.Component<ResizableProps, Resizable
   handleStop = () => {
     this.slackX = 0;
     this.slackY = 0;
-    console.log('stop');
+    if (this.props.onStop) {
+      this.props.onStop(this.state);
+    }
   };
 
   componentDidUpdate(prevProps: ResizableProps) {
@@ -113,16 +119,24 @@ export default class Resizable extends React.Component<ResizableProps, Resizable
   }
 
   render() {
-    const { children, resizeHandles = ['n', 'e', 's', 'w', 'nw', 'ne', 'se', 'sw'] } = this.props;
+    const { children, active } = this.props;
 
+    const resizeHandles = active ? this.props.resizeHandles || defaultResizeHandles : [];
     const { width, height, left, top } = this.state;
 
-    const className = classnames(children.props.className, 'drag-resizable');
+    const className = classnames(children.props.className, {
+      'drag-resizable': active,
+    });
 
-    const style = { width, height, left, top };
+    const style = { width, height, left, top, position: 'absolute' };
 
     return (
-      <DraggableCore onDrag={this.handleDrag} onStop={this.handleStop} cancel=".js-drag-cancel">
+      <DraggableCore
+        disabled={!active}
+        onDrag={this.handleDrag}
+        onStop={this.handleStop}
+        cancel=".js-drag-cancel"
+      >
         {React.cloneElement(children, {
           ref: this.elRef,
           className,

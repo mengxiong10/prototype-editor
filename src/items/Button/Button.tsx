@@ -30,8 +30,6 @@ function Button({
     fontWeight,
   };
 
-  console.log('render-button');
-
   return (
     <button type="button" disabled={disabled} style={style}>
       {textContent}

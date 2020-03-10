@@ -18,7 +18,7 @@ function ButtonDetailPanel(props: ButtonDetailPanelProps) {
     <Collapse defaultActiveKey={['1']}>
       <Panel header="外观" key="1">
         <RowFlex align="middle" justify="space-between">
-          <div>文字内容</div>
+          <span>文字内容</span>
           <Input style={{ width: 150 }} value={props.textContent} onChange={handleInputChange} />
         </RowFlex>
       </Panel>

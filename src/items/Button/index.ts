@@ -10,10 +10,10 @@ export const buttonOptions: ComponentOptions<ButtonProps> = {
     height: 50,
   },
   defaultData: {
-    backgroundColor: '#1890ff',
-    borderColor: '#1890ff',
+    backgroundColor: '#fff',
+    borderColor: '#ccc',
     borderWidth: 1,
-    color: '#fff',
+    color: '#333',
     textAlign: 'center',
     textContent: '按钮',
     fontWeight: 'normal',

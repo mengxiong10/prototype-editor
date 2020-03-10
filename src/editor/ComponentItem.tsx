@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon } from 'antd';
+import { FileAddOutlined } from '@ant-design/icons';
 
 export interface ComponentItemProps {
   children: React.ReactNode;
@@ -13,7 +13,7 @@ function ComponentItem({ type, children }: ComponentItemProps) {
 
   return (
     <div className="pe-component-item" draggable onDragStart={handleDragStart}>
-      <Icon type="file-add" />
+      <FileAddOutlined />
       {children}
     </div>
   );
