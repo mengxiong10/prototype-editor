@@ -2,33 +2,33 @@ import React, { useCallback } from 'react';
 import DragResizable from '../components/DragResizable';
 import { getComponent } from './components';
 import { ComponentData, ComponentPosition } from '@/types/editor';
-import { useEditorDispatch } from './EditorContext';
+import { useEditorDispatch } from './Context';
 
-export interface ComponentWrapperProps extends ComponentData {
+export interface ComponentWrapperProps extends React.HTMLAttributes<HTMLDivElement> {
   active: boolean;
-  onSelect: (id: string) => void;
+  data: ComponentData;
 }
 
-function ComponentWrapper(props: ComponentWrapperProps) {
-  const component = getComponent(props.type);
+function ComponentWrapper({ active, data, ...rest }: ComponentWrapperProps) {
+  const component = getComponent(data.type);
   const dispatch = useEditorDispatch();
   const updatePosition = useCallback(
     (position: ComponentPosition) => {
-      dispatch({ type: 'update', payload: { id: props.id, position } });
+      dispatch({ type: 'update', payload: { id: data.id, position } });
     },
-    [dispatch, props.id]
+    [dispatch, data.id]
   );
 
   if (!component) {
-    console.warn(`${props.type} 未注册`);
+    console.warn(`${data.type} 未注册`);
     return null;
   }
   return (
-    <DragResizable {...props.position} active={props.active} onStop={updatePosition}>
-      <div className="pe-component-wrapper" onMouseDownCapture={() => props.onSelect(props.id)}>
+    <DragResizable {...data.position} active={active} onStop={updatePosition}>
+      <div className="pe-component-wrapper" {...rest}>
         {React.createElement(component.component, {
           ...component.defaultData,
-          ...props.data,
+          ...data.data,
         })}
       </div>
     </DragResizable>

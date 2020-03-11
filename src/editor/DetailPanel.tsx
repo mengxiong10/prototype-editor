@@ -1,22 +1,25 @@
 import React from 'react';
 import { Unionize } from 'utility-types';
 import { getComponent } from './components';
-import { useEditorDispatch } from './EditorContext';
+import { useEditorDispatch } from './Context';
 import { ComponentData } from '@/types/editor';
+import { actions } from './reducer';
 
 export type DetailPanelComponent<T extends object> = T & {
   onDetailPanelChange: (obj: Unionize<T>) => void;
 };
 
 export interface DetailPanel {
-  data: ComponentData[];
-  selected: string[];
+  data: Readonly<ComponentData[]>;
+  selected: string;
 }
 
 function DetailPanel({ data, selected }: DetailPanel) {
   const dispatch = useEditorDispatch();
 
-  const selectedData = data.filter(v => selected.indexOf(v.id) !== -1);
+  const selectedIds = selected.split(',');
+
+  const selectedData = data.filter(v => selectedIds.indexOf(v.id) !== -1);
 
   const isSelected =
     selectedData.length > 0 && selectedData.every(v => v.type === selectedData[0].type);
@@ -24,13 +27,12 @@ function DetailPanel({ data, selected }: DetailPanel) {
   const component = isSelected ? getComponent(selectedData[0].type) : null;
 
   const handleChange = (obj: any) => {
-    return dispatch({
-      type: 'update',
-      payload: {
-        id: selected,
+    return dispatch(
+      actions.update({
+        id: selectedIds,
         data: obj,
-      },
-    });
+      })
+    );
   };
 
   return (

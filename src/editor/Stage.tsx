@@ -1,40 +1,51 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, SetStateAction } from 'react';
 import DropZone, { DropDoneHandler } from './DropZone';
-import { useEditorDispatch } from './EditorContext';
+import { useEditorDispatch } from './Context';
 import { ComponentData } from '@/types/editor';
 import ComponentWrapper from './ComponentWrapper';
 import DragSelect, { DragSelectHandler } from '../components/DragSelect';
+import { actions } from './reducer';
+import { getComponent } from './components';
+import { randomId } from '@/utils/randomId';
 
 export interface StageProps {
-  data: ComponentData[];
-  selected: string[];
+  data: Readonly<ComponentData[]>;
+  selected: string;
+  onSelect: (id: SetStateAction<string>) => void;
 }
 
-function Stage({ data, selected }: StageProps) {
+const createComponentData = (type: string, left: number, top: number): ComponentData | null => {
+  const component = getComponent(type);
+  const id = randomId();
+  if (!component) {
+    console.warn(`${type} 没有注册`);
+    return null;
+  }
+  const { width, height } = component.defaultSize || { width: 200, height: 200 };
+  return {
+    type,
+    id,
+    position: { top, left, width, height },
+    data: {},
+  };
+};
+
+function Stage({ data, selected, onSelect }: StageProps) {
   const dispatch = useEditorDispatch();
 
-  const addComponent: DropDoneHandler = useCallback(
-    ({ data: type, x, y }) => {
-      dispatch({ type: 'add', payload: { type, top: y - 20, left: x - 20 } });
-    },
-    [dispatch]
-  );
+  const handleAddComponent: DropDoneHandler = ({ data: type, x, y }) => {
+    const componentdata = createComponentData(type, x - 20, y - 20);
+    if (componentdata) {
+      dispatch(actions.add(componentdata));
+      onSelect(componentdata.id);
+    }
+  };
 
-  const handleSelect = useCallback(
-    (id: string | string[]) => {
-      dispatch({ type: 'select', payload: { id } });
-    },
-    [dispatch]
-  );
-
-  const handleCancelSelect = useCallback(
-    (evt: React.MouseEvent) => {
-      if (evt.target === evt.currentTarget) {
-        handleSelect([]);
-      }
-    },
-    [handleSelect]
-  );
+  const handleCancelSelect = (evt: React.MouseEvent) => {
+    if (evt.target === evt.currentTarget) {
+      onSelect('');
+    }
+  };
 
   const handleDragSelect: DragSelectHandler = value => {
     const id: string[] = [];
@@ -47,18 +58,33 @@ function Stage({ data, selected }: StageProps) {
         id.push(v.id);
       }
     });
-    handleSelect(id);
+    onSelect(id.join(','));
   };
+
+  // componentWrapper memo
+  const handleSelect = useCallback(
+    (evt: React.MouseEvent<HTMLDivElement>) => {
+      const { currentTarget } = evt;
+      const id = currentTarget.dataset.id!;
+      onSelect(id);
+    },
+    [onSelect]
+  );
 
   return (
     <DragSelect onDrag={handleDragSelect}>
-      <DropZone className="pe-content" onMouseDown={handleCancelSelect} onDropDone={addComponent}>
+      <DropZone
+        className="pe-content"
+        onMouseDown={handleCancelSelect}
+        onDropDone={handleAddComponent}
+      >
         {data.map(item => (
           <ComponentWrapper
-            {...item}
+            data={item}
+            data-id={item.id}
             key={item.id}
-            active={selected.indexOf(item.id) !== -1}
-            onSelect={handleSelect}
+            active={selected.split(',').indexOf(item.id) !== -1}
+            onMouseDownCapture={handleSelect}
           />
         ))}
       </DropZone>

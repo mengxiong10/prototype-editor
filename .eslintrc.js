@@ -38,6 +38,8 @@ module.exports = {
     'no-restricted-syntax': 0,
     // 禁止++ 主要是不加分号可能语法混乱, 这里都加分号直接关闭.
     'no-plusplus': 0,
+    // hasOwnProperty 等自己注意就好,没必要一定要Object.prototype.hasOwnProperty.call()
+    'no-prototype-builtins': 0,
 
     'no-unused-expressions': [2, { allowShortCircuit: true, allowTernary: true }],
     // 重新分配函数参数 forEach immer 中很多问题, 使用typescript readonly

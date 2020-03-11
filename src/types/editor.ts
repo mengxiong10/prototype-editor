@@ -5,8 +5,10 @@ export interface ComponentPosition {
   height: number;
 }
 
+export type ComponentId = string;
+
 export interface ComponentData<T = any> {
-  id: string;
+  id: ComponentId;
   type: string;
   position: ComponentPosition;
   data: T;

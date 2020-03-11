@@ -28,4 +28,4 @@ function DropZone({ onDropDone, children, format = 'type', ...rest }: DropZonePr
   );
 }
 
-export default React.memo(DropZone);
+export default DropZone;
