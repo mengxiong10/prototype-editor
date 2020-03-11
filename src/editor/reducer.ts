@@ -4,7 +4,7 @@ import { ComponentData, ComponentId, ComponentPosition } from '@/types/editor';
 type S = Readonly<ComponentData[]>;
 type ArrayCid = ComponentId | ComponentId[];
 
-const handlers = {
+const componentDataHandlers = {
   add(state: S, payload: ComponentData): S {
     return [...state, payload];
   },
@@ -43,4 +43,4 @@ const handlers = {
   },
 };
 
-export const { actions, reducer } = createReducerWithActions(handlers);
+export const { actions, reducer } = createReducerWithActions(componentDataHandlers);

@@ -1,50 +1,49 @@
 import React from 'react';
-import { Unionize } from 'utility-types';
-import { getComponent } from './components';
-import { useEditorDispatch } from './Context';
-import { ComponentData } from '@/types/editor';
-import { actions } from './reducer';
+import { Collapse } from 'antd';
+import { itemMap } from './DetailPanelHelper';
 
-export type DetailPanelComponent<T extends object> = T & {
-  onDetailPanelChange: (obj: Unionize<T>) => void;
-};
+const { Panel } = Collapse;
 
-export interface DetailPanel {
-  data: Readonly<ComponentData[]>;
-  selected: string;
+export interface DetailPanelItem<P> {
+  title: string;
+  prop: P;
+  type: keyof typeof itemMap;
 }
 
-function DetailPanel({ data, selected }: DetailPanel) {
-  const dispatch = useEditorDispatch();
+export interface DetailPanelGroup<P = string> {
+  title: string;
+  list: Array<DetailPanelItem<P>>;
+}
 
-  const selectedIds = selected.split(',');
+export interface DetailPanelProps {
+  groups: DetailPanelGroup[];
+  data: any;
+  onChange: (obj: any) => void;
+  children?: React.ReactNode;
+}
 
-  const selectedData = data.filter(v => selectedIds.indexOf(v.id) !== -1);
-
-  const isSelected =
-    selectedData.length > 0 && selectedData.every(v => v.type === selectedData[0].type);
-
-  const component = isSelected ? getComponent(selectedData[0].type) : null;
-
-  const handleChange = (obj: any) => {
-    return dispatch(
-      actions.update({
-        id: selectedIds,
-        data: obj,
-      })
-    );
-  };
-
+function DetailPanel({ groups, data, children, onChange }: DetailPanelProps) {
   return (
-    <div className="pe-detail-panel">
-      {component &&
-        component.detailPanel &&
-        React.createElement(component.detailPanel, {
-          ...component.defaultData,
-          ...selectedData[0].data,
-          onDetailPanelChange: handleChange,
-        })}
-    </div>
+    <Collapse defaultActiveKey={groups.map((v, i) => String(i))}>
+      {groups.map((group, i) => {
+        return (
+          <Panel header={group.title} key={String(i)}>
+            {group.list.map(({ type, title, prop, ...rest }) => {
+              const com = typeof type === 'string' ? itemMap[type] : type;
+              return React.createElement(com, {
+                ...rest,
+                key: prop,
+                prop,
+                title,
+                value: data[prop],
+                onChange,
+              });
+            })}
+          </Panel>
+        );
+      })}
+      {children}
+    </Collapse>
   );
 }
 

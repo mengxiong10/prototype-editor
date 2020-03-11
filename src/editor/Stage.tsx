@@ -1,6 +1,6 @@
 import React, { useCallback, SetStateAction } from 'react';
 import DropZone, { DropDoneHandler } from './DropZone';
-import { useEditorDispatch } from './Context';
+import { useEditor } from './Context';
 import { ComponentData } from '@/types/editor';
 import ComponentWrapper from './ComponentWrapper';
 import DragSelect, { DragSelectHandler } from '../components/DragSelect';
@@ -31,7 +31,7 @@ const createComponentData = (type: string, left: number, top: number): Component
 };
 
 function Stage({ data, selected, onSelect }: StageProps) {
-  const dispatch = useEditorDispatch();
+  const dispatch = useEditor();
 
   const handleAddComponent: DropDoneHandler = ({ data: type, x, y }) => {
     const componentdata = createComponentData(type, x - 20, y - 20);

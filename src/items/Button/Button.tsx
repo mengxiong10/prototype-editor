@@ -1,4 +1,6 @@
 import React from 'react';
+import classNames from 'classnames';
+import './Button.module.scss';
 
 export interface ButtonProps {
   disabled: boolean;
@@ -9,9 +11,11 @@ export interface ButtonProps {
   textAlign: 'left' | 'right' | 'center';
   textContent: string;
   fontWeight: 'normal' | 'bold';
+  circle: boolean;
 }
 
 function Button({
+  circle,
   backgroundColor,
   borderColor,
   borderWidth,
@@ -29,9 +33,12 @@ function Button({
     textAlign,
     fontWeight,
   };
+  const className = classNames('button', {
+    'button-circle': circle,
+  });
 
   return (
-    <button type="button" disabled={disabled} style={style}>
+    <button styleName={className} type="button" disabled={disabled} style={style}>
       {textContent}
     </button>
   );

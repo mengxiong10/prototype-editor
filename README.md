@@ -89,6 +89,7 @@ feat: A new feature
 #### 右侧详细 (DetailPanel)
 
 主要是一个容器,包裹具体的 detailPanel,向下输入 data 和 一个 onChange(改变 data 的方法)
+为下游 api 提供 2 种模式, 简单的直接一个数组利用规则组件, 复杂的可以自定义组件
 
 #### 中间画布 (Stage)
 

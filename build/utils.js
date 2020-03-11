@@ -29,8 +29,9 @@ exports.cssLoaders = function(options) {
   if (options.modules) {
     cssLoader.options = {
       ...cssLoader.options,
-      modules: true,
-      localIdentName: '[name]_[local]_[hash:base64:5]',
+      modules: {
+        localIdentName: '[name]_[local]_[hash:base64:5]',
+      },
     };
   }
 

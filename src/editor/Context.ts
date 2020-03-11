@@ -4,4 +4,4 @@ export const EditorAPIContext = React.createContext<Dispatch<any>>(() => {});
 
 export const EditorAPIProvider = EditorAPIContext.Provider;
 
-export const useEditorDispatch = () => useContext(EditorAPIContext);
+export const useEditor = () => useContext(EditorAPIContext);

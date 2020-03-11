@@ -2,7 +2,7 @@ import React, { useReducer, useState } from 'react';
 import { EditorAPIProvider } from './Context';
 import ComponentList from './ComponentList';
 import Stage from './Stage';
-import DetailPanel from './DetailPanel';
+import DetailPanelWrapper from './DetailPanelWrapper';
 import { reducer } from './reducer';
 
 function Editor() {
@@ -16,7 +16,7 @@ function Editor() {
         <div className="pe-main">
           <ComponentList />
           <Stage data={data} selected={selected} onSelect={setSelected} />
-          <DetailPanel data={data} selected={selected} />
+          <DetailPanelWrapper data={data} selected={selected} />
         </div>
       </div>
     </EditorAPIProvider>

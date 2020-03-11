@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import DragResizable from '../components/DragResizable';
 import { getComponent } from './components';
 import { ComponentData, ComponentPosition } from '@/types/editor';
-import { useEditorDispatch } from './Context';
+import { useEditor } from './Context';
 import { actions } from './reducer';
 
 export interface ComponentWrapperProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -12,7 +12,7 @@ export interface ComponentWrapperProps extends React.HTMLAttributes<HTMLDivEleme
 
 function ComponentWrapper({ active, data, ...rest }: ComponentWrapperProps) {
   const component = getComponent(data.type);
-  const dispatch = useEditorDispatch();
+  const dispatch = useEditor();
   const updatePosition = useCallback(
     (position: ComponentPosition) => {
       dispatch(actions.update({ id: data.id, position }));
