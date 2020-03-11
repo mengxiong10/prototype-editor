@@ -104,7 +104,8 @@ export default class Resizable extends React.Component<ResizableProps, Resizable
   handleStop = () => {
     this.slackX = 0;
     this.slackY = 0;
-    if (this.props.onStop) {
+    const keys: ['width', 'height', 'left', 'top'] = ['width', 'height', 'left', 'top'];
+    if (this.props.onStop && keys.some(k => this.props[k] !== this.state[k])) {
       this.props.onStop(this.state);
     }
   };

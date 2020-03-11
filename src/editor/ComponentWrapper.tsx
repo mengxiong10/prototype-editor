@@ -3,6 +3,7 @@ import DragResizable from '../components/DragResizable';
 import { getComponent } from './components';
 import { ComponentData, ComponentPosition } from '@/types/editor';
 import { useEditorDispatch } from './Context';
+import { actions } from './reducer';
 
 export interface ComponentWrapperProps extends React.HTMLAttributes<HTMLDivElement> {
   active: boolean;
@@ -14,7 +15,7 @@ function ComponentWrapper({ active, data, ...rest }: ComponentWrapperProps) {
   const dispatch = useEditorDispatch();
   const updatePosition = useCallback(
     (position: ComponentPosition) => {
-      dispatch({ type: 'update', payload: { id: data.id, position } });
+      dispatch(actions.update({ id: data.id, position }));
     },
     [dispatch, data.id]
   );
