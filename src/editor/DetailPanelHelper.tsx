@@ -1,6 +1,5 @@
 import React from 'react';
 import { Input, Switch, Slider } from 'antd';
-import { RowFlex } from 'my-react-common';
 import ColorPicker from '../components/ColorPicker';
 
 export interface DetailPanelRowProps extends Object {
@@ -12,41 +11,47 @@ export interface DetailPanelRowProps extends Object {
 
 export const RowInput = ({ prop, title, value, onChange }: DetailPanelRowProps) => {
   return (
-    <RowFlex align="middle" justify="space-between">
+    <div className="pe-detail-panel-row">
       <span>{title}</span>
       <Input
-        style={{ width: 150 }}
+        style={{ width: 100 }}
         value={value}
         onChange={evt => onChange({ [prop]: evt.target.value })}
       />
-    </RowFlex>
+    </div>
   );
 };
 
 export const RowColor = ({ prop, title, value, onChange }: DetailPanelRowProps) => {
   return (
-    <RowFlex align="middle" justify="space-between">
+    <div className="pe-detail-panel-row">
       <span>{title}</span>
       <ColorPicker color={value} onChangeComplete={color => onChange({ [prop]: color.hex })} />
-    </RowFlex>
+    </div>
   );
 };
 
 export const RowSwitch = ({ prop, title, value, onChange }: DetailPanelRowProps) => {
   return (
-    <RowFlex align="middle" justify="space-between">
+    <div className="pe-detail-panel-row">
       <span>{title}</span>
       <Switch checked={value} onChange={v => onChange({ [prop]: v })} />
-    </RowFlex>
+    </div>
   );
 };
 
 export const RowSlider = ({ prop, title, value, onChange }: DetailPanelRowProps) => {
   return (
-    <RowFlex>
+    <div className="pe-detail-panel-row">
       <span>{title}</span>
-      <Slider min={0} max={10} onChange={v => onChange({ [prop]: v })} value={value} />
-    </RowFlex>
+      <Slider
+        style={{ width: 100 }}
+        min={0}
+        max={10}
+        onChange={v => onChange({ [prop]: v })}
+        value={value}
+      />
+    </div>
   );
 };
 

@@ -26,6 +26,7 @@ function ColorPicker({ color, ...rest }: ColorPickerProps) {
             height: 14,
             borderRadius: 2,
             background: color,
+            boxShadow: 'rgba(0, 0, 0, 0.1) 0px 0px 0px 1px',
           }}
         ></div>
       </div>

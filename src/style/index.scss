@@ -48,7 +48,21 @@
 }
 
 .pe-detail-panel {
-  flex: 0 0 280px;
+  flex: 0 0 240px;
+  .ant-collapse-content-box {
+    padding: 0;
+  }
+}
+
+.pe-detail-panel-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-top: 1px solid #efefef;
+  &:first-child {
+    border-top-width: 0;
+  }
 }
 
 .pe-component-wrapper > :first-child {
