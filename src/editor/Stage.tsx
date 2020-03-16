@@ -1,7 +1,7 @@
-import React, { useCallback, SetStateAction } from 'react';
+import React, { useCallback } from 'react';
 import DropZone, { DropDoneHandler } from './DropZone';
 import { useEditor } from './Context';
-import { ComponentData } from '@/types/editor';
+import { ComponentData, ComponentId } from '@/types/editor';
 import ComponentWrapper from './ComponentWrapper';
 import DragSelect, { DragSelectHandler } from '../components/DragSelect';
 import { actions } from './reducer';
@@ -9,9 +9,8 @@ import { getComponent } from './registerComponents';
 import { randomId } from '@/utils/randomId';
 
 export interface StageProps {
-  data: Readonly<ComponentData[]>;
-  selected: string;
-  onSelect: (id: SetStateAction<string>) => void;
+  data: ComponentData[];
+  selected: ComponentId[];
 }
 
 const createComponentData = (type: string, left: number, top: number): ComponentData | null => {
@@ -30,20 +29,19 @@ const createComponentData = (type: string, left: number, top: number): Component
   };
 };
 
-function Stage({ data, selected, onSelect }: StageProps) {
+function Stage({ data, selected }: StageProps) {
   const dispatch = useEditor();
 
   const handleAddComponent: DropDoneHandler = ({ data: type, x, y }) => {
     const componentdata = createComponentData(type, x - 20, y - 20);
     if (componentdata) {
       dispatch(actions.add(componentdata));
-      onSelect(componentdata.id);
     }
   };
 
   const handleCancelSelect = (evt: React.MouseEvent) => {
     if (evt.target === evt.currentTarget) {
-      onSelect('');
+      dispatch(actions.select([]));
     }
   };
 
@@ -58,7 +56,7 @@ function Stage({ data, selected, onSelect }: StageProps) {
         id.push(v.id);
       }
     });
-    onSelect(id.join(','));
+    dispatch(actions.select(id));
   };
 
   // componentWrapper memo
@@ -66,9 +64,9 @@ function Stage({ data, selected, onSelect }: StageProps) {
     (evt: React.MouseEvent<HTMLDivElement>) => {
       const { currentTarget } = evt;
       const id = currentTarget.dataset.id!;
-      onSelect(id);
+      dispatch(actions.select(id));
     },
-    [onSelect]
+    [dispatch]
   );
 
   return (
@@ -83,7 +81,7 @@ function Stage({ data, selected, onSelect }: StageProps) {
             data={item}
             data-id={item.id}
             key={item.id}
-            active={selected.split(',').indexOf(item.id) !== -1}
+            active={selected.indexOf(item.id) !== -1}
             onMouseDownCapture={handleSelect}
           />
         ))}

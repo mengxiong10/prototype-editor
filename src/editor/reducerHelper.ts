@@ -18,7 +18,7 @@
 type ReturnState<T> = T extends (state: infer P, ...args: any[]) => any ? P : void;
 
 // 获取payload的类型
-type ReturnPayload<T> = T extends (state: any, payload: infer P) => any ? P : void;
+type ReturnPayload<T> = T extends (state: any, payload: infer P, ...args: any[]) => any ? P : void;
 
 // 推到actions的类型
 type ReturnAction<H> = {
@@ -29,25 +29,28 @@ type ReturnAction<H> = {
 
 type Handler = { [key: string]: (...args: any[]) => any };
 
-export function createActions<T extends Handler>(handlers: T, prefix?: string): ReturnAction<T> {
+export function createActions<T extends Handler>(handlers: T): ReturnAction<T> {
   const actions: any = {};
   Object.keys(handlers).forEach(key => {
-    actions[key] = (payload: any) => ({ type: key, payload, prefix });
+    actions[key] = (payload: any) => ({ type: key, payload });
   });
 
   return actions;
 }
 
-export function createReducer<T extends Handler>(handlers: T, prefix?: string) {
+export function createReducer<T extends Handler>(handlers: T) {
   type S = ReturnState<T[keyof T]>;
-  return (state: S, action: any): S => {
-    if (action.prefix === prefix && handlers.hasOwnProperty(action.type)) {
-      return handlers[action.type](state, action.payload);
+  return (state: S, action: any, ...args: any[]): S => {
+    if (handlers.hasOwnProperty(action.type)) {
+      return handlers[action.type](state, action.payload, ...args);
     }
     return state;
   };
 }
 
-export function createReducerWithActions<T extends Handler>(handlers: T, prefix?: string) {
-  return { actions: createActions(handlers, prefix), reducer: createReducer(handlers, prefix) };
+export function createReducerWithActions<T extends Handler>(...args: [T]) {
+  return {
+    actions: createActions(...args),
+    reducer: createReducer(...args),
+  };
 }

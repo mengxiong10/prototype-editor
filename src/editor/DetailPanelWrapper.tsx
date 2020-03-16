@@ -1,19 +1,19 @@
 import React, { useCallback } from 'react';
 import { getComponent } from './registerComponents';
 import { useEditor } from './Context';
-import { ComponentData } from '@/types/editor';
+import { ComponentData, ComponentId } from '@/types/editor';
 import { actions } from './reducer';
 import DetailPanel from './DetailPanel';
 
 export interface DetailPanelWrapper {
-  data: Readonly<ComponentData[]>;
-  selected: string;
+  data: ComponentData[];
+  selected: ComponentId[];
 }
 
 function DetailPanelWrapper({ data, selected }: DetailPanelWrapper) {
   const dispatch = useEditor();
 
-  const selectedData = data.filter(v => selected.split(',').indexOf(v.id) !== -1);
+  const selectedData = data.filter(v => selected.indexOf(v.id) !== -1);
 
   const isSelected =
     selectedData.length > 0 && selectedData.every(v => v.type === selectedData[0].type);
@@ -22,14 +22,9 @@ function DetailPanelWrapper({ data, selected }: DetailPanelWrapper) {
 
   const handleChange = useCallback(
     (obj: any) => {
-      dispatch(
-        actions.update({
-          id: selected.split(','),
-          data: obj,
-        })
-      );
+      dispatch(actions.update({ data: obj }));
     },
-    [dispatch, selected]
+    [dispatch]
   );
 
   return (

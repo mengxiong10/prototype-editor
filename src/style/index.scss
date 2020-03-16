@@ -1,3 +1,7 @@
+.body {
+  overflow: hidden;
+}
+
 #root {
   height: 100%;
 }
@@ -12,6 +16,7 @@
 .pe-main {
   flex: 1;
   display: flex;
+  overflow: hidden;
 }
 
 .pe-component-list {
