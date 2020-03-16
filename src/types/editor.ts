@@ -18,7 +18,7 @@ export interface ComponentData<T = any> {
 
 export interface ComponentOptions<T = any> {
   component: React.ElementType;
-  detailPanel: React.ElementType | Array<DetailPanelGroup<keyof T>>;
+  detailPanel: React.ElementType | Array<DetailPanelGroup<Extract<keyof T, string>>>;
   defaultSize?: { width: number; height: number };
   defaultData: T;
 }

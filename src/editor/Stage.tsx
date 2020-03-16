@@ -5,7 +5,7 @@ import { ComponentData } from '@/types/editor';
 import ComponentWrapper from './ComponentWrapper';
 import DragSelect, { DragSelectHandler } from '../components/DragSelect';
 import { actions } from './reducer';
-import { getComponent } from './components';
+import { getComponent } from './registerComponents';
 import { randomId } from '@/utils/randomId';
 
 export interface StageProps {

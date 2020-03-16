@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { getComponent } from './components';
+import { getComponent } from './registerComponents';
 import { useEditor } from './Context';
 import { ComponentData } from '@/types/editor';
 import { actions } from './reducer';

@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import DragResizable from '../components/DragResizable';
-import { getComponent } from './components';
+import { getComponent } from './registerComponents';
 import { ComponentData, ComponentPosition } from '@/types/editor';
 import { useEditor } from './Context';
 import { actions } from './reducer';

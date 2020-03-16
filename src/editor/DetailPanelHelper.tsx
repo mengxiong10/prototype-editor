@@ -1,7 +1,7 @@
 import React from 'react';
 import { Input, Switch, Slider } from 'antd';
 import { RowFlex } from 'my-react-common';
-import { SketchPicker } from 'react-color';
+import ColorPicker from '../components/ColorPicker';
 
 export interface DetailPanelRowProps extends Object {
   title: string;
@@ -27,7 +27,7 @@ export const RowColor = ({ prop, title, value, onChange }: DetailPanelRowProps) 
   return (
     <RowFlex align="middle" justify="space-between">
       <span>{title}</span>
-      <SketchPicker color={value} onChangeComplete={color => onChange({ [prop]: color.hex })} />
+      <ColorPicker color={value} onChangeComplete={color => onChange({ [prop]: color.hex })} />
     </RowFlex>
   );
 };
