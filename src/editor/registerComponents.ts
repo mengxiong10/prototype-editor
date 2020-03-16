@@ -1,5 +1,6 @@
-import { ComponentOptions } from '../types/editor';
-import { buttonOptions } from '../items/Button';
+import { ComponentOptions } from '@/types/editor';
+import { buttonOptions } from '@/items/Button';
+import { inputOptions } from '@/items/Input';
 
 const components: {
   [key: string]: ComponentOptions;
@@ -14,3 +15,4 @@ export function getComponent(name: string) {
 }
 
 registerComponent('button', buttonOptions);
+registerComponent('input', inputOptions);

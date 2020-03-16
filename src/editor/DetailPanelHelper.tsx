@@ -59,5 +59,5 @@ export const itemMap = {
   input: RowInput,
   color: RowColor,
   switch: RowSwitch,
-  slider: RowSlider,
+  number: RowSlider,
 };

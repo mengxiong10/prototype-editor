@@ -14,7 +14,7 @@ function ComponentItem({ type, children }: ComponentItemProps) {
   return (
     <div className="pe-component-item" draggable onDragStart={handleDragStart}>
       <FileAddOutlined />
-      {children}
+      <span style={{ marginTop: 5, fontSize: 12 }}>{children}</span>
     </div>
   );
 }
