@@ -5,11 +5,13 @@ import Stage from './Stage';
 import DetailPanelWrapper from './DetailPanelWrapper';
 import { reducer } from './reducer';
 
+const initialState = {
+  data: [],
+  selected: [],
+};
+
 function Editor() {
-  const [{ data, selected }, dispatch] = useReducer(reducer, {
-    data: [],
-    selected: [],
-  });
+  const [{ data, selected }, dispatch] = useReducer(reducer, initialState);
 
   return (
     <EditorAPIProvider value={dispatch}>

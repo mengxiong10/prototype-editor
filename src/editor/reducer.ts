@@ -1,6 +1,7 @@
 import shallowEqual from 'shallowequal';
 import { createReducerWithActions } from './reducerHelper';
 import { ComponentData, ComponentId, ComponentPosition } from '@/types/editor';
+import { Area } from '@/components/DragSelect';
 
 type StateDate = ComponentData[];
 type StateSelected = ComponentId[];
@@ -62,15 +63,31 @@ const componentDataHandlers = {
 
 // 处理selected逻辑
 const selectedHandler = {
+  // 添加组件后,选中该组件
   add(state: StateSelected, payload: ComponentData): StateSelected {
     return [payload.id];
   },
   select(state: StateSelected, payload: ArrayComponentId): StateSelected {
     const id = transform2Array(payload);
+    // 可以将比较 移到外层, 再加一层
     if (id.length === state.length && id.every((v, i) => v === state[i])) {
       return state;
     }
     return id;
+  },
+  selectArea(state: StateSelected, payload: Area, store: Store): StateSelected {
+    const { left, top, width, height } = payload;
+    const right = left + width;
+    const bottom = top + height;
+    return store.data
+      .filter(v => {
+        const { left: l, top: t, width: w, height: h } = v.position;
+        return left <= l + w && right >= l && top <= t + h && bottom >= t;
+      })
+      .map(v => v.id);
+  },
+  selectAll(state: StateSelected, payload: Area, store: Store): StateSelected {
+    return store.data.map(v => v.id);
   },
 };
 

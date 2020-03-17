@@ -32,39 +32,37 @@ const createComponentData = (type: string, left: number, top: number): Component
 function Stage({ data, selected }: StageProps) {
   const dispatch = useEditor();
 
-  const handleAddComponent: DropDoneHandler = ({ data: type, x, y }) => {
-    const componentdata = createComponentData(type, x - 20, y - 20);
-    if (componentdata) {
-      dispatch(actions.add(componentdata));
-    }
-  };
-
-  const handleCancelSelect = (evt: React.MouseEvent) => {
-    if (evt.target === evt.currentTarget) {
-      dispatch(actions.select([]));
-    }
-  };
-
-  const handleDragSelect: DragSelectHandler = value => {
-    const id: string[] = [];
-    const { left, top, width, height } = value;
-    const right = left + width;
-    const bottom = top + height;
-    data.forEach(v => {
-      const { left: x, top: y, width: w, height: h } = v.position;
-      if (left <= x + w && right >= x && top <= y + h && bottom >= y) {
-        id.push(v.id);
+  const handleAddComponent: DropDoneHandler = useCallback(
+    ({ data: type, x, y }) => {
+      const componentdata = createComponentData(type, x - 20, y - 20);
+      if (componentdata) {
+        dispatch(actions.add(componentdata));
       }
-    });
-    dispatch(actions.select(id));
-  };
+    },
+    [dispatch]
+  );
 
-  // componentWrapper memo
+  const handleCancelSelect = useCallback(
+    (evt: React.MouseEvent) => {
+      if (evt.target === evt.currentTarget) {
+        dispatch(actions.select([]));
+      }
+    },
+    [dispatch]
+  );
+
   const handleSelect = useCallback(
     (evt: React.MouseEvent<HTMLDivElement>) => {
       const { currentTarget } = evt;
       const id = currentTarget.dataset.id!;
       dispatch(actions.select(id));
+    },
+    [dispatch]
+  );
+
+  const handleDragSelect: DragSelectHandler = useCallback(
+    value => {
+      dispatch(actions.selectArea(value));
     },
     [dispatch]
   );

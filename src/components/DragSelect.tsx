@@ -1,12 +1,14 @@
 import React from 'react';
 import { rafThrottle } from '@/utils/rafThrottle';
 
-export type DragSelectHandler = (data: {
+export interface Area {
   left: number;
   top: number;
   width: number;
   height: number;
-}) => void;
+}
+
+export type DragSelectHandler = (data: Area) => void;
 
 export interface DragSelectProps {
   children: React.ReactElement;
