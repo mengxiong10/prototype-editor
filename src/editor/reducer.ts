@@ -2,6 +2,8 @@ import shallowEqual from 'shallowequal';
 import { createReducerWithActions } from './reducerHelper';
 import { ComponentData, ComponentId, ComponentPosition } from '@/types/editor';
 import { Area } from '@/components/DragSelect';
+import { randomId } from '@/utils/randomId';
+import { getComponent } from './registerComponents';
 
 type StateDate = ComponentData[];
 type StateSelected = ComponentId[];
@@ -13,6 +15,22 @@ type Store = {
 type ArrayComponentId = ComponentId | ComponentId[];
 
 const transform2Array = (id: ArrayComponentId) => (Array.isArray(id) ? id : [id]);
+
+export const createComponentData = (
+  type: string,
+  left: number,
+  top: number
+): ComponentData | null => {
+  const component = getComponent(type);
+  const id = randomId();
+  const { width, height } = component.defaultSize || { width: 200, height: 200 };
+  return {
+    type,
+    id,
+    position: { top, left, width, height },
+    data: {},
+  };
+};
 
 // 处理 data 逻辑
 const componentDataHandlers = {
@@ -69,7 +87,7 @@ const selectedHandler = {
   },
   select(state: StateSelected, payload: ArrayComponentId): StateSelected {
     const id = transform2Array(payload);
-    // 可以将比较 移到外层, 再加一层
+    // TODO: 可以将比较 移到外层, 再加一层
     if (id.length === state.length && id.every((v, i) => v === state[i])) {
       return state;
     }

@@ -20,10 +20,6 @@ function ComponentWrapper({ active, data, ...rest }: ComponentWrapperProps) {
     [dispatch, data.id]
   );
 
-  if (!component) {
-    console.warn(`${data.type} 未注册`);
-    return null;
-  }
   return (
     <DragResizable {...data.position} active={active} onStop={updatePosition}>
       <div className="pe-component-wrapper" {...rest}>

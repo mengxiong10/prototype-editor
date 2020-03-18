@@ -1,33 +1,15 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import DropZone, { DropDoneHandler } from './DropZone';
 import { useEditor } from './Context';
 import { ComponentData, ComponentId } from '@/types/editor';
 import ComponentWrapper from './ComponentWrapper';
 import DragSelect, { DragSelectHandler } from '../components/DragSelect';
-import { actions } from './reducer';
-import { getComponent } from './registerComponents';
-import { randomId } from '@/utils/randomId';
+import { actions, createComponentData } from './reducer';
 
 export interface StageProps {
   data: ComponentData[];
   selected: ComponentId[];
 }
-
-const createComponentData = (type: string, left: number, top: number): ComponentData | null => {
-  const component = getComponent(type);
-  const id = randomId();
-  if (!component) {
-    console.warn(`${type} 没有注册`);
-    return null;
-  }
-  const { width, height } = component.defaultSize || { width: 200, height: 200 };
-  return {
-    type,
-    id,
-    position: { top, left, width, height },
-    data: {},
-  };
-};
 
 function Stage({ data, selected }: StageProps) {
   const dispatch = useEditor();
@@ -51,6 +33,7 @@ function Stage({ data, selected }: StageProps) {
     [dispatch]
   );
 
+  // TODO: 可以放到stage的mousedown里面去, 通过closest拿到id
   const handleSelect = useCallback(
     (evt: React.MouseEvent<HTMLDivElement>) => {
       const { currentTarget } = evt;
@@ -67,12 +50,18 @@ function Stage({ data, selected }: StageProps) {
     [dispatch]
   );
 
+  const handleHotKeys = useCallback((e: React.KeyboardEvent) => {
+    console.log(e.target, e.currentTarget);
+  }, []);
+
   return (
     <DragSelect onDrag={handleDragSelect}>
       <DropZone
         className="pe-content"
         onMouseDown={handleCancelSelect}
         onDropDone={handleAddComponent}
+        tabIndex={-1}
+        onKeyDown={handleHotKeys}
       >
         {data.map(item => (
           <ComponentWrapper
