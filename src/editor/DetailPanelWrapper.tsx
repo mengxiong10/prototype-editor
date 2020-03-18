@@ -22,7 +22,7 @@ function DetailPanelWrapper({ data, selected }: DetailPanelWrapper) {
 
   const handleChange = useCallback(
     (obj: any) => {
-      dispatch(actions.update({ data: obj }));
+      dispatch(actions.updateData({ data: obj }));
     },
     [dispatch]
   );

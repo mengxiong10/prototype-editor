@@ -12,8 +12,12 @@ type Store = {
   selected: StateSelected;
 };
 
-type ArrayComponentId = ComponentId | ComponentId[];
+type UpdateFn<T> = ((v: T) => T) | T;
+const updateWithFn = <T>(value: T, updater: UpdateFn<T>) => {
+  return typeof updater === 'function' ? (updater as (v: T) => T)(value) : updater;
+};
 
+type ArrayComponentId = ComponentId | ComponentId[];
 const transform2Array = (id: ArrayComponentId) => (Array.isArray(id) ? id : [id]);
 
 export const createComponentData = (type: string, left: number, top: number): ComponentData => {
@@ -29,36 +33,47 @@ const componentDataHandlers = {
   add(state: StateDate, payload: ComponentData): StateDate {
     return [...state, payload];
   },
-  del(state: StateDate, payload: { id: ArrayComponentId } | undefined, store: Store): StateDate {
+  del(state: StateDate, payload: { id: ArrayComponentId } | void, store: Store): StateDate {
     const id = payload ? transform2Array(payload.id) : store.selected;
     return state.filter(v => id.indexOf(v.id) === -1);
   },
-  update(
+  updateData(
     state: StateDate,
-    payload: { id?: ArrayComponentId; data?: any; position?: ComponentPosition },
+    payload: { id?: ArrayComponentId; data: any },
     store: Store
   ): StateDate {
-    const id = payload.id ? transform2Array(payload.id) : store.selected;
-    const { data, position } = payload;
+    const { id, data } = payload;
+    const ids = id ? transform2Array(id) : store.selected;
+    return state.map(v => (ids.indexOf(v.id) !== -1 ? { ...v, data: { ...v.data, ...data } } : v));
+  },
+  updatePosition(
+    state: StateDate,
+    payload: {
+      id?: ArrayComponentId;
+      position: { [k in keyof ComponentPosition]?: UpdateFn<number> };
+    },
+    store: Store
+  ): StateDate {
+    const { id, position } = payload;
+    const ids = id ? transform2Array(id) : store.selected;
     return state.map(v => {
-      if (id.indexOf(v.id) !== -1) {
-        return {
-          ...v,
-          data: data ? { ...v.data, ...data } : v.data,
-          position: position ? { ...v.position, ...position } : v.position,
-        };
+      if (ids.indexOf(v.id) !== -1) {
+        const nextPosition = { ...v.position };
+        Object.keys(nextPosition).forEach((k: keyof ComponentPosition) => {
+          if (position[k]) {
+            nextPosition[k] = updateWithFn(nextPosition[k], position[k]!);
+          }
+        });
+        return { ...v, position: nextPosition };
       }
       return v;
     });
   },
-  sort(
-    state: StateDate,
-    payload: { id: ComponentId; value: number | ((i: number) => number) }
-  ): StateDate {
+  sort(state: StateDate, payload: { id: ComponentId; value: UpdateFn<number> }): StateDate {
     const { id, value } = payload;
     const index = state.findIndex(v => v.id === id);
     if (index === -1) return state;
-    let nextIndex = typeof value === 'function' ? value(index) : value;
+    let nextIndex = updateWithFn(index, value);
     if (nextIndex < 0) {
       nextIndex = state.length + nextIndex;
     }
@@ -96,7 +111,7 @@ const selectedHandler = {
       })
       .map(v => v.id);
   },
-  selectAll(state: StateSelected, payload: Area, store: Store): StateSelected {
+  selectAll(state: StateSelected, payload: void, store: Store): StateSelected {
     return store.data.map(v => v.id);
   },
 };

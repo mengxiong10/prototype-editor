@@ -11,14 +11,15 @@ export interface ComponentWrapperProps extends React.HTMLAttributes<HTMLDivEleme
 }
 
 function ComponentWrapper({ active, data, ...rest }: ComponentWrapperProps) {
-  const component = getComponent(data.type);
   const dispatch = useEditor();
   const updatePosition = useCallback(
     (position: ComponentPosition) => {
-      dispatch(actions.update({ id: data.id, position }));
+      dispatch(actions.updatePosition({ id: data.id, position }));
     },
     [dispatch, data.id]
   );
+
+  const component = getComponent(data.type);
 
   return (
     <DragResizable {...data.position} active={active} onStop={updatePosition}>
