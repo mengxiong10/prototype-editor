@@ -16,20 +16,12 @@ type ArrayComponentId = ComponentId | ComponentId[];
 
 const transform2Array = (id: ArrayComponentId) => (Array.isArray(id) ? id : [id]);
 
-export const createComponentData = (
-  type: string,
-  left: number,
-  top: number
-): ComponentData | null => {
+export const createComponentData = (type: string, left: number, top: number): ComponentData => {
   const component = getComponent(type);
   const id = randomId();
   const { width, height } = component.defaultSize || { width: 200, height: 200 };
-  return {
-    type,
-    id,
-    position: { top, left, width, height },
-    data: {},
-  };
+  const position = { top, left, width, height };
+  return { type, id, position, data: {} };
 };
 
 // 处理 data 逻辑

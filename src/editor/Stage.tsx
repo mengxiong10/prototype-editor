@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import DropZone, { DropDoneHandler } from './DropZone';
 import { useEditor } from './Context';
 import { ComponentData, ComponentId } from '@/types/editor';
@@ -50,10 +50,6 @@ function Stage({ data, selected }: StageProps) {
     [dispatch]
   );
 
-  const handleHotKeys = useCallback((e: React.KeyboardEvent) => {
-    console.log(e.target, e.currentTarget);
-  }, []);
-
   return (
     <DragSelect onDrag={handleDragSelect}>
       <DropZone
@@ -61,7 +57,6 @@ function Stage({ data, selected }: StageProps) {
         onMouseDown={handleCancelSelect}
         onDropDone={handleAddComponent}
         tabIndex={-1}
-        onKeyDown={handleHotKeys}
       >
         {data.map(item => (
           <ComponentWrapper
