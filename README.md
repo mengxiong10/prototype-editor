@@ -108,8 +108,8 @@ feat: A new feature
 - [x] 拖动,缩放 (写一个包裹组件去实现, 具体功能可以再分组件去实现)
 - [x] 组件的层叠(直接交换在数组里面的位置)
 - [x] 组件的单选/框选,取消选择
-- [ ] 键盘快捷键(stage 上添加 tabIndex, 监听 keydown, 只响应 target===currentTarget 的事件, 避免其他的冲突)
 - [ ] 右键菜单
+- [ ] 键盘快捷键(stage 上添加 tabIndex,还是在 document 上监听, 但是加判断焦点的位置)
 - [ ] 双击调出编辑
 
 #### 疑难组件

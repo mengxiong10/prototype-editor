@@ -17,9 +17,7 @@ function Stage({ data, selected }: StageProps) {
   const handleAddComponent: DropDoneHandler = useCallback(
     ({ data: type, x, y }) => {
       const componentdata = createComponentData(type, x - 20, y - 20);
-      if (componentdata) {
-        dispatch(actions.add(componentdata));
-      }
+      dispatch(actions.add(componentdata));
     },
     [dispatch]
   );

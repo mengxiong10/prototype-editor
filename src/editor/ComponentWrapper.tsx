@@ -14,7 +14,7 @@ function ComponentWrapper({ active, data, ...rest }: ComponentWrapperProps) {
   const dispatch = useEditor();
   const updatePosition = useCallback(
     (position: ComponentPosition) => {
-      dispatch(actions.updatePosition({ id: data.id, position }));
+      dispatch(actions.update({ id: data.id, position }));
     },
     [dispatch, data.id]
   );

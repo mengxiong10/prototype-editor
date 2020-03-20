@@ -1,7 +1,9 @@
 import React, { useContext, Dispatch } from 'react';
 
-export const EditorAPIContext = React.createContext<Dispatch<any>>(() => {});
+export type EditorDispatch = Dispatch<any>;
 
-export const EditorAPIProvider = EditorAPIContext.Provider;
+export const EditorContext = React.createContext<EditorDispatch>(() => {});
 
-export const useEditor = () => useContext(EditorAPIContext);
+export const EditorProvider = EditorContext.Provider;
+
+export const useEditor = () => useContext(EditorContext);

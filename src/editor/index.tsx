@@ -1,5 +1,5 @@
 import React, { useReducer } from 'react';
-import { EditorAPIProvider } from './Context';
+import { EditorProvider } from './Context';
 import ComponentList from './ComponentList';
 import Stage from './Stage';
 import DetailPanelWrapper from './DetailPanelWrapper';
@@ -14,7 +14,7 @@ function Editor() {
   const [{ data, selected }, dispatch] = useReducer(reducer, initialState);
 
   return (
-    <EditorAPIProvider value={dispatch}>
+    <EditorProvider value={dispatch}>
       <div className="pe-container">
         <div className="pe-main">
           <ComponentList />
@@ -22,7 +22,7 @@ function Editor() {
           <DetailPanelWrapper data={data} selected={selected} />
         </div>
       </div>
-    </EditorAPIProvider>
+    </EditorProvider>
   );
 }
 

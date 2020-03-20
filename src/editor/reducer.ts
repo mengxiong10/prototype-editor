@@ -1,16 +1,16 @@
-import shallowEqual from 'shallowequal';
-import { createReducerWithActions } from './reducerHelper';
+import { createReducerWithActions, combineReducers } from './reducerHelper';
 import { ComponentData, ComponentId, ComponentPosition } from '@/types/editor';
 import { Area } from '@/components/DragSelect';
 import { randomId } from '@/utils/randomId';
 import { getComponent } from './registerComponents';
 
-type StateDate = ComponentData[];
+type StateData = ComponentData[];
 type StateSelected = ComponentId[];
-type Store = {
-  data: StateDate;
+
+export interface Store {
+  data: StateData;
   selected: StateSelected;
-};
+}
 
 type UpdateFn<T> = ((v: T) => T) | T;
 const updateWithFn = <T>(value: T, updater: UpdateFn<T>) => {
@@ -25,51 +25,60 @@ export const createComponentData = (type: string, left: number, top: number): Co
   const id = randomId();
   const { width, height } = component.defaultSize || { width: 200, height: 200 };
   const position = { top, left, width, height };
-  return { type, id, position, data: {} };
+  return { id, type, position, data: {} };
+};
+
+export const cloneComponentData = (
+  base: ComponentData,
+  position: Partial<ComponentPosition>
+): ComponentData => {
+  const id = randomId();
+  return {
+    id,
+    type: base.type,
+    position: { ...base.position, ...position },
+    data: JSON.parse(JSON.stringify(base.data)),
+  };
 };
 
 // 处理 data 逻辑
 const componentDataHandlers = {
-  add(state: StateDate, payload: ComponentData): StateDate {
-    return [...state, payload];
+  add(state: StateData, payload: ComponentData | ComponentData[]): StateData {
+    return state.concat(payload);
   },
-  del(state: StateDate, payload: { id: ArrayComponentId } | void, store: Store): StateDate {
-    const id = payload ? transform2Array(payload.id) : store.selected;
+  del(state: StateData, payload: ArrayComponentId | void, store: Store): StateData {
+    const id = payload ? transform2Array(payload) : store.selected;
     return state.filter(v => id.indexOf(v.id) === -1);
   },
-  updateData(
-    state: StateDate,
-    payload: { id?: ArrayComponentId; data: any },
-    store: Store
-  ): StateDate {
-    const { id, data } = payload;
-    const ids = id ? transform2Array(id) : store.selected;
-    return state.map(v => (ids.indexOf(v.id) !== -1 ? { ...v, data: { ...v.data, ...data } } : v));
-  },
-  updatePosition(
-    state: StateDate,
+  update(
+    state: StateData,
     payload: {
       id?: ArrayComponentId;
-      position: { [k in keyof ComponentPosition]?: UpdateFn<number> };
+      position?: { [k in keyof ComponentPosition]?: UpdateFn<number> };
+      data?: any;
     },
     store: Store
-  ): StateDate {
-    const { id, position } = payload;
+  ): StateData {
+    const { id } = payload;
     const ids = id ? transform2Array(id) : store.selected;
     return state.map(v => {
       if (ids.indexOf(v.id) !== -1) {
-        const nextPosition = { ...v.position };
-        Object.keys(nextPosition).forEach((k: keyof ComponentPosition) => {
-          if (position[k]) {
-            nextPosition[k] = updateWithFn(nextPosition[k], position[k]!);
+        const nextData = { ...v };
+        ['position', 'data'].forEach((key: 'position' | 'data') => {
+          if (payload[key]) {
+            const nextValue = { ...nextData[key] };
+            Object.keys(payload[key]).forEach(k => {
+              nextValue[k] = updateWithFn(nextValue[k], payload[key][k]!);
+            });
+            nextData[key] = nextValue;
           }
         });
-        return { ...v, position: nextPosition };
+        return nextData;
       }
       return v;
     });
   },
-  sort(state: StateDate, payload: { id: ComponentId; value: UpdateFn<number> }): StateDate {
+  sort(state: StateData, payload: { id: ComponentId; value: UpdateFn<number> }): StateData {
     const { id, value } = payload;
     const index = state.findIndex(v => v.id === id);
     if (index === -1) return state;
@@ -89,8 +98,8 @@ const componentDataHandlers = {
 // 处理selected逻辑
 const selectedHandler = {
   // 添加组件后,选中该组件
-  add(state: StateSelected, payload: ComponentData): StateSelected {
-    return [payload.id];
+  add(state: StateSelected, payload: ComponentData | ComponentData[]): StateSelected {
+    return Array.isArray(payload) ? payload.map(v => v.id) : [payload.id];
   },
   select(state: StateSelected, payload: ArrayComponentId): StateSelected {
     const id = transform2Array(payload);
@@ -116,26 +125,11 @@ const selectedHandler = {
   },
 };
 
-const { actions: dataActions, reducer: dataReducer } = createReducerWithActions(
-  componentDataHandlers
-);
+const dataRA = createReducerWithActions(componentDataHandlers);
+const selectedRA = createReducerWithActions(selectedHandler);
 
-const { actions: selectedAction, reducer: selectedReducer } = createReducerWithActions(
-  selectedHandler
-);
-
-// 合并 actions
-export const actions = { ...selectedAction, ...dataActions };
-
-// 合并reducer
-export const reducer = (state: Store, action: any) => {
-  const nextState = {
-    data: dataReducer(state.data, action, state),
-    selected: selectedReducer(state.selected, action, state),
-  };
-  if (shallowEqual(nextState, state)) {
-    return state;
-  }
-
-  return nextState;
-};
+export const actions = { ...selectedRA.actions, ...dataRA.actions };
+export const reducer = combineReducers({
+  data: dataRA.reducer,
+  selected: selectedRA.reducer,
+});

@@ -1,3 +1,4 @@
+import shallowEqual from 'shallowequal';
 /**
  * *************
  * handlers 负责处理集体逻辑, 属性名就是type, 方法就是 处理函数
@@ -27,9 +28,17 @@ type ReturnAction<H> = {
   ) => { type: key; payload: ReturnPayload<H[key]> };
 };
 
-type Handler = { [key: string]: (...args: any[]) => any };
+type ReturnReducer<S = any, A = any> = (state: S, action: A, ...args: any[]) => S;
 
-export function createActions<T extends Handler>(handlers: T): ReturnAction<T> {
+type ReducersMapObject<S = any> = {
+  [K in keyof S]: ReturnReducer<S[K]>;
+};
+
+type Handler<S = any, P = any, Store = any> = (state: S, payload: P, Store?: Store) => S;
+
+type Handlers = { [key: string]: Handler };
+
+function createActions<T extends Handlers>(handlers: T): ReturnAction<T> {
   const actions: any = {};
   Object.keys(handlers).forEach(key => {
     actions[key] = (payload: any) => ({ type: key, payload });
@@ -38,7 +47,7 @@ export function createActions<T extends Handler>(handlers: T): ReturnAction<T> {
   return actions;
 }
 
-export function createReducer<T extends Handler>(handlers: T) {
+function createReducer<T extends Handlers>(handlers: T) {
   type S = ReturnState<T[keyof T]>;
   return (state: S, action: any, ...args: any[]): S => {
     if (handlers.hasOwnProperty(action.type)) {
@@ -48,9 +57,23 @@ export function createReducer<T extends Handler>(handlers: T) {
   };
 }
 
-export function createReducerWithActions<T extends Handler>(...args: [T]) {
+export function createReducerWithActions<T extends Handlers>(handlers: T) {
   return {
-    actions: createActions(...args),
-    reducer: createReducer(...args),
+    actions: createActions(handlers),
+    reducer: createReducer(handlers),
+  };
+}
+
+export function combineReducers<S extends { [k: string]: any }>(reducers: ReducersMapObject<S>) {
+  return (state: S, action: any) => {
+    const nextState: S = {} as any;
+    Object.keys(reducers).forEach((k: keyof S) => {
+      nextState[k] = reducers[k](state[k], action, state);
+    });
+    if (shallowEqual(nextState, state)) {
+      return state;
+    }
+
+    return nextState;
   };
 }
