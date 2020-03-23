@@ -93,10 +93,19 @@ feat: A new feature
 
 #### 中间画布 (Stage)
 
+```html
+<!-- layout层, overflow: auto; -->
+<div>
+  <!-- 画布层, 包括设置长宽, 点击, 右键菜单 等事件 -->
+  <div></div>
+</div>
+```
+
 1. drop 功能, 根据 type 获取新增的组件信息(注册的信息),
 2. 显示组件的绘制
-3. 框选组件
-   ...
+3. 框选组件, 单选
+4. 右键菜单
+5. 快捷键注册
 
 #### 组件数据处理
 
@@ -109,6 +118,15 @@ feat: A new feature
 - [x] 组件的层叠(直接交换在数组里面的位置)
 - [x] 组件的单选/框选,取消选择
 - [ ] 右键菜单
+
+  由于 antd 自带的 dropdown 点击区域不能 mousedown 关闭等等问题;
+  react-contextmenu 组件长按左键触发 open 等等问题;
+  自行开发一个简易组件实现, 功能:
+
+  1. 监听 contextmenu open.(记录鼠标位置, 方便粘贴等功能)
+  2. mousedown(排除菜单区域) 和 windows blur 事件 hide. (菜单区域的点击, 只有触发事件区域关闭菜单)
+  3. 注意菜单位置不超过 window.innerHeight 和 window.innerWidth
+
 - [ ] 键盘快捷键(stage 上添加 tabIndex,还是在 document 上监听, 但是加判断焦点的位置)
 - [ ] 双击调出编辑
 

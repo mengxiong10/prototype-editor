@@ -1,6 +1,8 @@
 import React from 'react';
 
-export type DropDoneHandler = (v: { x: number; y: number; data: string }) => void;
+export type DropDoneData = { x: number; y: number; data: string };
+
+export type DropDoneHandler = (v: DropDoneData) => void;
 
 export interface DropZoneProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;

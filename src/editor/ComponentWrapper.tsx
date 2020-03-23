@@ -23,7 +23,7 @@ function ComponentWrapper({ active, data, ...rest }: ComponentWrapperProps) {
 
   return (
     <DragResizable {...data.position} active={active} onStop={updatePosition}>
-      <div className="pe-component-wrapper" {...rest}>
+      <div {...rest}>
         {React.createElement(component.component, {
           ...component.defaultData,
           ...data.data,

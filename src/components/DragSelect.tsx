@@ -1,18 +1,18 @@
 import React from 'react';
 import { rafThrottle } from '@/utils/rafThrottle';
 
-export interface Area {
+export interface DragArea {
   left: number;
   top: number;
   width: number;
   height: number;
 }
 
-export type DragSelectHandler = (data: Area) => void;
+export type DragSelectHandler = (data: DragArea) => void;
 
-export interface DragSelectProps {
+export interface DragSelectProps extends React.HTMLAttributes<HTMLElement> {
   children: React.ReactElement;
-  onDrag?: DragSelectHandler;
+  onMove?: DragSelectHandler;
 }
 
 interface DragSelectState {
@@ -90,8 +90,8 @@ class DragSelect extends React.Component<DragSelectProps, DragSelectState> {
     if (x === this.state.x2 && y === this.state.y2) {
       return;
     }
-    if (this.props.onDrag) {
-      this.props.onDrag(getStyle({ x1: this.state.x1, y1: this.state.y1, x2: x, y2: y }));
+    if (this.props.onMove) {
+      this.props.onMove(getStyle({ x1: this.state.x1, y1: this.state.y1, x2: x, y2: y }));
     }
     this.setState({ x2: x, y2: y });
   });
@@ -120,7 +120,8 @@ class DragSelect extends React.Component<DragSelectProps, DragSelectState> {
   }
 
   render() {
-    const { children } = this.props;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { children, onMove, ...rest } = this.props;
     const { dragging } = this.state;
     const style = getStyle(this.state);
     const rectElement = dragging && (
@@ -135,6 +136,7 @@ class DragSelect extends React.Component<DragSelectProps, DragSelectState> {
       />
     );
     return React.cloneElement(children, {
+      ...rest,
       onMouseDown: this.handleStart,
       // 禁止默认的选中文字效果
       style: dragging ? { ...children.props.style, userSelect: 'none' } : children.props.style,

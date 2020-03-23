@@ -4,6 +4,7 @@ import ComponentList from './ComponentList';
 import Stage from './Stage';
 import DetailPanelWrapper from './DetailPanelWrapper';
 import { reducer } from './reducer';
+import ComponentWrapper from './ComponentWrapper';
 
 const initialState = {
   data: [],
@@ -18,7 +19,17 @@ function Editor() {
       <div className="pe-container">
         <div className="pe-main">
           <ComponentList />
-          <Stage data={data} selected={selected} />
+          <Stage data={data} selected={selected}>
+            {data.map(item => (
+              <ComponentWrapper
+                className="pe-component-wrapper"
+                data={item}
+                data-id={item.id}
+                key={item.id}
+                active={selected.indexOf(item.id) !== -1}
+              />
+            ))}
+          </Stage>
           <DetailPanelWrapper data={data} selected={selected} />
         </div>
       </div>

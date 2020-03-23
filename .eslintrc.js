@@ -44,6 +44,7 @@ module.exports = {
     'no-unused-expressions': [2, { allowShortCircuit: true, allowTernary: true }],
     // 重新分配函数参数 forEach immer 中很多问题, 使用typescript readonly
     'no-param-reassign': 0,
+    'class-methods-use-this': 0,
 
     'react/jsx-filename-extension': [1, { extensions: ['.tsx', '.jsx'] }],
     'react/jsx-no-target-blank': 0,

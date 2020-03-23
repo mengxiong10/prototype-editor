@@ -1,6 +1,6 @@
 import { createReducerWithActions, combineReducers } from './reducerHelper';
 import { ComponentData, ComponentId, ComponentPosition } from '@/types/editor';
-import { Area } from '@/components/DragSelect';
+import { DragArea } from '@/components/DragSelect';
 import { randomId } from '@/utils/randomId';
 import { getComponent } from './registerComponents';
 
@@ -13,11 +13,13 @@ export interface Store {
 }
 
 type UpdateFn<T> = ((v: T) => T) | T;
+
+type ArrayComponentId = ComponentId | ComponentId[];
+
 const updateWithFn = <T>(value: T, updater: UpdateFn<T>) => {
   return typeof updater === 'function' ? (updater as (v: T) => T)(value) : updater;
 };
 
-type ArrayComponentId = ComponentId | ComponentId[];
 const transform2Array = (id: ArrayComponentId) => (Array.isArray(id) ? id : [id]);
 
 export const createComponentData = (type: string, left: number, top: number): ComponentData => {
@@ -101,15 +103,17 @@ const selectedHandler = {
   add(state: StateSelected, payload: ComponentData | ComponentData[]): StateSelected {
     return Array.isArray(payload) ? payload.map(v => v.id) : [payload.id];
   },
-  select(state: StateSelected, payload: ArrayComponentId): StateSelected {
-    const id = transform2Array(payload);
-    // TODO: 可以将比较 移到外层, 再加一层
-    if (id.length === state.length && id.every((v, i) => v === state[i])) {
+  select(state: StateSelected, payload: ComponentId): StateSelected {
+    // 如果选择的组件已经选中了,就不变, 否则就换成新的组件
+    if (state.indexOf(payload) !== -1) {
       return state;
     }
-    return id;
+    return [payload];
   },
-  selectArea(state: StateSelected, payload: Area, store: Store): StateSelected {
+  selectClear(state: StateSelected): StateSelected {
+    return state.length === 0 ? state : [];
+  },
+  selectArea(state: StateSelected, payload: DragArea, store: Store): StateSelected {
     const { left, top, width, height } = payload;
     const right = left + width;
     const bottom = top + height;
