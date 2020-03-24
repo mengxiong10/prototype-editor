@@ -4,8 +4,8 @@ export type DropDoneData = { x: number; y: number; data: string };
 
 export type DropDoneHandler = (v: DropDoneData) => void;
 
-export interface DropZoneProps extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode;
+export interface DropZoneProps extends React.HTMLAttributes<HTMLElement> {
+  children: React.ReactElement;
   onDropDone: DropDoneHandler;
   format?: string;
 }
@@ -23,11 +23,11 @@ function DropZone({ onDropDone, children, format = 'type', ...rest }: DropZonePr
     evt.preventDefault();
   };
 
-  return (
-    <div {...rest} onDrop={handleDrop} onDragOver={handleDragOver}>
-      {children}
-    </div>
-  );
+  return React.cloneElement(children, {
+    ...rest,
+    onDrop: handleDrop,
+    onDragOver: handleDragOver,
+  });
 }
 
 export default DropZone;

@@ -120,16 +120,17 @@ export default class Stage extends React.Component<StageProps, {}> {
           overlay={menu}
           onOpen={this.handleOpenContextMenu}
         >
-          <DragSelect onMove={this.handleDragSelect}>
-            <DropZone
-              onDropDone={this.add}
-              style={{ minWidth: '100%', minHeight: '100%', width: '2000px', height: '1000px' }}
-              tabIndex={-1}
-              onMouseDown={this.handleSelect}
-            >
-              {this.props.children}
-            </DropZone>
-          </DragSelect>
+          <DropZone onDropDone={this.add}>
+            <DragSelect onMove={this.handleDragSelect}>
+              <div
+                style={{ minWidth: '100%', minHeight: '100%', width: '2000px', height: '1000px' }}
+                tabIndex={-1}
+                onMouseDown={this.handleSelect}
+              >
+                {this.props.children}
+              </div>
+            </DragSelect>
+          </DropZone>
         </ContextMenu>
       </div>
     );
