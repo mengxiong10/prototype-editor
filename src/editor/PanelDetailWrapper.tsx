@@ -3,14 +3,14 @@ import { getComponent } from './registerComponents';
 import { useEditor } from './Context';
 import { ComponentData, ComponentId } from '@/types/editor';
 import { actions } from './reducer';
-import DetailPanel from './DetailPanel';
+import DetailPanel from './PanelDetail';
 
-export interface DetailPanelWrapper {
+export interface PanelDetailWrapper {
   data: ComponentData[];
   selected: ComponentId[];
 }
 
-function DetailPanelWrapper({ data, selected }: DetailPanelWrapper) {
+function PanelDetailWrapper({ data, selected }: PanelDetailWrapper) {
   const dispatch = useEditor();
 
   const selectedData = data.filter(v => selected.indexOf(v.id) !== -1);
@@ -48,4 +48,4 @@ function DetailPanelWrapper({ data, selected }: DetailPanelWrapper) {
   );
 }
 
-export default DetailPanelWrapper;
+export default PanelDetailWrapper;

@@ -3,9 +3,9 @@ import { Menu } from 'antd';
 import { Store, actions, cloneComponentData, createComponentData } from './reducer';
 import { ComponentData } from '@/types/editor';
 import { EditorContext, EditorDispatch } from './Context';
-import ContextMenu from '../components/ContextMenu';
-import DragSelect, { DragArea } from '@/components/DragSelect';
-import DropZone, { DropDoneData } from './DropZone';
+import ContextMenu from '@/components/ContextMenu';
+import DrawRect, { RectData } from '@/components/DrawRect';
+import DropZone, { DropDoneData } from '@/components/DropZone';
 import 'antd/es/dropdown/style/index.css';
 
 interface StageProps extends Store {
@@ -30,13 +30,16 @@ export default class Stage extends React.Component<StageProps, {}> {
   del = () => {
     const dispatch = this.context;
     const { selected } = this.props;
-    dispatch(actions.del(selected));
+    if (selected.length) {
+      dispatch(actions.del(selected));
+    }
   };
 
   copy = () => {
     const { data, selected } = this.props;
-    if (!selected.length) return;
-    this.clipboardData = data.filter(v => selected.indexOf(v.id) !== -1);
+    if (selected.length) {
+      this.clipboardData = data.filter(v => selected.indexOf(v.id) !== -1);
+    }
   };
 
   cut = () => {
@@ -44,11 +47,10 @@ export default class Stage extends React.Component<StageProps, {}> {
     this.del();
   };
 
-  paste = () => {
+  paste = ({ x, y }: { x: number; y: number }) => {
     const dispatch = this.context;
     const { clipboardData } = this;
     if (!clipboardData.length) return;
-    const { x, y } = this.contextMenuPosition;
     const minX = Math.min(...clipboardData.map(v => v.position.left));
     const minY = Math.min(...clipboardData.map(v => v.position.top));
     const diffX = x - minX;
@@ -72,7 +74,7 @@ export default class Stage extends React.Component<StageProps, {}> {
     }
   };
 
-  handleDragSelect = (value: DragArea) => {
+  handleDragSelect = (value: RectData) => {
     const dispatch = this.context;
     dispatch(actions.selectArea(value));
   };
@@ -103,7 +105,7 @@ export default class Stage extends React.Component<StageProps, {}> {
   renderStateMenu() {
     return (
       <Menu prefixCls="ant-dropdown-menu">
-        <Menu.Item key="paste" onClick={this.paste}>
+        <Menu.Item key="paste" onClick={() => this.paste(this.contextMenuPosition)}>
           粘贴
         </Menu.Item>
       </Menu>
@@ -121,7 +123,7 @@ export default class Stage extends React.Component<StageProps, {}> {
           onOpen={this.handleOpenContextMenu}
         >
           <DropZone onDropDone={this.add}>
-            <DragSelect onMove={this.handleDragSelect}>
+            <DrawRect onMove={this.handleDragSelect}>
               <div
                 style={{ minWidth: '100%', minHeight: '100%', width: '2000px', height: '1000px' }}
                 tabIndex={-1}
@@ -129,7 +131,7 @@ export default class Stage extends React.Component<StageProps, {}> {
               >
                 {this.props.children}
               </div>
-            </DragSelect>
+            </DrawRect>
           </DropZone>
         </ContextMenu>
       </div>

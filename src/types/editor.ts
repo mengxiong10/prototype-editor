@@ -1,4 +1,4 @@
-import { DetailPanelGroup } from '@/editor/DetailPanel';
+import { DetailPanelGroup } from '@/editor/PanelDetail';
 
 export interface ComponentPosition {
   left: number;

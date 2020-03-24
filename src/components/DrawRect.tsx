@@ -1,21 +1,23 @@
 import React from 'react';
 import { rafThrottle } from '@/utils/rafThrottle';
 
-export interface DragArea {
+export interface RectData {
   left: number;
   top: number;
   width: number;
   height: number;
 }
 
-export type DragSelectHandler = (data: DragArea) => void;
+export type DrawRectHandler = (data: RectData) => void;
 
-export interface DragSelectProps extends React.HTMLAttributes<HTMLElement> {
+export interface DrawRectProps extends React.HTMLAttributes<HTMLElement> {
   children: React.ReactElement;
-  onMove?: DragSelectHandler;
+  rectStyle?: React.CSSProperties;
+  onMove?: DrawRectHandler;
+  onStop?: DrawRectHandler;
 }
 
-interface DragSelectState {
+interface DrawRectState {
   x1: number;
   y1: number;
   x2: number;
@@ -28,8 +30,14 @@ const getPosition = (
   target: Element
 ) => {
   const rect = target.getBoundingClientRect();
-  const x = clientX - rect.left + target.scrollLeft;
-  const y = clientY - rect.top + target.scrollTop;
+  let x = clientX - rect.left + target.scrollLeft;
+  let y = clientY - rect.top + target.scrollTop;
+  const maxWidth = target.scrollWidth;
+  const maxHeight = target.scrollHeight;
+  x = Math.max(0, x);
+  x = Math.min(x, maxWidth);
+  y = Math.max(0, y);
+  y = Math.min(y, maxHeight);
   return { x, y };
 };
 
@@ -41,10 +49,10 @@ const getStyle = ({ x1, x2, y1, y2 }: { x1: number; x2: number; y1: number; y2: 
   return { left, top, width, height };
 };
 
-class DragSelect extends React.Component<DragSelectProps, DragSelectState> {
+class DrawRect extends React.Component<DrawRectProps, DrawRectState> {
   el: Element | null = null;
 
-  constructor(props: DragSelectProps) {
+  constructor(props: DrawRectProps) {
     super(props);
     this.state = {
       x1: 0,
@@ -80,13 +88,7 @@ class DragSelect extends React.Component<DragSelectProps, DragSelectState> {
     if (!this.state.dragging || !this.el) {
       return;
     }
-    let { x, y } = getPosition(evt, this.el);
-    const maxWidth = this.el.scrollWidth;
-    const maxHeight = this.el.scrollHeight;
-    x = Math.max(0, x);
-    x = Math.min(x, maxWidth);
-    y = Math.max(0, y);
-    y = Math.min(y, maxHeight);
+    const { x, y } = getPosition(evt, this.el);
     if (x === this.state.x2 && y === this.state.y2) {
       return;
     }
@@ -98,8 +100,11 @@ class DragSelect extends React.Component<DragSelectProps, DragSelectState> {
 
   handleStop = () => {
     const { dragging } = this.state;
-    if (!dragging) {
+    if (!dragging || !this.el) {
       return;
+    }
+    if (this.props.onStop) {
+      this.props.onStop(getStyle(this.state));
     }
     this.el = null;
     this.setState({
@@ -120,8 +125,12 @@ class DragSelect extends React.Component<DragSelectProps, DragSelectState> {
   }
 
   render() {
+    const defaultRectStyle = {
+      backgroundColor: 'rgba(16, 142, 233, 0.05)',
+      border: '1px solid #108ee9',
+    };
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { children, onMove, ...rest } = this.props;
+    const { children, onMove, onStop, rectStyle = defaultRectStyle, ...rest } = this.props;
     const { dragging } = this.state;
     const style = getStyle(this.state);
     const rectElement = dragging && (
@@ -129,9 +138,8 @@ class DragSelect extends React.Component<DragSelectProps, DragSelectState> {
         key="dragSelect"
         style={{
           ...style,
+          ...rectStyle,
           position: 'absolute',
-          backgroundColor: 'rgba(16, 142, 233, 0.05)',
-          border: '1px solid #108ee9',
         }}
       />
     );
@@ -145,4 +153,4 @@ class DragSelect extends React.Component<DragSelectProps, DragSelectState> {
   }
 }
 
-export default DragSelect;
+export default DrawRect;

@@ -96,7 +96,7 @@ feat: A new feature
 ```html
 <!-- layout层, overflow: auto; -->
 <div>
-  <!-- 画布层, 包括设置长宽, 点击, 右键菜单 等事件 -->
+  <!-- 组件层, 包括设置长宽, 点击, 右键菜单 等事件 -->
   <div></div>
 </div>
 ```
@@ -128,7 +128,7 @@ feat: A new feature
   2. mousedown(排除菜单区域) 和 windows blur 事件 hide. (菜单区域的点击, 只有触发事件区域关闭菜单)
   3. 注意菜单位置不超过 window.innerHeight 和 window.innerWidth
 
-- [ ] 键盘快捷键(stage 上添加 tabIndex,还是在 document 上监听, 但是加判断焦点的位置)
+- [ ] 键盘快捷键(需要注意触发时机)
 - [ ] 双击调出编辑
 
 #### 疑难组件

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Collapse } from 'antd';
-import ComponentItem from './ComponentItem';
+import ComponentItem from './PanelComponentItem';
 
 const { Panel } = Collapse;
 

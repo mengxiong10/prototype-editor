@@ -1,8 +1,8 @@
 import React, { useReducer } from 'react';
 import { EditorProvider } from './Context';
-import ComponentList from './ComponentList';
-import Stage from './Stage';
-import DetailPanelWrapper from './DetailPanelWrapper';
+import PanelComponentList from './PanelComponentList';
+import PanelStage from './PanelStage';
+import PanelDetailWrapper from './PanelDetailWrapper';
 import { reducer } from './reducer';
 import ComponentWrapper from './ComponentWrapper';
 
@@ -18,8 +18,8 @@ function Editor() {
     <EditorProvider value={dispatch}>
       <div className="pe-container">
         <div className="pe-main">
-          <ComponentList />
-          <Stage data={data} selected={selected}>
+          <PanelComponentList />
+          <PanelStage data={data} selected={selected}>
             {data.map(item => (
               <ComponentWrapper
                 className="pe-component-wrapper"
@@ -29,8 +29,8 @@ function Editor() {
                 active={selected.indexOf(item.id) !== -1}
               />
             ))}
-          </Stage>
-          <DetailPanelWrapper data={data} selected={selected} />
+          </PanelStage>
+          <PanelDetailWrapper data={data} selected={selected} />
         </div>
       </div>
     </EditorProvider>

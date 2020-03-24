@@ -1,6 +1,6 @@
 import { createReducerWithActions, combineReducers } from './reducerHelper';
 import { ComponentData, ComponentId, ComponentPosition } from '@/types/editor';
-import { DragArea } from '@/components/DragSelect';
+import { RectData } from '@/components/DrawRect';
 import { randomId } from '@/utils/randomId';
 import { getComponent } from './registerComponents';
 
@@ -113,7 +113,7 @@ const selectedHandler = {
   selectClear(state: StateSelected): StateSelected {
     return state.length === 0 ? state : [];
   },
-  selectArea(state: StateSelected, payload: DragArea, store: Store): StateSelected {
+  selectArea(state: StateSelected, payload: RectData, store: Store): StateSelected {
     const { left, top, width, height } = payload;
     const right = left + width;
     const bottom = top + height;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Collapse } from 'antd';
-import { itemMap } from './DetailPanelHelper';
+import { itemMap } from './PanelDetailHelper';
 
 const { Panel } = Collapse;
 
