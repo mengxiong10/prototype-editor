@@ -132,12 +132,7 @@ export default class Resizable extends React.Component<ResizableProps, Resizable
     const style = { width, height, left, top, position: 'absolute' };
 
     return (
-      <DraggableCore
-        disabled={!active}
-        onDrag={this.handleDrag}
-        onStop={this.handleStop}
-        cancel=".js-drag-cancel"
-      >
+      <DraggableCore onDrag={this.handleDrag} onStop={this.handleStop} cancel=".js-drag-cancel">
         {React.cloneElement(children, {
           ref: this.elRef,
           className,
