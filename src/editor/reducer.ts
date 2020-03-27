@@ -43,6 +43,24 @@ export const cloneComponentData = (
   };
 };
 
+let clipboardData: ComponentData[];
+
+export const pasteComponentData = ({ x, y }: { x: number; y: number }) => {
+  if (!clipboardData) return [];
+  const minX = Math.min(...clipboardData.map(v => v.position.left));
+  const minY = Math.min(...clipboardData.map(v => v.position.top));
+  const diffX = x - minX;
+  const diffY = y - minY;
+  return clipboardData.map(v => {
+    const position = { left: v.position.left + diffX, top: v.position.top + diffY };
+    return cloneComponentData(v, position);
+  });
+};
+
+export const copyComponentData = (data: ComponentData[], selected: ComponentId[]) => {
+  clipboardData = data.filter(v => selected.indexOf(v.id) !== -1);
+};
+
 // 处理 data 逻辑
 const componentDataHandlers = {
   add(state: StateData, payload: ComponentData | ComponentData[]): StateData {
