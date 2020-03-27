@@ -7,9 +7,9 @@ export interface Disposable {
 }
 
 export class TypedEvent<T = void> {
-  private listeners: Array<Listener<T>> = [];
+  private listeners: Listener<T>[] = [];
 
-  private listenersOncer: Array<Listener<T>> = [];
+  private listenersOncer: Listener<T>[] = [];
 
   public on = (listener: Listener<T>): Disposable => {
     this.listeners.push(listener);

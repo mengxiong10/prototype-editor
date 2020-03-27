@@ -12,7 +12,7 @@ export interface DetailPanelItem<P> {
 
 export interface DetailPanelGroup<P = string> {
   title: string;
-  list: Array<DetailPanelItem<P>>;
+  list: DetailPanelItem<P>[];
 }
 
 export interface DetailPanelProps {

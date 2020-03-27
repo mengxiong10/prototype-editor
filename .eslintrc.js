@@ -76,7 +76,7 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 0,
     '@typescript-eslint/no-non-null-assertion': 0,
     '@typescript-eslint/no-empty-interface': 0,
-    '@typescript-eslint/array-type': [2, { default: 'array-simple' }],
+    '@typescript-eslint/array-type': [2, { default: 'array' }],
     '@typescript-eslint/explicit-member-accessibility': 0,
 
     // 必须是package.json里面的包: 1
