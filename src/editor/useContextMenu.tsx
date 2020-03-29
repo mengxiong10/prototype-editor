@@ -43,7 +43,7 @@ export function useContextmenu({ data, selected }: Store) {
         dispatch(actions.add(pasteComponentData(menuPosition.current)));
         break;
       default:
-        throw new Error('');
+        throw new TypeError(`invalid arguments ${key}`);
     }
   };
 
