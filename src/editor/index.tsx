@@ -17,9 +17,15 @@ function Editor() {
     <EditorProvider value={dispatch}>
       <div className="pe-container">
         <div className="pe-main">
-          <PanelComponentList />
-          <PanelStage data={data} selected={selected} />
-          <PanelDetailWrapper data={data} selected={selected} />
+          <div className="pe-component-list">
+            <PanelComponentList />
+          </div>
+          <div className="pe-content">
+            <PanelStage data={data} selected={selected} />
+          </div>
+          <div className="pe-detail-panel">
+            <PanelDetailWrapper data={data} selected={selected} />
+          </div>
         </div>
       </div>
     </EditorProvider>

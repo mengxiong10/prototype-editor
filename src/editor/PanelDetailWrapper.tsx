@@ -27,24 +27,22 @@ function PanelDetailWrapper({ data, selected }: PanelDetailWrapper) {
     [dispatch]
   );
 
-  return (
-    <div className="pe-detail-panel">
-      {component &&
-        component.detailPanel &&
-        (Array.isArray(component.detailPanel) ? (
-          <DetailPanel
-            groups={component.detailPanel}
-            onChange={handleChange}
-            data={{ ...component.defaultData, ...selectedData[0].data }}
-          />
-        ) : (
-          React.createElement(component.detailPanel as React.ElementType, {
-            ...component.defaultData,
-            ...selectedData[0].data,
-            onChange: handleChange,
-          })
-        ))}
-    </div>
+  if (!(component && component.detailPanel)) {
+    return null;
+  }
+
+  return Array.isArray(component.detailPanel) ? (
+    <DetailPanel
+      groups={component.detailPanel}
+      onChange={handleChange}
+      data={{ ...component.defaultData, ...selectedData[0].data }}
+    />
+  ) : (
+    React.createElement(component.detailPanel as React.ElementType, {
+      ...component.defaultData,
+      ...selectedData[0].data,
+      onChange: handleChange,
+    })
   );
 }
 

@@ -44,28 +44,26 @@ function PanelStage2({ data, selected }: PanelStage2Props) {
   };
 
   return (
-    <div className="pe-content">
-      <ContextMenu handle=".ant-dropdown-menu-item" {...contextmenu}>
-        <DrawRect onMove={handleDragSelect}>
-          <div
-            style={{ minWidth: '100%', minHeight: '100%', width: '2000px', height: '1000px' }}
-            tabIndex={-1}
-            onMouseDown={handleSelect}
-            {...dropProps}
-          >
-            {data.map(item => (
-              <ComponentWrapper
-                className="pe-component-wrapper"
-                data={item}
-                data-id={item.id}
-                key={item.id}
-                active={selected.indexOf(item.id) !== -1}
-              />
-            ))}
-          </div>
-        </DrawRect>
-      </ContextMenu>
-    </div>
+    <ContextMenu handle=".ant-dropdown-menu-item" {...contextmenu}>
+      <DrawRect onMove={handleDragSelect}>
+        <div
+          style={{ minWidth: '100%', minHeight: '100%', width: '2000px', height: '1000px' }}
+          tabIndex={-1}
+          onMouseDown={handleSelect}
+          {...dropProps}
+        >
+          {data.map(item => (
+            <ComponentWrapper
+              className="pe-component-wrapper"
+              data={item}
+              data-id={item.id}
+              key={item.id}
+              active={selected.indexOf(item.id) !== -1}
+            />
+          ))}
+        </div>
+      </DrawRect>
+    </ContextMenu>
   );
 }
 
