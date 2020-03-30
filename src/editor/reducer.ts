@@ -4,23 +4,20 @@ import { RectData } from '@/components/DrawRect';
 import { randomId } from '@/utils/randomId';
 import { getComponent } from './registerComponents';
 
-type StateData = ComponentData[];
-type StateSelected = ComponentId[];
-
 export interface Store {
-  data: StateData;
-  selected: StateSelected;
+  data: ComponentData[];
+  selected: ComponentId[];
 }
 
 type UpdateFn<T> = ((v: T) => T) | T;
 
-type ArrayComponentId = ComponentId | ComponentId[];
+type SingleOrArray<T> = T | T[];
 
 const updateWithFn = <T>(value: T, updater: UpdateFn<T>) => {
   return typeof updater === 'function' ? (updater as (v: T) => T)(value) : updater;
 };
 
-const transform2Array = (id: ArrayComponentId) => (Array.isArray(id) ? id : [id]);
+const transform2Array = (id: SingleOrArray<ComponentId>) => (Array.isArray(id) ? id : [id]);
 
 export const createComponentData = (type: string, left: number, top: number): ComponentData => {
   const component = getComponent(type);
@@ -57,28 +54,33 @@ export const pasteComponentData = ({ x, y }: { x: number; y: number }) => {
   });
 };
 
-export const copyComponentData = (data: ComponentData[], selected: ComponentId[]) => {
-  clipboardData = data.filter(v => selected.indexOf(v.id) !== -1);
-};
+const getDataHandlers = () => {
+  type DataHandler<T = void> = (state: ComponentData[], payload: T, s: Store) => ComponentData[];
 
-// 处理 data 逻辑
-const componentDataHandlers = {
-  add(state: StateData, payload: ComponentData | ComponentData[]): StateData {
+  const add: DataHandler<SingleOrArray<ComponentData>> = (state, payload) => {
     return state.concat(payload);
-  },
-  del(state: StateData, payload: ArrayComponentId | void, store: Store): StateData {
+  };
+
+  const del: DataHandler<SingleOrArray<ComponentId> | void> = (state, payload, store) => {
     const id = payload ? transform2Array(payload) : store.selected;
     return state.filter(v => id.indexOf(v.id) === -1);
-  },
-  update(
-    state: StateData,
-    payload: {
-      id?: ArrayComponentId;
-      position?: { [k in keyof ComponentPosition]?: UpdateFn<number> };
-      data?: any;
-    },
-    store: Store
-  ): StateData {
+  };
+
+  const copy: DataHandler = (state, payload, { data, selected }) => {
+    clipboardData = data.filter(v => selected.indexOf(v.id) !== -1);
+    return state;
+  };
+
+  const cut: DataHandler = (...rest) => {
+    copy(...rest);
+    return del(...rest);
+  };
+
+  const update: DataHandler<{
+    id?: SingleOrArray<ComponentId>;
+    position?: { [k in keyof ComponentPosition]?: UpdateFn<number> };
+    data?: any;
+  }> = (state, payload, store) => {
     const { id } = payload;
     const ids = id ? transform2Array(id) : store.selected;
     return state.map(v => {
@@ -97,8 +99,9 @@ const componentDataHandlers = {
       }
       return v;
     });
-  },
-  sort(state: StateData, payload: { id: ComponentId; value: UpdateFn<number> }): StateData {
+  };
+
+  const sort: DataHandler<{ id: ComponentId; value: UpdateFn<number> }> = (state, payload) => {
     const { id, value } = payload;
     const index = state.findIndex(v => v.id === id);
     if (index === -1) return state;
@@ -112,26 +115,31 @@ const componentDataHandlers = {
     const nextState = state.slice();
     nextState.splice(nextIndex, 0, nextState.splice(index, 1)[0]);
     return nextState;
-  },
+  };
+
+  return { add, del, update, sort, copy, cut };
 };
 
-// 处理selected逻辑
-const selectedHandler = {
-  // 添加组件后,选中该组件
-  add(state: StateSelected, payload: ComponentData | ComponentData[]): StateSelected {
+const getSelectHandlers = () => {
+  type SelectHandler<T = void> = (state: ComponentId[], payload: T, s: Store) => ComponentId[];
+
+  const add: SelectHandler<SingleOrArray<ComponentData>> = (state, payload) => {
     return Array.isArray(payload) ? payload.map(v => v.id) : [payload.id];
-  },
-  select(state: StateSelected, payload: ComponentId): StateSelected {
+  };
+
+  const select: SelectHandler<ComponentId> = (state, payload) => {
     // 如果选择的组件已经选中了,就不变, 否则就换成新的组件
     if (state.indexOf(payload) !== -1) {
       return state;
     }
     return [payload];
-  },
-  selectClear(state: StateSelected): StateSelected {
+  };
+
+  const selectClear: SelectHandler = state => {
     return state.length === 0 ? state : [];
-  },
-  selectArea(state: StateSelected, payload: RectData, store: Store): StateSelected {
+  };
+
+  const selectArea: SelectHandler<RectData> = (state, payload, store) => {
     const { left, top, width, height } = payload;
     const right = left + width;
     const bottom = top + height;
@@ -141,14 +149,17 @@ const selectedHandler = {
         return left <= l + w && right >= l && top <= t + h && bottom >= t;
       })
       .map(v => v.id);
-  },
-  selectAll(state: StateSelected, payload: void, store: Store): StateSelected {
+  };
+
+  const selectAll: SelectHandler = (state, payload, store) => {
     return store.data.map(v => v.id);
-  },
+  };
+
+  return { add, select, selectAll, selectClear, selectArea };
 };
 
-const dataRA = createReducerWithActions(componentDataHandlers);
-const selectedRA = createReducerWithActions(selectedHandler);
+const dataRA = createReducerWithActions(getDataHandlers());
+const selectedRA = createReducerWithActions(getSelectHandlers());
 
 export const actions = { ...selectedRA.actions, ...dataRA.actions };
 export const reducer = combineReducers({

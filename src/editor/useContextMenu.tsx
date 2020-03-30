@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { Menu } from 'antd';
 import { ClickParam } from 'antd/lib/menu';
 import { useEditor } from './Context';
-import { actions, copyComponentData, pasteComponentData, Store } from './reducer';
+import { actions, pasteComponentData, Store } from './reducer';
 import 'antd/es/dropdown/style/index.css';
 
 type ContextMenuOption = { title?: string; key: string; type?: 'Item' | 'Divider' };
@@ -16,31 +16,30 @@ const componentContextMenu: ContextMenuOption[] = [
 
 const stageContextMenu: ContextMenuOption[] = [{ title: '粘贴', key: 'paste' }];
 
-export function useContextmenu({ data, selected }: Store) {
+export function useContextmenu({ selected }: Store) {
   const dispatch = useEditor();
 
-  const menuPosition = useRef({ x: 0, y: 0 });
+  const position = useRef({ x: 0, y: 0 });
 
   const onOpen = (evt: React.MouseEvent) => {
     const rect = evt.currentTarget.getBoundingClientRect();
-    menuPosition.current.x = evt.clientX - rect.left;
-    menuPosition.current.y = evt.clientY - rect.top;
+    position.current.x = evt.clientX - rect.left;
+    position.current.y = evt.clientY - rect.top;
   };
 
   const handleMenuClick = ({ key }: ClickParam) => {
     switch (key) {
       case 'del':
-        dispatch(actions.del(selected));
+        dispatch(actions.del());
         break;
       case 'cut':
-        copyComponentData(data, selected);
-        dispatch(actions.del(selected));
+        dispatch(actions.cut());
         break;
       case 'copy':
-        copyComponentData(data, selected);
+        dispatch(actions.copy());
         break;
       case 'paste':
-        dispatch(actions.add(pasteComponentData(menuPosition.current)));
+        dispatch(actions.add(pasteComponentData(position.current)));
         break;
       default:
         throw new TypeError(`invalid arguments ${key}`);
