@@ -24,7 +24,7 @@ export interface DetailPanelProps {
 
 function DetailPanel({ groups, data, children, onChange }: DetailPanelProps) {
   return (
-    <Collapse defaultActiveKey={groups.map((v, i) => String(i))}>
+    <Collapse className="pe-detail-panel" defaultActiveKey={groups.map((v, i) => String(i))}>
       {groups.map((group, i) => {
         return (
           <Panel header={group.title} key={String(i)}>

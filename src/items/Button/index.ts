@@ -13,9 +13,7 @@ export const buttonOptions: ComponentOptions<ButtonProps> = {
     borderColor: '#ccc',
     borderWidth: 1,
     color: '#333',
-    textAlign: 'center',
     textContent: '按钮',
-    fontWeight: 'normal',
     disabled: false,
   },
   detailPanel: [

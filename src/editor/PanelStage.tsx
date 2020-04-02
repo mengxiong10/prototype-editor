@@ -1,6 +1,6 @@
 import React, { useCallback, useRef } from 'react';
 import ContextMenu from '@/components/ContextMenu';
-import DrawRect, { RectData } from '@/components/DrawRect';
+import DrawShape, { ShapeData } from '@/components/DrawShape';
 import { useEditor } from './Context';
 import { ComponentData, ComponentId } from '@/types/editor';
 import { useContextmenu } from './useContextMenu';
@@ -17,15 +17,15 @@ export interface PanelStage2Props {
 function PanelStage2({ data, selected }: PanelStage2Props) {
   const dispatch = useEditor();
 
-  const stageEl = useRef<HTMLDivElement>(null);
-
   const contextmenuProps = useContextmenu({ data, selected });
+
+  const stageRef = useRef<HTMLDivElement>(null);
 
   const { onMouseMove } = useShortcuts();
 
   const dropProps = useDrop({
     onDropDone: ({ data: type, x, y }) => {
-      const componentdata = createComponentData(type, x - 20, y - 20);
+      const componentdata = createComponentData(type, { left: x - 20, top: y - 20 });
       dispatch(actions.add(componentdata));
     },
   });
@@ -36,39 +36,35 @@ function PanelStage2({ data, selected }: PanelStage2Props) {
         dispatch(actions.selectClear());
       } else {
         const wrapper = (evt.target as Element).closest('.pe-component-wrapper');
-        const id = (wrapper as HTMLDivElement).dataset.id!;
-        dispatch(actions.select(id));
+        if (wrapper && wrapper !== evt.target) {
+          const id = (wrapper as HTMLDivElement).dataset.id!;
+          dispatch(actions.select(id));
+        }
       }
     },
     [dispatch]
   );
 
-  const handleDragSelect = (value: RectData) => {
+  const handleDragSelect = (value: ShapeData) => {
     dispatch(actions.selectArea(value));
   };
 
   return (
     <ContextMenu handle=".ant-dropdown-menu-item" {...contextmenuProps}>
-      <DrawRect onMove={handleDragSelect}>
-        <div
-          ref={stageEl}
-          style={{ minWidth: '100%', minHeight: '100%', width: '2000px', height: '1000px' }}
-          tabIndex={-1}
-          onMouseDown={handleSelect}
-          onMouseMove={onMouseMove}
-          {...dropProps}
-        >
-          {data.map(item => (
-            <ComponentWrapper
-              className="pe-component-wrapper"
-              data={item}
-              data-id={item.id}
-              key={item.id}
-              active={selected.indexOf(item.id) !== -1}
-            />
-          ))}
-        </div>
-      </DrawRect>
+      <DrawShape
+        ref={stageRef}
+        className="pe-editor-stage"
+        style={{ width: 2000, height: 1000 }}
+        tabIndex={-1}
+        onMouseDown={handleSelect}
+        onMouseMove={onMouseMove}
+        onMove={handleDragSelect}
+        {...dropProps}
+      >
+        {data.map(item => (
+          <ComponentWrapper key={item.id} data={item} active={selected.indexOf(item.id) !== -1} />
+        ))}
+      </DrawShape>
     </ContextMenu>
   );
 }

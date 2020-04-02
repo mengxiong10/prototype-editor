@@ -1,6 +1,6 @@
 import { createReducerWithActions, combineReducers } from './reducerHelper';
-import { ComponentData, ComponentId, ComponentPosition } from '@/types/editor';
-import { RectData } from '@/components/DrawRect';
+import { ComponentData, ComponentId, ComponentPosition, ComponentSize } from '@/types/editor';
+import { ShapeData } from '@/components/DrawShape';
 import { randomId } from '@/utils/randomId';
 import { getComponent } from './registerComponents';
 
@@ -19,12 +19,15 @@ const updateWithFn = <T>(value: T, updater: UpdateFn<T>) => {
 
 const transform2Array = (id: SingleOrArray<ComponentId>) => (Array.isArray(id) ? id : [id]);
 
-export const createComponentData = (type: string, left: number, top: number): ComponentData => {
+export const createComponentData = (
+  type: string,
+  position: ComponentPosition,
+  size?: ComponentSize
+): ComponentData => {
   const component = getComponent(type);
   const id = randomId();
-  const { width, height } = component.defaultSize || { width: 200, height: 200 };
-  const position = { top, left, width, height };
-  return { id, type, position, data: {} };
+  size = size || component.defaultSize || { width: 200, height: 100 };
+  return { id, type, position, size, data: {} };
 };
 
 export const cloneComponentData = (
@@ -36,6 +39,7 @@ export const cloneComponentData = (
     id,
     type: base.type,
     position: { ...base.position, ...position },
+    size: base.size,
     data: JSON.parse(JSON.stringify(base.data)),
   };
 };
@@ -79,6 +83,7 @@ const getDataHandlers = () => {
   const update: DataHandler<{
     id?: SingleOrArray<ComponentId>;
     position?: { [k in keyof ComponentPosition]?: UpdateFn<number> };
+    size?: { [k in keyof ComponentSize]?: UpdateFn<number> };
     data?: any;
   }> = (state, payload, store) => {
     const { id } = payload;
@@ -86,7 +91,7 @@ const getDataHandlers = () => {
     return state.map(v => {
       if (ids.indexOf(v.id) !== -1) {
         const nextData = { ...v };
-        ['position', 'data'].forEach((key: 'position' | 'data') => {
+        ['position', 'data', 'size'].forEach((key: 'position' | 'data' | 'size') => {
           if (payload[key]) {
             const nextValue = { ...nextData[key] };
             Object.keys(payload[key]).forEach(k => {
@@ -139,13 +144,14 @@ const getSelectHandlers = () => {
     return state.length === 0 ? state : [];
   };
 
-  const selectArea: SelectHandler<RectData> = (state, payload, store) => {
+  const selectArea: SelectHandler<ShapeData> = (state, payload, store) => {
     const { left, top, width, height } = payload;
     const right = left + width;
     const bottom = top + height;
     return store.data
       .filter(v => {
-        const { left: l, top: t, width: w, height: h } = v.position;
+        const { left: l, top: t } = v.position;
+        const { width: w, height: h } = v.size;
         return left <= l + w && right >= l && top <= t + h && bottom >= t;
       })
       .map(v => v.id);

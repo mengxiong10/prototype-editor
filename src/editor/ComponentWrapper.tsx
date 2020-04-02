@@ -1,20 +1,26 @@
 import React, { useCallback } from 'react';
-import DragResizable from '../components/DragResizable';
+import DragResizable, { ResizableState } from '../components/DragResizable';
 import { getComponent } from './registerComponents';
-import { ComponentData, ComponentPosition } from '@/types/editor';
+import { ComponentData } from '@/types/editor';
 import { useEditor } from './Context';
 import { actions } from './reducer';
 
-export interface ComponentWrapperProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface ComponentWrapperProps {
   active: boolean;
   data: ComponentData;
 }
 
-function ComponentWrapper({ active, data, ...rest }: ComponentWrapperProps) {
+function ComponentWrapper({ active, data }: ComponentWrapperProps) {
   const dispatch = useEditor();
   const updatePosition = useCallback(
-    (position: ComponentPosition) => {
-      dispatch(actions.update({ id: data.id, position }));
+    ({ left, top, width, height }: ResizableState) => {
+      dispatch(
+        actions.update({
+          id: data.id,
+          position: { left, top },
+          size: { width, height },
+        })
+      );
     },
     [dispatch, data.id]
   );
@@ -22,8 +28,8 @@ function ComponentWrapper({ active, data, ...rest }: ComponentWrapperProps) {
   const component = getComponent(data.type);
 
   return (
-    <DragResizable {...data.position} active={active} onStop={updatePosition}>
-      <div {...rest}>
+    <DragResizable {...data.position} {...data.size} active={active} onStop={updatePosition}>
+      <div className="pe-component-wrapper" data-id={data.id}>
         {React.createElement(component.component, {
           ...component.defaultData,
           ...data.data,

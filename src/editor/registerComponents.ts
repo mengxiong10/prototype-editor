@@ -2,6 +2,8 @@ import NotFound from './NotFound';
 import { ComponentOptions } from '@/types/editor';
 import { buttonOptions } from '@/items/Button';
 import { inputOptions } from '@/items/Input';
+import { commentOptions } from '@/items/Comment';
+import { rectOptions } from '@/items/Rect';
 
 const components: {
   [key: string]: ComponentOptions;
@@ -23,3 +25,5 @@ export function getComponent(type: string) {
 
 registerComponent('button', buttonOptions);
 registerComponent('input', inputOptions);
+registerComponent('comment', commentOptions);
+registerComponent('rect', rectOptions);

@@ -7,8 +7,6 @@ export interface ButtonProps {
   borderWidth: string | number;
   borderColor: string;
   color: string;
-  textAlign: 'left' | 'right' | 'center';
-  fontWeight: 'normal' | 'bold';
   circle: boolean;
   textContent: string;
   disabled: boolean;

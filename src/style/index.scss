@@ -6,21 +6,34 @@ body {
   height: 100%;
 }
 
-.pe-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
+.ant-layout,
+.ant-layout-sider {
+  background: #fff;
 }
 
-.pe-main {
-  flex: 1;
-  display: flex;
-  overflow: hidden;
+.u-scroll {
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+  }
+
+  &:hover::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+  }
 }
 
-.pe-component-list {
-  flex: 0 0 220px;
+.pe-editor-stage {
+  position: relative;
+  min-width: 100%;
+  min-height: 100%;
 }
 
 .pe-component-item {
@@ -36,15 +49,6 @@ body {
   &:hover {
     background-color: #eee;
   }
-}
-
-.pe-content {
-  position: relative;
-  flex: 1;
-  height: 100%;
-  overflow: auto;
-  border-left: 1px solid #ccc;
-  border-right: 1px solid #ccc;
 }
 
 .pe-detail-panel {
@@ -69,8 +73,4 @@ body {
   display: block;
   width: 100%;
   height: 100%;
-}
-
-.pe-toolbar {
-  border-bottom: 1px solid #ccc;
 }

@@ -121,7 +121,7 @@ feat: A new feature
       高级: 当多选后,拖动一个,其他也一起移动.(通过自定义事件去沟通)
 - [x] 组件的层叠(直接交换在数组里面的位置)
 - [x] 组件的单选/框选,取消选择
-- [ ] 右键菜单
+- [x] 右键菜单
 
   由于 antd 自带的 dropdown 点击区域不能 mousedown 关闭等等问题;
   react-contextmenu 组件长按左键触发 open 等等问题;
@@ -131,12 +131,17 @@ feat: A new feature
   2. mousedown(排除菜单区域) 和 windows blur 事件 hide. (菜单区域的点击, 只有触发事件区域关闭菜单)
   3. 注意菜单位置不超过 window.innerHeight 和 window.innerWidth
 
-- [ ] 键盘快捷键(需要注意触发时机)
+- [x] 键盘快捷键(需要注意触发时机)
 - [ ] 双击调出编辑
+
+#### undo/redo
+
+需要有 debounce, 比如输入框的更新,等到失去焦点才记录
 
 #### 疑难组件
 
 1. 批注组件
+   富文本编辑器,还是沿用 draft.js, focus 的时候接管键盘快捷键包括撤销重做
 
 2. 表格
 
