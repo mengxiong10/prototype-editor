@@ -12,15 +12,12 @@ function PanelDrawer() {
   const [type, setType] = useState('');
 
   const hideDrawer = useCallback(() => {
-    console.log('click');
     setType('');
   }, []);
 
   const ref = useClickOutside({
     onClick: hideDrawer,
   });
-
-  console.log(type);
 
   const handleStop = ({ left, top, width, height }: ShapeData) => {
     hideDrawer();
