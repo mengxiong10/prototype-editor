@@ -1,5 +1,5 @@
-import React, { useState, useLayoutEffect, RefObject } from 'react';
-import { rafThrottle } from '@/utils/rafThrottle';
+import React, { useState, RefObject, useCallback } from 'react';
+import { DraggableData, useDraggable } from '@/hooks/useDraggable';
 
 export interface ShapeData {
   left: number;
@@ -17,22 +17,6 @@ export interface DrawShapeProps extends React.HTMLAttributes<HTMLDivElement> {
   onStop?: ShapeRectHandler;
 }
 
-const getPosition = (
-  { clientX, clientY }: { clientX: number; clientY: number },
-  target: Element
-) => {
-  const rect = target.getBoundingClientRect();
-  let x = clientX - rect.left + target.scrollLeft;
-  let y = clientY - rect.top + target.scrollTop;
-  const maxWidth = target.scrollWidth;
-  const maxHeight = target.scrollHeight;
-  x = Math.max(0, x);
-  x = Math.min(x, maxWidth);
-  y = Math.max(0, y);
-  y = Math.min(y, maxHeight);
-  return { x, y };
-};
-
 const getStyle = ({ x1, x2, y1, y2 }: { x1: number; x2: number; y1: number; y2: number }) => {
   const left = Math.min(x1, x2);
   const top = Math.min(y1, y2);
@@ -47,35 +31,29 @@ const defaultShapeStyle = {
 };
 
 function DrawShape(props: DrawShapeProps, ref: RefObject<HTMLDivElement>) {
-  const { children, shapeStyle, style, onMove, onStop, onMouseDown, ...rest } = props;
+  const { children, shapeStyle, onMove, onStop, onMouseDown, ...rest } = props;
 
   const [rect, setRect] = useState({ x1: 0, x2: 0, y1: 0, y2: 0 });
-  const [dragging, setDragging] = useState(false);
 
-  const handleStart = (evt: React.MouseEvent<HTMLDivElement>) => {
-    if (onMouseDown) {
-      onMouseDown(evt);
-    }
-    const { target, currentTarget, button } = evt;
-    // 只响应左键
-    if (typeof button === 'number' && button !== 0) {
-      return;
-    }
-    // 不响应冒泡
-    if (target !== currentTarget) {
-      return;
-    }
-    const { x, y } = getPosition(evt, currentTarget);
-    setDragging(true);
-    setRect({ x1: x, y1: y, x2: x, y2: y });
-  };
-
-  useLayoutEffect(() => {
-    const handleMove = rafThrottle((evt: MouseEvent) => {
-      if (!dragging || !ref.current) {
-        return;
+  const handleStart = useCallback(
+    (evt: React.MouseEvent<HTMLDivElement>, data: DraggableData) => {
+      if (onMouseDown) {
+        onMouseDown(evt);
       }
-      const { x, y } = getPosition(evt, ref.current);
+      const { target, currentTarget } = evt;
+      // 不响应冒泡
+      if (target !== currentTarget) {
+        return false;
+      }
+      const { x, y } = data;
+      setRect({ x1: x, y1: y, x2: x, y2: y });
+      return true;
+    },
+    [onMouseDown]
+  );
+
+  const handleMove = useCallback(
+    ({ x, y }: DraggableData) => {
       setRect(prev => {
         const next = { ...prev, x2: x, y2: y };
         if (onMove) {
@@ -83,31 +61,25 @@ function DrawShape(props: DrawShapeProps, ref: RefObject<HTMLDivElement>) {
         }
         return next;
       });
-    });
+    },
+    [onMove]
+  );
 
-    const handleStop = () => {
-      if (!dragging || !ref.current) {
-        return;
+  const handleStop = useCallback(() => {
+    setRect(prev => {
+      if (onStop) {
+        onStop(getStyle(prev));
       }
-      setDragging(false);
-      setRect(prev => {
-        if (onStop) {
-          onStop(getStyle(prev));
-        }
-        return { x1: 0, y1: 0, x2: 0, y2: 0 };
-      });
-    };
-    if (dragging) {
-      window.addEventListener('mousemove', handleMove);
-      window.addEventListener('mouseup', handleStop);
-    }
-    return () => {
-      if (dragging) {
-        window.removeEventListener('mousemove', handleMove);
-        window.removeEventListener('mouseup', handleStop);
-      }
-    };
-  }, [dragging, onMove, onStop, ref]);
+      return { x1: 0, y1: 0, x2: 0, y2: 0 };
+    });
+  }, [onStop]);
+
+  const { dragging, onMouseDown: handleMouseDown } = useDraggable({
+    onStart: handleStart,
+    onMove: handleMove,
+    onStop: handleStop,
+    ref,
+  });
 
   const shapeElement = dragging && (
     <div
@@ -121,12 +93,7 @@ function DrawShape(props: DrawShapeProps, ref: RefObject<HTMLDivElement>) {
   );
 
   return (
-    <div
-      {...rest}
-      ref={ref}
-      onMouseDown={handleStart}
-      style={dragging ? { ...style, userSelect: 'none' } : style}
-    >
+    <div {...rest} ref={ref} onMouseDown={handleMouseDown}>
       {children}
       {shapeElement}
     </div>

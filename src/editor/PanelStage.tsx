@@ -8,6 +8,7 @@ import { actions, createComponentData } from './reducer';
 import { useDrop } from '@/hooks/useDrop';
 import { useShortcuts } from './useShortcuts';
 import ComponentWrapper from './ComponentWrapper';
+import Component from './Component';
 
 export interface PanelStage2Props {
   data: ComponentData[];
@@ -21,7 +22,7 @@ function PanelStage2({ data, selected }: PanelStage2Props) {
 
   const stageRef = useRef<HTMLDivElement>(null);
 
-  const { onMouseMove } = useShortcuts();
+  useShortcuts(stageRef);
 
   const dropProps = useDrop({
     onDropDone: ({ data: type, x, y }) => {
@@ -57,12 +58,18 @@ function PanelStage2({ data, selected }: PanelStage2Props) {
         style={{ width: 2000, height: 1000 }}
         tabIndex={-1}
         onMouseDown={handleSelect}
-        onMouseMove={onMouseMove}
         onMove={handleDragSelect}
         {...dropProps}
       >
         {data.map(item => (
-          <ComponentWrapper key={item.id} data={item} active={selected.indexOf(item.id) !== -1} />
+          <ComponentWrapper
+            key={item.id}
+            id={item.id}
+            rect={item.rect}
+            active={selected.indexOf(item.id) !== -1}
+          >
+            <Component type={item.type} data={item.data} />
+          </ComponentWrapper>
         ))}
       </DrawShape>
     </ContextMenu>

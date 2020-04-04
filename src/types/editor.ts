@@ -1,11 +1,8 @@
 import { DetailPanelGroup } from '@/editor/PanelDetail';
 
-export interface ComponentPosition {
+export interface ComponentRect {
   left: number;
   top: number;
-}
-
-export interface ComponentSize {
   width: number;
   height: number;
 }
@@ -16,8 +13,7 @@ export type ComponentId = string;
 export interface ComponentData<T = any> {
   id: ComponentId;
   type: string;
-  position: ComponentPosition;
-  size: ComponentSize;
+  rect: ComponentRect;
   data: T;
 }
 

@@ -19,11 +19,14 @@ function PanelDrawer() {
     onClick: hideDrawer,
   });
 
-  const handleStop = ({ left, top, width, height }: ShapeData) => {
-    hideDrawer();
-    const componentdata = createComponentData(type, { left, top }, { width, height });
-    dispatch(actions.add(componentdata));
-  };
+  const handleStop = useCallback(
+    (value: ShapeData) => {
+      hideDrawer();
+      const componentdata = createComponentData(type, value);
+      dispatch(actions.add(componentdata));
+    },
+    [dispatch, hideDrawer, type]
+  );
 
   useEffect(() => {
     return drawerEvent.on((value: string) => {
@@ -31,9 +34,6 @@ function PanelDrawer() {
     });
   }, []);
 
-  if (!type) {
-    return null;
-  }
   return (
     <DrawShape
       style={{
@@ -44,6 +44,7 @@ function PanelDrawer() {
         height: '100%',
         zIndex: 20,
         cursor: 'crosshair',
+        display: type ? 'block' : 'none',
       }}
       ref={ref}
       shapeStyle={{ border: '1px solid rgb(211, 208, 0)' }}

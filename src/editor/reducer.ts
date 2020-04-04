@@ -1,5 +1,5 @@
 import { createReducerWithActions, combineReducers } from './reducerHelper';
-import { ComponentData, ComponentId, ComponentPosition, ComponentSize } from '@/types/editor';
+import { ComponentData, ComponentId, ComponentRect } from '@/types/editor';
 import { ShapeData } from '@/components/DrawShape';
 import { randomId } from '@/utils/randomId';
 import { getComponent } from './registerComponents';
@@ -19,27 +19,22 @@ const updateWithFn = <T>(value: T, updater: UpdateFn<T>) => {
 
 const transform2Array = (id: SingleOrArray<ComponentId>) => (Array.isArray(id) ? id : [id]);
 
-export const createComponentData = (
-  type: string,
-  position: ComponentPosition,
-  size?: ComponentSize
-): ComponentData => {
-  const component = getComponent(type);
+export const createComponentData = (type: string, rect: Partial<ComponentRect>): ComponentData => {
+  const { defaultSize } = getComponent(type);
   const id = randomId();
-  size = size || component.defaultSize || { width: 200, height: 100 };
-  return { id, type, position, size, data: {} };
+  const defaultRect = { left: 10, top: 10, width: 200, height: 100 };
+  return { id, type, rect: { ...defaultRect, ...defaultSize, ...rect }, data: {} };
 };
 
 export const cloneComponentData = (
   base: ComponentData,
-  position: Partial<ComponentPosition>
+  rect: Partial<ComponentRect>
 ): ComponentData => {
   const id = randomId();
   return {
     id,
     type: base.type,
-    position: { ...base.position, ...position },
-    size: base.size,
+    rect: { ...base.rect, ...rect },
     data: JSON.parse(JSON.stringify(base.data)),
   };
 };
@@ -48,12 +43,12 @@ let clipboardData: ComponentData[];
 
 export const pasteComponentData = ({ x, y }: { x: number; y: number }) => {
   if (!clipboardData) return [];
-  const minX = Math.min(...clipboardData.map(v => v.position.left));
-  const minY = Math.min(...clipboardData.map(v => v.position.top));
+  const minX = Math.min(...clipboardData.map(v => v.rect.left));
+  const minY = Math.min(...clipboardData.map(v => v.rect.top));
   const diffX = x - minX;
   const diffY = y - minY;
   return clipboardData.map(v => {
-    const position = { left: v.position.left + diffX, top: v.position.top + diffY };
+    const position = { left: v.rect.left + diffX, top: v.rect.top + diffY };
     return cloneComponentData(v, position);
   });
 };
@@ -82,8 +77,7 @@ const getDataHandlers = () => {
 
   const update: DataHandler<{
     id?: SingleOrArray<ComponentId>;
-    position?: { [k in keyof ComponentPosition]?: UpdateFn<number> };
-    size?: { [k in keyof ComponentSize]?: UpdateFn<number> };
+    rect?: { [k in keyof ComponentRect]?: UpdateFn<number> };
     data?: any;
   }> = (state, payload, store) => {
     const { id } = payload;
@@ -91,7 +85,7 @@ const getDataHandlers = () => {
     return state.map(v => {
       if (ids.indexOf(v.id) !== -1) {
         const nextData = { ...v };
-        ['position', 'data', 'size'].forEach((key: 'position' | 'data' | 'size') => {
+        ['rect', 'data'].forEach((key: 'rect' | 'data') => {
           if (payload[key]) {
             const nextValue = { ...nextData[key] };
             Object.keys(payload[key]).forEach(k => {
@@ -150,8 +144,7 @@ const getSelectHandlers = () => {
     const bottom = top + height;
     return store.data
       .filter(v => {
-        const { left: l, top: t } = v.position;
-        const { width: w, height: h } = v.size;
+        const { left: l, top: t, width: w, height: h } = v.rect;
         return left <= l + w && right >= l && top <= t + h && bottom >= t;
       })
       .map(v => v.id);
