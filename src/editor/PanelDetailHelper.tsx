@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input, Switch, Slider } from 'antd';
+import { Input, Switch, InputNumber } from 'antd';
 import ColorPicker from '../components/ColorPicker';
 
 export interface DetailPanelRowProps extends Object {
@@ -40,12 +40,12 @@ export const RowSwitch = ({ prop, title, value, onChange }: DetailPanelRowProps)
   );
 };
 
-export const RowSlider = ({ prop, title, value, onChange }: DetailPanelRowProps) => {
+export const RowNumber = ({ prop, title, value, onChange }: DetailPanelRowProps) => {
   return (
     <div className="pe-detail-panel-row">
       <span>{title}</span>
-      <Slider
-        style={{ width: 100 }}
+      <InputNumber
+        style={{ width: 80 }}
         min={0}
         max={10}
         onChange={v => onChange({ [prop]: v })}
@@ -59,5 +59,5 @@ export const itemMap = {
   input: RowInput,
   color: RowColor,
   switch: RowSwitch,
-  number: RowSlider,
+  number: RowNumber,
 };
