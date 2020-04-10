@@ -5,12 +5,32 @@ body {
 }
 
 #root {
+  display: flex;
   height: 100%;
 }
 
-.ant-layout,
-.ant-layout-sider {
-  background: #fff;
+.pe-left-sider {
+  width: 213px;
+  flex: 0 0 213px;
+  border-right: 1px solid #e8e8e8;
+}
+
+.pe-right-sider {
+  width: 240px;
+  flex: 0 0 240px;
+  border-left: 1px solid #e8e8e8;
+}
+
+.pe-main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.pe-content {
+  position: relative;
+  overflow: auto;
 }
 
 .u-scroll {
@@ -54,7 +74,6 @@ body {
 }
 
 .pe-detail-panel {
-  flex: 0 0 240px;
   .ant-collapse-content-box {
     padding: 0;
   }

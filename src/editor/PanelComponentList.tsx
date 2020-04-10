@@ -6,7 +6,7 @@ const { Panel } = Collapse;
 
 function ComponentList() {
   return (
-    <Collapse defaultActiveKey={['1']}>
+    <Collapse style={{ border: 0 }} defaultActiveKey={['1']}>
       <Panel header="基础组件" key="1">
         <ComponentItem type="button">按钮</ComponentItem>
         <ComponentItem type="input">单行输入</ComponentItem>
