@@ -75,7 +75,8 @@ export function useDraggable<T extends HTMLElement = HTMLDivElement>(props: UseD
     const onMouseMove = rafThrottle((evt: MouseEvent) => {
       if (!dragging) return;
       if (!ref.current) return;
-      const { x, y } = offsetFromParent(evt, ref.current.offsetParent!);
+      if (!ref.current.offsetParent) return;
+      const { x, y } = offsetFromParent(evt, ref.current.offsetParent);
       data.current.deltaX = x - data.current.x;
       data.current.deltaY = y - data.current.y;
       data.current.x = x;

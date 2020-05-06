@@ -19,6 +19,7 @@ function Button(props: ButtonProps) {
     'button-circle': circle,
   });
 
+  // TODO: disabled 在编辑模式的时候不要设置, 设置之后不能响应点击事件
   return (
     <button styleName={className} type="button" disabled={disabled} style={style}>
       {textContent}

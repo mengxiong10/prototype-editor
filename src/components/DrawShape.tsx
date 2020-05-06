@@ -35,11 +35,8 @@ function DrawShape(props: DrawShapeProps, ref: RefObject<HTMLDivElement>) {
 
   const [rect, setRect] = useState({ x1: 0, x2: 0, y1: 0, y2: 0 });
 
-  const handleStart = useCallback(
+  const handleDrawStart = useCallback(
     (evt: React.MouseEvent<HTMLDivElement>, data: DraggableData) => {
-      if (onMouseDown) {
-        onMouseDown(evt);
-      }
       const { target, currentTarget } = evt;
       // 不响应冒泡
       if (target !== currentTarget) {
@@ -49,10 +46,10 @@ function DrawShape(props: DrawShapeProps, ref: RefObject<HTMLDivElement>) {
       setRect({ x1: x, y1: y, x2: x, y2: y });
       return true;
     },
-    [onMouseDown]
+    []
   );
 
-  const handleMove = useCallback(
+  const handleDrawMove = useCallback(
     ({ x, y }: DraggableData) => {
       setRect(prev => {
         const next = { ...prev, x2: x, y2: y };
@@ -65,7 +62,7 @@ function DrawShape(props: DrawShapeProps, ref: RefObject<HTMLDivElement>) {
     [onMove]
   );
 
-  const handleStop = useCallback(() => {
+  const handleDrawStop = useCallback(() => {
     setRect(prev => {
       if (onStop) {
         onStop(getStyle(prev));
@@ -74,12 +71,19 @@ function DrawShape(props: DrawShapeProps, ref: RefObject<HTMLDivElement>) {
     });
   }, [onStop]);
 
-  const { dragging, onMouseDown: handleMouseDown } = useDraggable({
-    onStart: handleStart,
-    onMove: handleMove,
-    onStop: handleStop,
+  const { dragging, onMouseDown: drawMouseDown } = useDraggable({
+    onStart: handleDrawStart,
+    onMove: handleDrawMove,
+    onStop: handleDrawStop,
     ref,
   });
+
+  const handleMouseDown = (evt: React.MouseEvent<HTMLDivElement>) => {
+    if (onMouseDown) {
+      onMouseDown(evt);
+    }
+    drawMouseDown(evt);
+  };
 
   const shapeElement = dragging && (
     <div
