@@ -15,7 +15,7 @@ export interface PanelStage2Props {
   selected: ComponentId[];
 }
 
-function PanelStage2({ data, selected }: PanelStage2Props) {
+function PanelStage({ data, selected }: PanelStage2Props) {
   const dispatch = useEditor();
 
   const contextmenuProps = useContextmenu({ data, selected });
@@ -35,45 +35,41 @@ function PanelStage2({ data, selected }: PanelStage2Props) {
     (evt: React.MouseEvent) => {
       if (evt.target === evt.currentTarget) {
         dispatch(actions.selectClear());
-      } else {
-        const wrapper = (evt.target as Element).closest('.pe-component-wrapper');
-        if (wrapper && wrapper !== evt.target) {
-          const id = (wrapper as HTMLDivElement).dataset.id!;
-          dispatch(actions.select(id));
-        }
       }
     },
     [dispatch]
   );
 
-  const handleDragSelect = (value: ShapeData) => {
+  const handleDragMove = (value: ShapeData) => {
     dispatch(actions.selectArea(value));
   };
 
   return (
     <ContextMenu handle=".ant-dropdown-menu-item" {...contextmenuProps}>
-      <DrawShape
-        ref={stageRef}
-        className="pe-editor-stage"
-        style={{ width: 2000, height: 1000 }}
-        tabIndex={-1}
-        onMouseDown={handleSelect}
-        onMove={handleDragSelect}
-        {...dropProps}
-      >
-        {data.map(item => (
-          <ComponentWrapper
-            key={item.id}
-            id={item.id}
-            rect={item.rect}
-            active={selected.indexOf(item.id) !== -1}
-          >
-            <Component type={item.type} data={item.data} />
-          </ComponentWrapper>
-        ))}
+      <DrawShape onMouseDown={handleSelect} onMove={handleDragMove}>
+        <div
+          ref={stageRef}
+          className="pe-editor-stage"
+          style={{ width: 2000, height: 1000 }}
+          tabIndex={-1}
+          {...dropProps}
+        >
+          {data.map(item => (
+            <ComponentWrapper
+              className="pe-component-wrapper"
+              key={item.id}
+              id={item.id}
+              type={item.type}
+              rect={item.rect}
+              active={selected.indexOf(item.id) !== -1}
+            >
+              <Component type={item.type} data={item.data} />
+            </ComponentWrapper>
+          ))}
+        </div>
       </DrawShape>
     </ContextMenu>
   );
 }
 
-export default PanelStage2;
+export default PanelStage;

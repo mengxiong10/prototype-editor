@@ -64,28 +64,30 @@ function ContextMenu(props: ContextMenuProps) {
     }
   }, [node, position]);
 
-  const menu = ReactDOM.createPortal(
-    <div
-      key="contextmenu"
-      ref={node}
-      className="contextmenu"
-      style={{
-        display: visible ? 'block' : 'none',
-        position: 'fixed',
-        zIndex: 2000,
-        ...position,
-      }}
-      onClick={handleMenuClick}
-    >
-      {overlay}
-    </div>,
-    document.body
+  return (
+    <>
+      {React.cloneElement(children, {
+        onContextMenu: handleContextMenu,
+        key: 'children',
+      })}
+      {ReactDOM.createPortal(
+        <div
+          ref={node}
+          className="contextmenu"
+          style={{
+            display: visible ? 'block' : 'none',
+            position: 'fixed',
+            zIndex: 2000,
+            ...position,
+          }}
+          onClick={handleMenuClick}
+        >
+          {overlay}
+        </div>,
+        document.body
+      )}
+    </>
   );
-
-  return React.cloneElement(children, {
-    onContextMenu: handleContextMenu,
-    children: [...children.props.children, menu],
-  });
 }
 
 export default ContextMenu;

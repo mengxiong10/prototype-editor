@@ -35,21 +35,21 @@ function PanelDrawer() {
   }, []);
 
   return (
-    <DrawShape
-      style={{
-        position: 'absolute',
-        left: 0,
-        top: 0,
-        width: '100%',
-        height: '100%',
-        zIndex: 20,
-        cursor: 'crosshair',
-        display: type ? 'block' : 'none',
-      }}
-      ref={ref}
-      shapeStyle={{ border: '1px solid rgb(211, 208, 0)' }}
-      onStop={handleStop}
-    />
+    <DrawShape shapeStyle={{ border: '1px solid rgb(211, 208, 0)' }} onStop={handleStop}>
+      <div
+        ref={ref}
+        style={{
+          display: type ? 'block' : 'none',
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: 20,
+          cursor: 'crosshair',
+        }}
+      ></div>
+    </DrawShape>
   );
 }
 

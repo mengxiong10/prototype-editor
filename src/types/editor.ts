@@ -19,6 +19,7 @@ export interface ComponentData<T = any> {
 
 export interface ComponentOptions<T = any> {
   component: React.ElementType;
+  wrapperStyle?: React.CSSProperties;
   defaultData: T;
   defaultSize?: { width: number; height: number };
   detailPanel?: React.ElementType | DetailPanelGroup<Extract<keyof T, string>>[];

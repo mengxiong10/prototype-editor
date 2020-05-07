@@ -1,7 +1,7 @@
 $handle-width: 17px;
 $half-handle-width: ($handle-width - 1) / 2;
 
-.drag-resizable {
+.resizable {
   position: absolute;
   outline: 1px dashed #007dfc;
 }
@@ -15,6 +15,7 @@ $half-handle-width: ($handle-width - 1) / 2;
   padding: 4px;
   background-color: #007dfc;
   background-clip: content-box;
+  pointer-events: all;
 }
 
 .resizable-handle-nw {
