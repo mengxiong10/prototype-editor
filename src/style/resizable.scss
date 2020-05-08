@@ -1,0 +1,69 @@
+$handle-width: 17px;
+$half-handle-width: ($handle-width - 1) / 2;
+
+.resizable {
+  position: absolute;
+  outline: 1px dashed #007dfc;
+}
+
+.resizable-handle {
+  position: absolute;
+  width: $handle-width;
+  height: $handle-width;
+  box-sizing: border-box;
+  border-radius: 50%;
+  padding: 4px;
+  background-color: #007dfc;
+  background-clip: content-box;
+  pointer-events: all;
+}
+
+.resizable-handle-nw {
+  top: -$half-handle-width;
+  left: -$half-handle-width;
+  cursor: nwse-resize;
+}
+
+.resizable-handle-n {
+  top: -$half-handle-width;
+  left: 50%;
+  margin-left: -$half-handle-width;
+  cursor: ns-resize;
+}
+
+.resizable-handle-ne {
+  top: -$half-handle-width;
+  right: -$half-handle-width;
+  cursor: nesw-resize;
+}
+
+.resizable-handle-e {
+  right: -$half-handle-width;
+  top: 50%;
+  margin-top: -$half-handle-width;
+  cursor: ew-resize;
+}
+
+.resizable-handle-se {
+  right: -$half-handle-width;
+  bottom: -$half-handle-width;
+  cursor: nwse-resize;
+}
+.resizable-handle-s {
+  bottom: -$half-handle-width;
+  left: 50%;
+  margin-left: -$half-handle-width;
+  cursor: ns-resize;
+}
+
+.resizable-handle-sw {
+  left: -$half-handle-width;
+  bottom: -$half-handle-width;
+  cursor: nesw-resize;
+}
+.resizable-handle-w {
+  left: -$half-handle-width;
+  top: 50%;
+  margin-top: -$half-handle-width;
+  cursor: ew-resize;
+}

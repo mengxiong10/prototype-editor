@@ -21,8 +21,9 @@ export class TypedEvent<T = void> {
   };
 
   public off = (listener: Listener<T>) => {
-    const callbackIndex = this.listeners.indexOf(listener);
-    if (callbackIndex !== -1) this.listeners.splice(callbackIndex, 1);
+    this.listeners = this.listeners.filter(v => {
+      return v !== listener;
+    });
   };
 
   public emit = (event: T) => {

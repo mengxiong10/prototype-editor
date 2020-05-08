@@ -16,4 +16,4 @@ function ComponentList() {
   );
 }
 
-export default ComponentList;
+export default React.memo(ComponentList);

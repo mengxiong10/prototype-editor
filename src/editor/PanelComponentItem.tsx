@@ -19,4 +19,4 @@ function ComponentItem({ type, children }: ComponentItemProps) {
   );
 }
 
-export default React.memo(ComponentItem);
+export default ComponentItem;

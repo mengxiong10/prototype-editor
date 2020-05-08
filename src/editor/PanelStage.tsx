@@ -8,7 +8,6 @@ import { actions, createComponentData } from './reducer';
 import { useDrop } from '@/hooks/useDrop';
 import { useShortcuts } from './useShortcuts';
 import ComponentWrapper from './ComponentWrapper';
-import Component from './Component';
 
 export interface PanelStage2Props {
   data: ComponentData[];
@@ -55,16 +54,7 @@ function PanelStage({ data, selected }: PanelStage2Props) {
           {...dropProps}
         >
           {data.map(item => (
-            <ComponentWrapper
-              className="pe-component-wrapper"
-              key={item.id}
-              id={item.id}
-              type={item.type}
-              rect={item.rect}
-              active={selected.indexOf(item.id) !== -1}
-            >
-              <Component type={item.type} data={item.data} />
-            </ComponentWrapper>
+            <ComponentWrapper key={item.id} item={item} active={selected.indexOf(item.id) !== -1} />
           ))}
         </div>
       </DrawShape>
