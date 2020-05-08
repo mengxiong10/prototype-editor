@@ -1,4 +1,5 @@
 import shallowEqual from 'shallowequal';
+import { isEqualArray } from '@/utils';
 /**
  * *************
  * handlers 负责处理集体逻辑, 属性名就是type, 方法就是 处理函数
@@ -74,6 +75,16 @@ export function combineReducers<S extends { [k: string]: any }>(reducers: Reduce
       return state;
     }
 
+    return nextState;
+  };
+}
+
+export function arrayEnhancer(reducer: ReturnReducer): ReturnReducer {
+  return (state, ...args) => {
+    const nextState = reducer(state, ...args);
+    if (isEqualArray(nextState, state)) {
+      return state;
+    }
     return nextState;
   };
 }

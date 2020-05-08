@@ -6,6 +6,7 @@ export interface ComponentProps {
   data: any;
 }
 
+// 废弃
 function Component({ type, data }: ComponentProps) {
   const componentOption = getComponent(type);
 

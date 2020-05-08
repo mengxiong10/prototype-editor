@@ -1,4 +1,4 @@
-import { createReducerWithActions, combineReducers } from './reducerHelper';
+import { createReducerWithActions, combineReducers, arrayEnhancer } from './reducerHelper';
 import { ComponentData, ComponentId, ComponentRect } from '@/types/editor';
 import { ShapeData } from '@/components/DrawShape';
 import { randomId } from '@/utils/randomId';
@@ -163,5 +163,5 @@ const selectedRA = createReducerWithActions(getSelectHandlers());
 export const actions = { ...selectedRA.actions, ...dataRA.actions };
 export const reducer = combineReducers({
   data: dataRA.reducer,
-  selected: selectedRA.reducer,
+  selected: arrayEnhancer(selectedRA.reducer),
 });
