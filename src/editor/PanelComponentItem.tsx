@@ -1,5 +1,5 @@
 import React from 'react';
-import { FileAddOutlined } from '@ant-design/icons';
+import FileAddOutlined from '@ant-design/icons/FileAddOutlined';
 
 export interface ComponentItemProps {
   children: React.ReactNode;

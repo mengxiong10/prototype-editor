@@ -1,11 +1,9 @@
 import React from 'react';
-import {
-  OrderedListOutlined,
-  UnorderedListOutlined,
-  BoldOutlined,
-  ItalicOutlined,
-  UnderlineOutlined,
-} from '@ant-design/icons';
+import OrderedListOutlined from '@ant-design/icons/OrderedListOutlined';
+import UnorderedListOutlined from '@ant-design/icons/UnorderedListOutlined';
+import BoldOutlined from '@ant-design/icons/BoldOutlined';
+import ItalicOutlined from '@ant-design/icons/ItalicOutlined';
+import UnderlineOutlined from '@ant-design/icons/UnderlineOutlined';
 import { EditorState } from 'draft-js';
 
 const BLOCK_TYPES = [

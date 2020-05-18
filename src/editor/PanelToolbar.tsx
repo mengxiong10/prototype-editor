@@ -1,7 +1,7 @@
 import React, { HTMLAttributes } from 'react';
 import { RowFlex } from 'my-react-common';
 import { Divider } from 'antd';
-import { CommentOutlined } from '@ant-design/icons';
+import CommentOutlined from '@ant-design/icons/CommentOutlined';
 import { drawerEvent } from './PanelDrawer';
 
 export interface ButtonIconProps extends HTMLAttributes<HTMLDivElement> {
