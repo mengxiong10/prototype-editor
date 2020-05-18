@@ -19,11 +19,15 @@ const updateWithFn = <T>(value: T, updater: UpdateFn<T>) => {
 
 const transform2Array = (id: SingleOrArray<ComponentId>) => (Array.isArray(id) ? id : [id]);
 
-export const createComponentData = (type: string, rect: Partial<ComponentRect>): ComponentData => {
+export const createComponentData = (
+  type: string,
+  rect: Partial<ComponentRect>,
+  association?: ComponentId
+): ComponentData => {
   const { defaultSize } = getComponent(type);
   const id = randomId();
   const defaultRect = { left: 10, top: 10, width: 200, height: 100 };
-  return { id, type, rect: { ...defaultRect, ...defaultSize, ...rect }, data: {} };
+  return { id, type, rect: { ...defaultRect, ...defaultSize, ...rect }, data: {}, association };
 };
 
 export const cloneComponentData = (

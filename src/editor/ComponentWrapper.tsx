@@ -169,6 +169,7 @@ function ComponentWrapper({ active, item }: ComponentWrapperProps) {
   };
   const classNames = classnames('pe-component-wrapper', {
     resizable: active,
+    active,
   });
 
   const resizeHandles = active ? defaultResizeHandles : [];

@@ -2,6 +2,7 @@ import React, { HTMLAttributes } from 'react';
 import { RowFlex } from 'my-react-common';
 import { Divider } from 'antd';
 import CommentOutlined from '@ant-design/icons/CommentOutlined';
+import BorderOutlined from '@ant-design/icons/BorderOutlined';
 import { drawingEvent } from './event';
 
 export interface ButtonIconProps extends HTMLAttributes<HTMLDivElement> {
@@ -10,9 +11,9 @@ export interface ButtonIconProps extends HTMLAttributes<HTMLDivElement> {
 
 const ButtonIcon = ({ children, ...rest }: ButtonIconProps) => {
   return (
-    <div style={{ cursor: 'pointer' }} {...rest}>
+    <RowFlex align="middle" style={{ cursor: 'pointer' }} {...rest}>
       {children}
-    </div>
+    </RowFlex>
   );
 };
 
@@ -23,13 +24,22 @@ function PanelToolbar() {
     <RowFlex
       id={id}
       align="middle"
-      style={{ height: 40, flex: '0 0 40px', padding: '0 16px', borderBottom: '1px solid #e8e8e8' }}
+      style={{
+        height: 40,
+        flex: '0 0 40px',
+        padding: '0 16px',
+        lineHeight: 1,
+        borderBottom: '1px solid #e8e8e8',
+      }}
     >
-      <ButtonIcon onClick={() => drawingEvent.emit('rect')}>方框</ButtonIcon>
+      <ButtonIcon onClick={() => drawingEvent.emit('rect')}>
+        <BorderOutlined />
+        <span style={{ marginLeft: 4 }}>方框</span>
+      </ButtonIcon>
       <Divider type="vertical" />
-      <ButtonIcon>
+      <ButtonIcon onClick={() => drawingEvent.emit('comment')}>
         <CommentOutlined />
-        <span style={{ marginLeft: 8 }}>标注</span>
+        <span style={{ marginLeft: 4 }}>标注</span>
       </ButtonIcon>
     </RowFlex>
   );

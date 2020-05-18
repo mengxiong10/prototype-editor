@@ -15,6 +15,7 @@ export interface ComponentData<T = any> {
   type: string;
   rect: ComponentRect;
   data: T;
+  association?: ComponentId;
 }
 
 export interface ComponentOptions<T = any> {

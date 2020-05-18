@@ -20,8 +20,17 @@ function PanelDrawing() {
   const handleStop = useCallback(
     (value: ShapeData) => {
       hideDrawer();
-      const componentdata = createComponentData(type, value);
-      dispatch(actions.add(componentdata));
+      if (type === 'comment') {
+        const richData = createComponentData('rich', {
+          left: value.left + value.width + 200,
+          top: value.top,
+        });
+        const rect = createComponentData('rect', value, richData.id);
+        dispatch(actions.add([richData, rect]));
+      } else {
+        const componentdata = createComponentData(type, value);
+        dispatch(actions.add(componentdata));
+      }
     },
     [dispatch, hideDrawer, type]
   );

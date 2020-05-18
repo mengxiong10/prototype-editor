@@ -2,14 +2,14 @@ import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { Editor, EditorState, RichUtils, Modifier } from 'draft-js';
 import { InlineStyleControls, BlockStyleControls } from './StyleControls';
 import 'draft-js/dist/Draft.css';
-import './Comment.module.scss';
+import './RichEditor.module.scss';
 
-export interface CommentProps {
+export interface RichEditorProps {
   value: EditorState;
   backgroundColor: string;
 }
 
-function Comment({ value, backgroundColor }: CommentProps) {
+function RichEditor({ value, backgroundColor }: RichEditorProps) {
   const [editorState, changeEditorState] = useState(value);
 
   const editor = useRef<Editor>(null);
@@ -60,7 +60,7 @@ function Comment({ value, backgroundColor }: CommentProps) {
   }, [focus]);
 
   return (
-    <div style={{ backgroundColor, display: 'flex', flexDirection: 'column' }} styleName="comment">
+    <div style={{ backgroundColor, display: 'flex' }} styleName="rich-editor">
       <div
         className="js-drag-cancel u-scroll"
         style={{ flex: 1, overflow: 'auto', padding: 5 }}
@@ -73,16 +73,7 @@ function Comment({ value, backgroundColor }: CommentProps) {
           ref={editor}
         />
       </div>
-      <footer
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          height: 40,
-          padding: 5,
-          flex: '0 0 40px',
-          borderTop: '1px solid #eee',
-        }}
-      >
+      <footer styleName="rich-editor-footer">
         <InlineStyleControls editorState={editorState} onToggle={toggleInlineStyle} />
         <BlockStyleControls editorState={editorState} onToggle={toggleBlockType} />
       </footer>
@@ -90,4 +81,4 @@ function Comment({ value, backgroundColor }: CommentProps) {
   );
 }
 
-export default Comment;
+export default RichEditor;

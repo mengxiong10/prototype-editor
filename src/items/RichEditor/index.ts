@@ -1,9 +1,9 @@
 import { EditorState } from 'draft-js';
-import Comment, { CommentProps } from './Comment';
+import RichEditor, { RichEditorProps } from './RichEditor';
 import { ComponentOptions } from '../../types/editor';
 
-export const commentOptions: ComponentOptions<CommentProps> = {
-  component: Comment,
+export const richEditorOptions: ComponentOptions<RichEditorProps> = {
+  component: RichEditor,
   defaultSize: {
     width: 250,
     height: 180,

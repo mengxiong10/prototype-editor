@@ -9,10 +9,10 @@ export const buttonOptions: ComponentOptions<ButtonProps> = {
   },
   defaultData: {
     circle: false,
-    backgroundColor: '#fff',
-    borderColor: '#ccc',
+    backgroundColor: '#1890ff',
+    borderColor: '#1890ff',
     borderWidth: 1,
-    color: '#333',
+    color: '#fff',
     textContent: '按钮',
     disabled: false,
   },
