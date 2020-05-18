@@ -2,7 +2,7 @@ import React, { useReducer } from 'react';
 import { EditorProvider } from './Context';
 import PanelComponentList from './PanelComponentList';
 import PanelStage from './PanelStage';
-import PanelDrawer from './PanelDrawer';
+import PanelDrawing from './PanelDrawing';
 import PanelDetailWrapper from './PanelDetailWrapper';
 import PanelToolbar from './PanelToolbar';
 import { reducer } from './reducer';
@@ -24,7 +24,7 @@ function Editor() {
         <PanelToolbar />
         <div className="pe-content u-scroll">
           <PanelStage data={data} selected={selected} />
-          <PanelDrawer />
+          <PanelDrawing />
         </div>
       </main>
       <aside className="pe-right-sider">

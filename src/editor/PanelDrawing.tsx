@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import DrawShape, { ShapeData } from '@/components/DrawShape';
-import { TypedEvent } from '@/utils/typedEvent';
 import { useEditor } from './Context';
 import { createComponentData, actions } from './reducer';
+import { drawingEvent } from './event';
 import { useClickOutside } from '@/hooks/useClickOutside';
 
-export const drawerEvent = new TypedEvent<string>();
-
-function PanelDrawer() {
+function PanelDrawing() {
   const dispatch = useEditor();
   const [type, setType] = useState('');
 
@@ -29,7 +27,7 @@ function PanelDrawer() {
   );
 
   useEffect(() => {
-    return drawerEvent.on((value: string) => {
+    return drawingEvent.on((value: string) => {
       setType(value);
     });
   }, []);
@@ -53,4 +51,4 @@ function PanelDrawer() {
   );
 }
 
-export default React.memo(PanelDrawer);
+export default React.memo(PanelDrawing);
