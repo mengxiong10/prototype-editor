@@ -26,7 +26,8 @@ function PanelDrawing() {
           top: value.top,
         });
         const rect = createComponentData('rect', value, richData.id);
-        dispatch(actions.add([richData, rect]));
+        dispatch(actions.add(rect));
+        dispatch(actions.add(richData));
       } else {
         const componentdata = createComponentData(type, value);
         dispatch(actions.add(componentdata));

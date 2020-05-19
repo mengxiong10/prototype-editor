@@ -144,7 +144,8 @@ componentWrapper 组件
 
 #### undo/redo
 
-需要有 debounce, 比如输入框的更新,等到失去焦点才记录
+需要有 debounce, 比如输入框的更新,等到失去焦点才记录 ?
+输入框 undo/redo 事件自带
 
 #### 疑难组件
 
