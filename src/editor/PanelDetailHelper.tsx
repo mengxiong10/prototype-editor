@@ -2,6 +2,8 @@ import React from 'react';
 import { Input, Switch, InputNumber } from 'antd';
 import ColorPicker from '../components/ColorPicker';
 
+const { TextArea } = Input;
+
 export interface DetailPanelRowProps extends Object {
   title: string;
   prop: string;
@@ -14,7 +16,20 @@ export const RowInput = ({ prop, title, value, onChange }: DetailPanelRowProps) 
     <div className="pe-detail-panel-row">
       <span>{title}</span>
       <Input
-        style={{ width: 100 }}
+        style={{ width: 120 }}
+        value={value}
+        onChange={evt => onChange({ [prop]: evt.target.value })}
+      />
+    </div>
+  );
+};
+
+export const RowTextArea = ({ prop, title, value, onChange }: DetailPanelRowProps) => {
+  return (
+    <div className="pe-detail-panel-row">
+      <span>{title}</span>
+      <TextArea
+        style={{ width: 120 }}
         value={value}
         onChange={evt => onChange({ [prop]: evt.target.value })}
       />
@@ -57,6 +72,7 @@ export const RowNumber = ({ prop, title, value, onChange }: DetailPanelRowProps)
 
 export const itemMap = {
   input: RowInput,
+  textarea: RowTextArea,
   color: RowColor,
   switch: RowSwitch,
   number: RowNumber,

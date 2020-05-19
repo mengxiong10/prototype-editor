@@ -1,17 +1,20 @@
 import React from 'react';
 import { Collapse } from 'antd';
 import ComponentItem from './PanelComponentItem';
+import { shortcuts } from './registerComponents';
 
 const { Panel } = Collapse;
 
 function ComponentList() {
   return (
-    <Collapse style={{ border: 0 }} defaultActiveKey={['1']}>
-      <Panel header="基础组件" key="1">
-        <ComponentItem type="button">按钮</ComponentItem>
-        <ComponentItem type="input">单行输入</ComponentItem>
-        <ComponentItem type="rich">富文本</ComponentItem>
-      </Panel>
+    <Collapse style={{ border: 0 }} defaultActiveKey={[shortcuts[0].key]}>
+      {shortcuts.map(item => (
+        <Panel header={item.title} key={item.key}>
+          {item.children.map(v => (
+            <ComponentItem type={v.type}>{v.name}</ComponentItem>
+          ))}
+        </Panel>
+      ))}
     </Collapse>
   );
 }
