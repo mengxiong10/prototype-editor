@@ -11,7 +11,9 @@ function ComponentList() {
       {shortcuts.map(item => (
         <Panel header={item.title} key={item.key}>
           {item.children.map(v => (
-            <ComponentItem type={v.type}>{v.name}</ComponentItem>
+            <ComponentItem key={v.type} type={v.type}>
+              {v.name}
+            </ComponentItem>
           ))}
         </Panel>
       ))}
