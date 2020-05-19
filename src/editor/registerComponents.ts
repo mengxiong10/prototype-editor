@@ -1,10 +1,5 @@
 import NotFound from './NotFound';
 import { ComponentOptions } from '@/types/editor';
-import { buttonOptions } from '@/items/Button';
-import { inputOptions } from '@/items/Input';
-import { richEditorOptions } from '@/items/RichEditor';
-import { rectOptions } from '@/items/Rect';
-import { textareaOptions } from '@/items/TextArea';
 
 interface Shortcut {
   name: string;
@@ -14,15 +9,13 @@ interface Shortcut {
 /**
  * 左侧组件的显示
  */
-export const shortcuts: { title: string; key: string; children: Shortcut[] }[] = [
-  { title: '基础组件', key: 'base', children: [] },
-];
+export const shortcuts: { title: string; key: string; children: Shortcut[] }[] = [];
 
 const components: {
   [key: string]: ComponentOptions;
 } = {};
 
-function registerComponent(
+export function registerComponent(
   type: string,
   options: ComponentOptions,
   shortcut?: { name: string; group: string }
@@ -30,8 +23,12 @@ function registerComponent(
   components[type] = options;
   if (shortcut) {
     const { name, group } = shortcut;
-    const item = shortcuts.find(v => v.key === group);
-    if (item) {
+    let item = shortcuts.find(v => v.title === group);
+    if (!item) {
+      item = { title: group, key: String(shortcuts.length), children: [] };
+      shortcuts.push(item);
+    }
+    if (item.children.every(v => v.type !== type)) {
       item.children.push({ name, type });
     }
   }
@@ -46,9 +43,3 @@ export function getComponent(type: string) {
     }
   );
 }
-
-registerComponent('button', buttonOptions, { group: 'base', name: '按钮' });
-registerComponent('input', inputOptions, { group: 'base', name: '单行输入' });
-registerComponent('textarea', textareaOptions, { group: 'base', name: '多行输入' });
-registerComponent('rich', richEditorOptions, { group: 'base', name: '富文本' });
-registerComponent('rect', rectOptions);

@@ -3,6 +3,7 @@ import zh from 'antd/lib/locale-provider/zh_CN';
 import React from 'react';
 import { hot } from 'react-hot-loader/root';
 import Editor from './editor';
+import './items';
 
 const getPopupContainer = (dom?: HTMLElement) => {
   return ((dom && dom.closest('.ant-modal')) || document.body) as HTMLElement;
