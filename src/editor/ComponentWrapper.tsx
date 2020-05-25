@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { usePrevious } from 'my-react-common';
 import classnames from 'classnames';
@@ -7,6 +7,7 @@ import { ComponentRect, ComponentData } from '@/types/editor';
 import { useEditor } from './Context';
 import { actions } from './reducer';
 import { getComponent } from './registerComponents';
+import { useComponent } from './useComponent';
 import { componentDragEvent, componentDragStopEvent } from './event';
 
 export interface ComponentWrapperProps {
@@ -153,14 +154,7 @@ function ComponentWrapper({ active, item }: ComponentWrapperProps) {
     return undefined;
   }, [active, dispatch, id, innerRect]);
 
-  const component = useMemo(() => {
-    const componentOption = getComponent(type);
-
-    return React.createElement(componentOption.component, {
-      ...componentOption.defaultData,
-      ...componentData,
-    });
-  }, [componentData, type]);
+  const component = useComponent({ type, componentData });
 
   const style: React.CSSProperties = {
     ...getComponent(type).wrapperStyle,
