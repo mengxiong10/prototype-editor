@@ -92,7 +92,7 @@ body {
 
 .pe-component-wrapper {
   &.active {
-    outline: 1px dashed #007dfc;
+    outline: 1px solid #007dfc;
   }
   & > :first-child {
     display: block;

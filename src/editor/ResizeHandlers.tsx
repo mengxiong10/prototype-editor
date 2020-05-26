@@ -111,7 +111,7 @@ function ResizeHandlers({ data, selected }: ResizeHandlersProps) {
           top: outerTop,
           width: outerWidth,
           height: outerHeight,
-          outline: '1px dashed #007dfc',
+          outline: '1px solid #007dfc',
         }}
       >
         {handlers.map(d => (
