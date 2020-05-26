@@ -9,6 +9,7 @@ import { useDrop } from '@/hooks/useDrop';
 import { useShortcuts } from './useShortcuts';
 import ComponentWrapper from './ComponentWrapper';
 import PanelCanvas from './PanelCanvas';
+import ResizeHandlers from './ResizeHandlers';
 
 export interface PanelStage2Props {
   data: ComponentData[];
@@ -58,6 +59,7 @@ function PanelStage({ data, selected }: PanelStage2Props) {
             <ComponentWrapper key={item.id} item={item} active={selected.indexOf(item.id) !== -1} />
           ))}
           <PanelCanvas width={2000} height={1000} data={data} />
+          {selected.length > 0 && <ResizeHandlers data={data} selected={selected} />}
         </div>
       </DrawShape>
     </ContextMenu>

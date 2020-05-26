@@ -15,7 +15,7 @@ $half-handle-width: ($handle-width - 1) / 2;
   padding: 4px;
   background-color: #007dfc;
   background-clip: content-box;
-  pointer-events: all;
+  pointer-events: auto;
 }
 
 .resizable-handle-nw {

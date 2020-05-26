@@ -90,10 +90,15 @@ body {
   }
 }
 
-.pe-component-wrapper > :first-child {
-  display: block;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  white-space: nowrap;
+.pe-component-wrapper {
+  &.active {
+    outline: 1px dashed #007dfc;
+  }
+  & > :first-child {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+  }
 }

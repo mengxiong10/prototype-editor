@@ -27,6 +27,7 @@ export const createComponentData = (
   const { defaultSize } = getComponent(type);
   const id = randomId();
   const defaultRect = { left: 10, top: 10, width: 200, height: 100 };
+
   return { id, type, rect: { ...defaultRect, ...defaultSize, ...rect }, data: {}, association };
 };
 
@@ -81,7 +82,7 @@ const getDataHandlers = () => {
 
   const update: DataHandler<{
     id?: SingleOrArray<ComponentId>;
-    rect?: { [k in keyof ComponentRect]?: UpdateFn<number> };
+    rect?: (prev: ComponentRect) => Partial<ComponentRect> | Partial<ComponentRect>;
     data?: any;
   }> = (state, payload, store) => {
     const { id } = payload;
@@ -92,10 +93,7 @@ const getDataHandlers = () => {
         ['rect', 'data'].forEach((key: 'rect' | 'data') => {
           if (payload[key]) {
             const nextValue = { ...nextData[key] };
-            Object.keys(payload[key]).forEach(k => {
-              nextValue[k] = updateWithFn(nextValue[k], payload[key][k]!);
-            });
-            nextData[key] = nextValue;
+            nextData[key] = { ...nextValue, ...updateWithFn(nextValue, payload[key]) };
           }
         });
         return nextData;
@@ -144,12 +142,10 @@ const getSelectHandlers = () => {
 
   const selectArea: SelectHandler<ShapeData> = (state, payload, store) => {
     const { left, top, width, height } = payload;
-    const right = left + width;
-    const bottom = top + height;
     return store.data
       .filter(v => {
         const { left: l, top: t, width: w, height: h } = v.rect;
-        return left <= l + w && right >= l && top <= t + h && bottom >= t;
+        return left <= l && top <= t && left + width >= l + w && top + height >= t + h;
       })
       .map(v => v.id);
   };
