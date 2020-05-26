@@ -1,47 +1,55 @@
-import React, { useState, useCallback, useLayoutEffect } from 'react';
+import React, { useLayoutEffect } from 'react';
 import ReactDOM from 'react-dom';
+import { Menu } from 'antd';
+import { ClickParam } from 'antd/lib/menu';
 import { useClickOutside } from '@/hooks/useClickOutside';
+import 'antd/es/dropdown/style/index.css';
+
+export interface ContextMenuItem {
+  type?: 'Item';
+  title: React.ReactNode;
+  shortcut?: string;
+  disabled?: boolean;
+  key: string;
+  handler: () => any;
+}
+
+export interface ContextMenuDivider {
+  type: 'Divider';
+}
+
+export type ContextMenuOption = ContextMenuItem | ContextMenuDivider;
+
+export interface MenuPosition {
+  left: number;
+  top: number;
+}
 
 export interface ContextMenuProps {
-  children: React.ReactElement;
-  overlay: React.ReactNode;
-  handle?: string;
-  onOpen?: (evt: React.MouseEvent) => void;
+  position: MenuPosition;
+  onChangePosition: (v: MenuPosition) => void;
+  getMenu: () => ContextMenuOption[];
+  onClose: () => void;
 }
 
 function ContextMenu(props: ContextMenuProps) {
-  const { children, overlay, handle, onOpen } = props;
-  const [position, setPosition] = useState({ left: 0, top: 0 });
-  const [visible, setVisible] = useState(false);
+  const { getMenu, onClose, position, onChangePosition } = props;
 
-  const hideMenu = useCallback(() => {
-    setVisible(false);
-  }, []);
+  const menu = getMenu();
 
-  const node = useClickOutside({ onClick: hideMenu });
+  const node = useClickOutside({ onClick: onClose });
 
-  const handleContextMenu = useCallback(
-    (evt: React.MouseEvent) => {
-      evt.preventDefault();
-      evt.stopPropagation();
-      if (onOpen) {
-        onOpen(evt);
-      }
-      const { clientX, clientY } = evt;
-      setPosition({ left: clientX, top: clientY });
-      setVisible(true);
-    },
-    [onOpen]
-  );
-
-  const handleMenuClick = (evt: React.MouseEvent) => {
-    const { target } = evt;
-    if (!handle || (target as Element).matches(handle)) {
-      setVisible(false);
+  const handleMenuClick = ({ key }: ClickParam) => {
+    const item = menu.find((o: ContextMenuItem) => o.key === key) as ContextMenuItem;
+    if (item && item.handler) {
+      Promise.resolve(item.handler()).then(() => {
+        onClose();
+      });
     }
   };
 
   useLayoutEffect(() => {
+    // 检查position的位置是否超过屏幕, 重新定位
     const el = node.current!;
     const rect = el.getBoundingClientRect();
     const { width, height } = rect;
@@ -60,33 +68,38 @@ function ContextMenu(props: ContextMenuProps) {
       left = width < innerWidth ? (innerWidth - width) / 2 : 0;
     }
     if (top !== position.top || left !== position.left) {
-      setPosition({ top, left });
+      onChangePosition({ top, left });
     }
-  }, [node, position]);
+  }, [node, onChangePosition, position]);
 
-  return (
-    <>
-      {React.cloneElement(children, {
-        onContextMenu: handleContextMenu,
-        key: 'children',
-      })}
-      {ReactDOM.createPortal(
-        <div
-          ref={node}
-          className="contextmenu"
-          style={{
-            display: visible ? 'block' : 'none',
-            position: 'fixed',
-            zIndex: 2000,
-            ...position,
-          }}
-          onClick={handleMenuClick}
-        >
-          {overlay}
-        </div>,
-        document.body
-      )}
-    </>
+  return ReactDOM.createPortal(
+    <div
+      ref={node}
+      style={{
+        position: 'fixed',
+        zIndex: 2000,
+        ...position,
+      }}
+    >
+      <Menu prefixCls="ant-dropdown-menu" style={{ minWidth: 180 }} onClick={handleMenuClick}>
+        {menu.map((item, i) => {
+          if (item.type === 'Divider') {
+            return <Menu.Divider key={String(i)} />;
+          }
+          return (
+            <Menu.Item
+              style={{ display: 'flex', justifyContent: 'space-between' }}
+              key={item.key}
+              disabled={item.disabled}
+            >
+              <span>{item.title}</span>
+              {item.shortcut !== undefined && <span>{item.shortcut}</span>}
+            </Menu.Item>
+          );
+        })}
+      </Menu>
+    </div>,
+    document.body
   );
 }
 

@@ -1,20 +1,7 @@
 import React, { useRef } from 'react';
-import { Menu } from 'antd';
-import { ClickParam } from 'antd/lib/menu';
+import { ContextMenuOption } from '@/components/ContextMenu';
 import { useEditor } from './Context';
-import { actions, pasteComponentData, Store } from './reducer';
-import 'antd/es/dropdown/style/index.css';
-
-type ContextMenuOption = { title?: string; key: string; type?: 'Item' | 'Divider' };
-
-const componentContextMenu: ContextMenuOption[] = [
-  { title: '删除', key: 'del' },
-  { type: 'Divider', key: 'd1' },
-  { title: '剪切', key: 'cut' },
-  { title: '复制', key: 'copy' },
-];
-
-const stageContextMenu: ContextMenuOption[] = [{ title: '粘贴', key: 'paste' }];
+import { actions, pasteComponentData, Store, clipboard } from './reducer';
 
 export function useContextmenu({ selected }: Store) {
   const dispatch = useEditor();
@@ -27,36 +14,41 @@ export function useContextmenu({ selected }: Store) {
     position.current.y = evt.clientY - rect.top;
   };
 
-  const handleMenuClick = ({ key }: ClickParam) => {
-    switch (key) {
-      case 'del':
-        dispatch(actions.del());
-        break;
-      case 'cut':
-        dispatch(actions.cut());
-        break;
-      case 'copy':
-        dispatch(actions.copy());
-        break;
-      case 'paste':
-        dispatch(actions.add(pasteComponentData(position.current)));
-        break;
-      default:
-        throw new TypeError(`invalid arguments ${key}`);
-    }
+  const getMenu = () => {
+    const componentContextMenu: ContextMenuOption[] = [
+      {
+        title: '删除',
+        shortcut: 'Del',
+        key: 'del',
+        handler: () => dispatch(actions.del()),
+      },
+      { type: 'Divider' },
+      {
+        title: '剪切',
+        shortcut: 'Ctrl+X',
+        key: 'cut',
+        handler: () => dispatch(actions.cut()),
+      },
+      {
+        title: '复制',
+        shortcut: 'Ctrl+C',
+        key: 'copy',
+        handler: () => dispatch(actions.copy()),
+      },
+    ];
+
+    const stageContextMenu: ContextMenuOption[] = [
+      {
+        title: '粘贴',
+        shortcut: 'Ctrl+V',
+        disabled: clipboard.data.length === 0,
+        key: 'paste',
+        handler: () => dispatch(actions.add(pasteComponentData(position.current))),
+      },
+    ];
+
+    return selected.length ? componentContextMenu : stageContextMenu;
   };
 
-  const options = selected.length ? componentContextMenu : stageContextMenu;
-  const overlay = (
-    <Menu prefixCls="ant-dropdown-menu" onClick={handleMenuClick}>
-      {options.map(item => {
-        if (item.type === 'Divider') {
-          return <Menu.Divider key={item.key} />;
-        }
-        return <Menu.Item key={item.key}>{item.title}</Menu.Item>;
-      })}
-    </Menu>
-  );
-
-  return { overlay, onOpen };
+  return { getMenu, onOpen };
 }

@@ -1,5 +1,5 @@
 import React, { useCallback, useRef } from 'react';
-import ContextMenu from '@/components/ContextMenu';
+import ContextMenuTrigger from '@/components/ContextMenuTrigger';
 import DrawShape, { ShapeData } from '@/components/DrawShape';
 import { useEditor } from './Context';
 import { ComponentData, ComponentId } from '@/types/editor';
@@ -18,6 +18,8 @@ export interface PanelStage2Props {
 
 function PanelStage({ data, selected }: PanelStage2Props) {
   const dispatch = useEditor();
+
+  const selectedData = data.filter(v => selected.indexOf(v.id) !== -1);
 
   const contextmenuProps = useContextmenu({ data, selected });
 
@@ -46,7 +48,7 @@ function PanelStage({ data, selected }: PanelStage2Props) {
   };
 
   return (
-    <ContextMenu handle=".ant-dropdown-menu-item" {...contextmenuProps}>
+    <ContextMenuTrigger {...contextmenuProps}>
       <DrawShape onMouseDown={handleSelect} onMove={handleDragMove}>
         <div
           ref={stageRef}
@@ -59,10 +61,10 @@ function PanelStage({ data, selected }: PanelStage2Props) {
             <ComponentWrapper key={item.id} item={item} active={selected.indexOf(item.id) !== -1} />
           ))}
           <PanelCanvas width={2000} height={1000} data={data} />
-          {selected.length > 0 && <ResizeHandlers data={data} selected={selected} />}
+          {selectedData.length > 0 && <ResizeHandlers selectedData={selectedData} />}
         </div>
       </DrawShape>
-    </ContextMenu>
+    </ContextMenuTrigger>
   );
 }
 

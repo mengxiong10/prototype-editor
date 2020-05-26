@@ -44,15 +44,19 @@ export const cloneComponentData = (
   };
 };
 
-let clipboardData: ComponentData[];
+export const clipboard: {
+  data: ComponentData[];
+} = {
+  data: [],
+};
 
 export const pasteComponentData = ({ x, y }: { x: number; y: number }) => {
-  if (!clipboardData) return [];
-  const minX = Math.min(...clipboardData.map(v => v.rect.left));
-  const minY = Math.min(...clipboardData.map(v => v.rect.top));
+  if (clipboard.data.length === 0) return [];
+  const minX = Math.min(...clipboard.data.map(v => v.rect.left));
+  const minY = Math.min(...clipboard.data.map(v => v.rect.top));
   const diffX = x - minX;
   const diffY = y - minY;
-  return clipboardData.map(v => {
+  return clipboard.data.map(v => {
     const position = { left: v.rect.left + diffX, top: v.rect.top + diffY };
     return cloneComponentData(v, position);
   });
@@ -71,7 +75,7 @@ const getDataHandlers = () => {
   };
 
   const copy: DataHandler = (state, payload, { data, selected }) => {
-    clipboardData = data.filter(v => selected.indexOf(v.id) !== -1);
+    clipboard.data = data.filter(v => selected.indexOf(v.id) !== -1);
     return state;
   };
 
@@ -143,10 +147,6 @@ const getSelectHandlers = () => {
     return [...state, payload];
   };
 
-  const del: SelectHandler = () => {
-    return [];
-  };
-
   const selectClear: SelectHandler = state => {
     return state.length === 0 ? state : [];
   };
@@ -165,13 +165,14 @@ const getSelectHandlers = () => {
     return store.data.map(v => v.id);
   };
 
-  return { add, select, multipleSelect, selectAll, selectClear, selectArea, del };
+  return { add, select, multipleSelect, selectAll, selectClear, selectArea };
 };
 
 const dataRA = createReducerWithActions(getDataHandlers());
 const selectedRA = createReducerWithActions(getSelectHandlers());
 
 export const actions = { ...selectedRA.actions, ...dataRA.actions };
+
 export const reducer = combineReducers({
   data: dataRA.reducer,
   selected: arrayEnhancer(selectedRA.reducer),

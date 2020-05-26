@@ -1,17 +1,16 @@
 import React, { useRef } from 'react';
-import { ComponentData, ComponentId } from '@/types/editor';
+import { ComponentData } from '@/types/editor';
 import Draggable, { DraggableHandler } from '@/components/Draggable';
 import { useEditor } from './Context';
 import { actions } from './reducer';
 
 interface ResizeHandlersProps {
-  data: ComponentData[];
-  selected: ComponentId[];
+  selectedData: ComponentData[];
 }
 
 const handlers = ['n', 'e', 's', 'w', 'nw', 'ne', 'se', 'sw'];
 
-function ResizeHandlers({ data, selected }: ResizeHandlersProps) {
+function ResizeHandlers({ selectedData }: ResizeHandlersProps) {
   const dispatch = useEditor();
 
   const slack = useRef({
@@ -26,7 +25,6 @@ function ResizeHandlers({ data, selected }: ResizeHandlersProps) {
     canResizeHeight: false,
   });
 
-  const selectedData = data.filter(v => selected.indexOf(v.id) !== -1);
   let [outerLeft, outerTop, outerRight, outerBottom] = [Infinity, Infinity, 0, 0];
   let [minWidth, minHeight] = [Infinity, Infinity];
   selectedData.forEach(v => {
