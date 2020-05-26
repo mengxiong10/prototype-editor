@@ -18,8 +18,8 @@ function ComponentWrapper({ active, item }: ComponentWrapperProps) {
   const dispatch = useEditor();
 
   // 选中组件
-  const handleSelect = () => {
-    dispatch(actions.select(id));
+  const handleSelect = (evt: React.MouseEvent) => {
+    dispatch(evt.shiftKey ? actions.multipleSelect(id) : actions.select(id));
   };
 
   const handleMove: DraggableHandler = coreData => {

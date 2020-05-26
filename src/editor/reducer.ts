@@ -136,6 +136,17 @@ const getSelectHandlers = () => {
     return [payload];
   };
 
+  const multipleSelect: SelectHandler<ComponentId> = (state, payload) => {
+    if (state.indexOf(payload) !== -1) {
+      return state;
+    }
+    return [...state, payload];
+  };
+
+  const del: SelectHandler = () => {
+    return [];
+  };
+
   const selectClear: SelectHandler = state => {
     return state.length === 0 ? state : [];
   };
@@ -154,7 +165,7 @@ const getSelectHandlers = () => {
     return store.data.map(v => v.id);
   };
 
-  return { add, select, selectAll, selectClear, selectArea };
+  return { add, select, multipleSelect, selectAll, selectClear, selectArea, del };
 };
 
 const dataRA = createReducerWithActions(getDataHandlers());
