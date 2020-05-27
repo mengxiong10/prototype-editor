@@ -35,6 +35,19 @@ export function useContextmenu({ selected }: Store) {
         key: 'copy',
         handler: () => dispatch(actions.copy()),
       },
+      {
+        type: 'Divider',
+      },
+      {
+        title: '置顶',
+        key: 'top',
+        handler: () => dispatch(actions.sort(-1)),
+      },
+      {
+        title: '置底',
+        key: 'bottom',
+        handler: () => dispatch(actions.sort(0)),
+      },
     ];
 
     const stageContextMenu: ContextMenuOption[] = [

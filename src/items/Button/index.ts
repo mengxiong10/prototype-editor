@@ -4,15 +4,15 @@ import { ComponentOptions } from '../../types/editor';
 export const buttonOptions: ComponentOptions<ButtonProps> = {
   component: Button,
   defaultSize: {
-    width: 100,
-    height: 50,
+    width: 80,
+    height: 32,
   },
   defaultData: {
     circle: false,
-    backgroundColor: '#1890ff',
-    borderColor: '#1890ff',
+    backgroundColor: '#fff',
+    borderColor: '#d9d9d9',
     borderWidth: 1,
-    color: '#fff',
+    color: 'rgba(0, 0, 0, 0.65)',
     textContent: '按钮',
     disabled: false,
   },

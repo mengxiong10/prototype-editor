@@ -106,20 +106,21 @@ const getDataHandlers = () => {
     });
   };
 
-  const sort: DataHandler<{ id: ComponentId; value: UpdateFn<number> }> = (state, payload) => {
-    const { id, value } = payload;
-    const index = state.findIndex(v => v.id === id);
-    if (index === -1) return state;
-    let nextIndex = updateWithFn(index, value);
-    if (nextIndex < 0) {
-      nextIndex = state.length + nextIndex;
+  const sort: DataHandler<0 | -1> = (state, payload, store) => {
+    const value = payload;
+    const ids = store.selected;
+    const current: ComponentData[] = [];
+    const rest: ComponentData[] = [];
+    state.forEach(v => {
+      ids.includes(v.id) ? current.push(v) : rest.push(v);
+    });
+    if (value === 0) {
+      return current.concat(rest);
     }
-    if (nextIndex === index || nextIndex < 0 || nextIndex > state.length) {
-      return state;
+    if (value === -1) {
+      return rest.concat(current);
     }
-    const nextState = state.slice();
-    nextState.splice(nextIndex, 0, nextState.splice(index, 1)[0]);
-    return nextState;
+    return state;
   };
 
   return { add, del, update, sort, copy, cut };

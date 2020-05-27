@@ -1,6 +1,4 @@
 import React from 'react';
-import classNames from 'classnames';
-import './Button.module.scss';
 
 export interface ButtonProps {
   backgroundColor: string;
@@ -15,13 +13,14 @@ export interface ButtonProps {
 function Button(props: ButtonProps) {
   const { disabled, circle, textContent, ...style } = props;
 
-  const className = classNames('button', {
-    'button-circle': circle,
-  });
-
   // TODO: disabled 在编辑模式的时候不要设置, 设置之后不能响应点击事件
   return (
-    <button styleName={className} type="button" disabled={disabled} style={style}>
+    <button
+      className="ant-btn"
+      type="button"
+      disabled={disabled}
+      style={{ ...style, borderRadius: circle ? '50%' : undefined }}
+    >
       {textContent}
     </button>
   );
