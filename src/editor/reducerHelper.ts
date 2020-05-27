@@ -79,7 +79,7 @@ export function combineReducers<S extends { [k: string]: any }>(reducers: Reduce
   };
 }
 
-export function arrayEnhancer(reducer: ReturnReducer): ReturnReducer {
+export function shallowArrayEqualEnhancer(reducer: ReturnReducer): ReturnReducer {
   return (state, ...args) => {
     const nextState = reducer(state, ...args);
     if (isEqualArray(nextState, state)) {

@@ -1,4 +1,8 @@
-import { createReducerWithActions, combineReducers, arrayEnhancer } from './reducerHelper';
+import {
+  createReducerWithActions,
+  combineReducers,
+  shallowArrayEqualEnhancer,
+} from './reducerHelper';
 import { ComponentData, ComponentId, ComponentRect } from '@/types/editor';
 import { ShapeData } from '@/components/DrawShape';
 import { randomId } from '@/utils/randomId';
@@ -133,7 +137,7 @@ const getSelectHandlers = () => {
     return Array.isArray(payload) ? payload.map(v => v.id) : [payload.id];
   };
 
-  const select: SelectHandler<ComponentId> = (state, payload) => {
+  const selectSingle: SelectHandler<ComponentId> = (state, payload) => {
     // 如果选择的组件已经选中了,就不变, 否则就换成新的组件
     if (state.indexOf(payload) !== -1) {
       return state;
@@ -141,15 +145,15 @@ const getSelectHandlers = () => {
     return [payload];
   };
 
-  const multipleSelect: SelectHandler<ComponentId> = (state, payload) => {
+  const selectMultiple: SelectHandler<ComponentId> = (state, payload) => {
     if (state.indexOf(payload) !== -1) {
       return state;
     }
     return [...state, payload];
   };
 
-  const selectClear: SelectHandler = state => {
-    return state.length === 0 ? state : [];
+  const selectClear: SelectHandler = () => {
+    return [];
   };
 
   const selectArea: SelectHandler<ShapeData> = (state, payload, store) => {
@@ -166,7 +170,7 @@ const getSelectHandlers = () => {
     return store.data.map(v => v.id);
   };
 
-  return { add, select, multipleSelect, selectAll, selectClear, selectArea };
+  return { add, selectSingle, selectMultiple, selectAll, selectClear, selectArea };
 };
 
 const dataRA = createReducerWithActions(getDataHandlers());
@@ -176,5 +180,5 @@ export const actions = { ...selectedRA.actions, ...dataRA.actions };
 
 export const reducer = combineReducers({
   data: dataRA.reducer,
-  selected: arrayEnhancer(selectedRA.reducer),
+  selected: shallowArrayEqualEnhancer(selectedRA.reducer),
 });
