@@ -1,4 +1,5 @@
 import { useRef, useEffect } from 'react';
+import { ActionCreators } from 'redux-undo';
 import { useHotkeys } from '../hooks/useHotkeys';
 import { useEditor } from './Context';
 import { actions, pasteComponentData } from './reducer';
@@ -41,11 +42,19 @@ export function useShortcuts(ref: React.RefObject<HTMLElement>) {
     dispatch(actions.selectAll());
   });
 
-  useHotkeys('shift+ctrl+up', () => {
+  useHotkeys('ctrl+shift+up', () => {
     dispatch(actions.sort(-1));
   });
 
-  useHotkeys('shift+ctrl+down', () => {
+  useHotkeys('ctrl+shift+down', () => {
     dispatch(actions.sort(0));
+  });
+
+  useHotkeys('ctrl+z', () => {
+    dispatch(ActionCreators.undo());
+  });
+
+  useHotkeys('ctrl+shift+z', () => {
+    dispatch(ActionCreators.redo());
   });
 }

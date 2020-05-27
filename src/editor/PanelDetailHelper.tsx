@@ -9,29 +9,44 @@ export interface DetailPanelRowProps extends Object {
   prop: string;
   value: any;
   onChange: (obj: any) => void;
+  onChangeWithoutHistory: (obj: any) => void;
 }
 
-export const RowInput = ({ prop, title, value, onChange }: DetailPanelRowProps) => {
+export const RowInput = ({
+  prop,
+  title,
+  value,
+  onChange,
+  onChangeWithoutHistory,
+}: DetailPanelRowProps) => {
   return (
     <div className="pe-detail-panel-row">
       <span>{title}</span>
       <Input
         style={{ width: 120 }}
         value={value}
-        onChange={evt => onChange({ [prop]: evt.target.value })}
+        onChange={evt => onChangeWithoutHistory({ [prop]: evt.target.value })}
+        onBlur={() => onChange(null)}
       />
     </div>
   );
 };
 
-export const RowTextArea = ({ prop, title, value, onChange }: DetailPanelRowProps) => {
+export const RowTextArea = ({
+  prop,
+  title,
+  value,
+  onChange,
+  onChangeWithoutHistory,
+}: DetailPanelRowProps) => {
   return (
     <div className="pe-detail-panel-row">
       <span>{title}</span>
       <TextArea
         style={{ width: 120 }}
         value={value}
-        onChange={evt => onChange({ [prop]: evt.target.value })}
+        onChange={evt => onChangeWithoutHistory({ [prop]: evt.target.value })}
+        onBlur={() => onChange(null)}
       />
     </div>
   );
@@ -55,7 +70,13 @@ export const RowSwitch = ({ prop, title, value, onChange }: DetailPanelRowProps)
   );
 };
 
-export const RowNumber = ({ prop, title, value, onChange }: DetailPanelRowProps) => {
+export const RowNumber = ({
+  prop,
+  title,
+  value,
+  onChange,
+  onChangeWithoutHistory,
+}: DetailPanelRowProps) => {
   return (
     <div className="pe-detail-panel-row">
       <span>{title}</span>
@@ -63,8 +84,9 @@ export const RowNumber = ({ prop, title, value, onChange }: DetailPanelRowProps)
         style={{ width: 80 }}
         min={0}
         max={10}
-        onChange={v => onChange({ [prop]: v })}
         value={value}
+        onChange={v => onChangeWithoutHistory({ [prop]: v })}
+        onBlur={() => onChange(null)}
       />
     </div>
   );

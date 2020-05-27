@@ -22,9 +22,10 @@ function ComponentWrapper({ active, item }: ComponentWrapperProps) {
     dispatch(evt.shiftKey ? actions.selectMultiple(id) : actions.selectSingle(id));
   };
 
+  // 拖动过程忽略历史记录
   const handleMove: DraggableHandler = coreData => {
     dispatch(
-      actions.update({
+      actions.updateWithoutHistory({
         rect: prev => {
           return {
             left: prev.left + coreData.deltaX,
@@ -33,6 +34,13 @@ function ComponentWrapper({ active, item }: ComponentWrapperProps) {
         },
       })
     );
+  };
+
+  // 停止后记录历史
+  const handleStop: DraggableHandler = () => {
+    // 更新一个空对象, 直接返回当前state, 如果之前data有变化, undoable就会把当前值入栈, 如果之前值没变化, 不会更新
+    // https://github.com/omnidan/redux-undo/blob/b4edbb3603/src/reducer.js#L208
+    dispatch(actions.update({}));
   };
 
   const component = useComponent({ type, componentData });
@@ -48,7 +56,7 @@ function ComponentWrapper({ active, item }: ComponentWrapperProps) {
   });
 
   return (
-    <Draggable onMouseDown={handleSelect} onMove={handleMove}>
+    <Draggable onMouseDown={handleSelect} onMove={handleMove} onStop={handleStop}>
       <div className={classNames} style={style} data-id={item.id}>
         {component}
       </div>

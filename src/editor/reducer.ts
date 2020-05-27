@@ -1,3 +1,4 @@
+import undoable, { StateWithHistory } from 'redux-undo';
 import {
   createReducerWithActions,
   combineReducers,
@@ -9,7 +10,7 @@ import { randomId } from '@/utils/randomId';
 import { getComponent } from './registerComponents';
 
 export interface Store {
-  data: ComponentData[];
+  data: StateWithHistory<ComponentData[]>;
   selected: ComponentId[];
 }
 
@@ -79,7 +80,7 @@ const getDataHandlers = () => {
   };
 
   const copy: DataHandler = (state, payload, { data, selected }) => {
-    clipboard.data = data.filter(v => selected.indexOf(v.id) !== -1);
+    clipboard.data = data.present.filter(v => selected.indexOf(v.id) !== -1);
     return state;
   };
 
@@ -93,10 +94,18 @@ const getDataHandlers = () => {
     rect?: (prev: ComponentRect) => Partial<ComponentRect> | Partial<ComponentRect>;
     data?: any;
   }> = (state, payload, store) => {
-    const { id } = payload;
+    const { id, rect, data } = payload;
     const ids = id ? transform2Array(id) : store.selected;
+    // 如果是空对象就直接返回当前值,
+    // 如果之前使用了updateWithouthistory, 没有记录最新值的历史, 这个可以作为把最新的值放到history里面的一个hack,
+    // 适用于拖动结束 或者 输入框失焦 后
+    // 当然也可以触发一个没有监听的type, 或者专门写一个语义化的type返回当前state
+    if (!rect && !data) {
+      return state;
+    }
     return state.map(v => {
       if (ids.indexOf(v.id) !== -1) {
+        // 如果有需要, 可以引入immer, 确保相同的数据直接返回原始值.
         const nextData = { ...v };
         ['rect', 'data'].forEach((key: 'rect' | 'data') => {
           if (payload[key]) {
@@ -127,7 +136,7 @@ const getDataHandlers = () => {
     return state;
   };
 
-  return { add, del, update, sort, copy, cut };
+  return { add, del, update, sort, copy, cut, updateWithoutHistory: update };
 };
 
 const getSelectHandlers = () => {
@@ -158,7 +167,7 @@ const getSelectHandlers = () => {
 
   const selectArea: SelectHandler<ShapeData> = (state, payload, store) => {
     const { left, top, width, height } = payload;
-    return store.data
+    return store.data.present
       .filter(v => {
         const { left: l, top: t, width: w, height: h } = v.rect;
         return left <= l && top <= t && left + width >= l + w && top + height >= t + h;
@@ -167,7 +176,7 @@ const getSelectHandlers = () => {
   };
 
   const selectAll: SelectHandler = (state, payload, store) => {
-    return store.data.map(v => v.id);
+    return store.data.present.map(v => v.id);
   };
 
   return { add, selectSingle, selectMultiple, selectAll, selectClear, selectArea };
@@ -178,7 +187,15 @@ const selectedRA = createReducerWithActions(getSelectHandlers());
 
 export const actions = { ...selectedRA.actions, ...dataRA.actions };
 
-export const reducer = combineReducers({
-  data: dataRA.reducer,
+export const reducer = combineReducers<Store>({
+  data: undoable(dataRA.reducer, {
+    limit: 10,
+    filter: action => {
+      // updateWithouthistory 和 update 一样, 除了不记录历史
+      const whitelist = ['updateWithoutHistory'];
+
+      return !whitelist.includes(action.type);
+    },
+  }),
   selected: shallowArrayEqualEnhancer(selectedRA.reducer),
 });

@@ -2,24 +2,20 @@ import React, { useCallback, useRef } from 'react';
 import ContextMenuTrigger from '@/components/ContextMenuTrigger';
 import DrawShape, { ShapeData } from '@/components/DrawShape';
 import { useEditor } from './Context';
-import { ComponentData, ComponentId } from '@/types/editor';
 import { useContextmenu } from './useContextMenu';
-import { actions, createComponentData } from './reducer';
+import { actions, createComponentData, Store } from './reducer';
 import { useDrop } from '@/hooks/useDrop';
 import { useShortcuts } from './useShortcuts';
 import ComponentWrapper from './ComponentWrapper';
 import PanelCanvas from './PanelCanvas';
 import ResizeHandlers from './ResizeHandlers';
 
-export interface PanelStage2Props {
-  data: ComponentData[];
-  selected: ComponentId[];
-}
+export interface PanelStage2Props extends Store {}
 
 function PanelStage({ data, selected }: PanelStage2Props) {
   const dispatch = useEditor();
 
-  const selectedData = data.filter(v => selected.indexOf(v.id) !== -1);
+  const selectedData = data.present.filter(v => selected.indexOf(v.id) !== -1);
 
   const contextmenuProps = useContextmenu({ data, selected });
 
@@ -57,10 +53,10 @@ function PanelStage({ data, selected }: PanelStage2Props) {
           tabIndex={-1}
           {...dropProps}
         >
-          {data.map(item => (
+          {data.present.map(item => (
             <ComponentWrapper key={item.id} item={item} active={selected.indexOf(item.id) !== -1} />
           ))}
-          <PanelCanvas width={2000} height={1000} data={data} />
+          <PanelCanvas width={2000} height={1000} data={data.present} />
           {selectedData.length > 0 && <ResizeHandlers selectedData={selectedData} />}
         </div>
       </DrawShape>

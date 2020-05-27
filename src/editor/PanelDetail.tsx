@@ -19,10 +19,17 @@ export interface DetailPanelProps {
   groups: DetailPanelGroup[];
   data: any;
   onChange: (obj: any) => void;
+  onChangeWithoutHistory: (obj: any) => void;
   children?: React.ReactNode;
 }
 
-function DetailPanel({ groups, data, children, onChange }: DetailPanelProps) {
+function DetailPanel({
+  groups,
+  data,
+  children,
+  onChange,
+  onChangeWithoutHistory,
+}: DetailPanelProps) {
   return (
     <Collapse
       className="pe-detail-panel"
@@ -41,6 +48,7 @@ function DetailPanel({ groups, data, children, onChange }: DetailPanelProps) {
                 title,
                 value: data[prop],
                 onChange,
+                onChangeWithoutHistory,
               });
             })}
           </Panel>

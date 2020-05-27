@@ -5,10 +5,14 @@ import PanelStage from './PanelStage';
 import PanelDrawing from './PanelDrawing';
 import PanelDetailWrapper from './PanelDetailWrapper';
 import PanelToolbar from './PanelToolbar';
-import { reducer } from './reducer';
+import { reducer, Store } from './reducer';
 
-const initialState = {
-  data: [],
+const initialState: Store = {
+  data: {
+    past: [],
+    present: [],
+    future: [],
+  },
   selected: [],
 };
 
@@ -21,14 +25,14 @@ function Editor() {
         <PanelComponentList />
       </aside>
       <main className="pe-main">
-        <PanelToolbar />
+        <PanelToolbar data={data} selected={selected} />
         <div className="pe-content u-scroll">
           <PanelStage data={data} selected={selected} />
           <PanelDrawing />
         </div>
       </main>
       <aside className="pe-right-sider">
-        <PanelDetailWrapper data={data} selected={selected} />
+        <PanelDetailWrapper data={data.present} selected={selected} />
       </aside>
     </EditorProvider>
   );

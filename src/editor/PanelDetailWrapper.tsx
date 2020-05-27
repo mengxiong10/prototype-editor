@@ -22,7 +22,14 @@ function PanelDetailWrapper({ data, selected }: PanelDetailWrapper) {
 
   const handleChange = useCallback(
     (obj: any) => {
-      dispatch(actions.update({ data: obj }));
+      dispatch(actions.update(obj !== null ? { data: obj } : {}));
+    },
+    [dispatch]
+  );
+
+  const handleChangeWithoutHistory = useCallback(
+    (obj: any) => {
+      dispatch(actions.updateWithoutHistory({ data: obj }));
     },
     [dispatch]
   );
@@ -33,9 +40,10 @@ function PanelDetailWrapper({ data, selected }: PanelDetailWrapper) {
 
   return Array.isArray(component.detailPanel) ? (
     <DetailPanel
+      data={{ ...component.defaultData, ...selectedData[0].data }}
       groups={component.detailPanel}
       onChange={handleChange}
-      data={{ ...component.defaultData, ...selectedData[0].data }}
+      onChangeWithoutHistory={handleChangeWithoutHistory}
     />
   ) : (
     React.createElement(component.detailPanel as React.ElementType, {

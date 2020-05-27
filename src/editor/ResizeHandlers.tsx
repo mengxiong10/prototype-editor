@@ -87,7 +87,7 @@ function ResizeHandlers({ selectedData }: ResizeHandlersProps) {
     const radioHeight = nextOuterHeight / outerHeight;
 
     dispatch(
-      actions.update({
+      actions.updateWithoutHistory({
         rect: prev => {
           const width = radioWidth * prev.width;
           const height = radioHeight * prev.height;
@@ -99,8 +99,18 @@ function ResizeHandlers({ selectedData }: ResizeHandlersProps) {
     );
   };
 
+  const handleStop: DraggableHandler = () => {
+    // 更新一个空对象, 如果之前data有变化, undoable就会把最新的值入栈, 如果之前data没变化,不变
+    dispatch(actions.update({}));
+  };
+
   return (
-    <Draggable handle=".resizable-handle" onMove={handleMove} onStart={handleDragStart}>
+    <Draggable
+      handle=".resizable-handle"
+      onMove={handleMove}
+      onStop={handleStop}
+      onStart={handleDragStart}
+    >
       <div
         style={{
           position: 'absolute',
