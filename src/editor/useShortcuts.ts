@@ -40,4 +40,12 @@ export function useShortcuts(ref: React.RefObject<HTMLElement>) {
   useHotkeys('ctrl+a', () => {
     dispatch(actions.selectAll());
   });
+
+  useHotkeys('shift+ctrl+up', () => {
+    dispatch(actions.sort(-1));
+  });
+
+  useHotkeys('shift+ctrl+down', () => {
+    dispatch(actions.sort(0));
+  });
 }

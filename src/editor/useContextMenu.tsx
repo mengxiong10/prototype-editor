@@ -41,11 +41,13 @@ export function useContextmenu({ selected }: Store) {
       {
         title: '置顶',
         key: 'top',
+        shortcut: 'Shift+Ctrl+↑',
         handler: () => dispatch(actions.sort(-1)),
       },
       {
         title: '置底',
         key: 'bottom',
+        shortcut: 'Shift+Ctrl+↓',
         handler: () => dispatch(actions.sort(0)),
       },
     ];
