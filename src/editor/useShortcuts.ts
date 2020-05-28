@@ -13,6 +13,7 @@ export function useShortcuts(ref: React.RefObject<HTMLElement>) {
     const handleMove = (evt: MouseEvent) => {
       if (!ref.current) return;
       const rect = ref.current.getBoundingClientRect();
+      // TODO: 还要计算ref.current 的滚动
       position.current.x = evt.clientX - rect.left;
       position.current.y = evt.clientY - rect.top;
     };

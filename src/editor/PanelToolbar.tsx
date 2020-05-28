@@ -35,7 +35,7 @@ function PanelToolbar({ data }: PanelToolbarProps) {
   const dispatch = useEditor();
 
   const divider = (
-    <div style={{ height: '60%', width: 1, background: '#c1c1c1', margin: '0 8px' }}></div>
+    <div style={{ height: '60%', width: 1, background: '#e8e8e8', margin: '0 8px' }}></div>
   );
 
   return (
