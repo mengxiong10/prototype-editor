@@ -3,7 +3,8 @@ import ContextMenuTrigger from '@/components/ContextMenuTrigger';
 import DrawShape, { ShapeData } from '@/components/DrawShape';
 import { useEditor } from './Context';
 import { useContextmenu } from './useContextMenu';
-import { actions, createComponentData, Store } from './reducer';
+import { actions, Store } from './reducer';
+import { createComponentData, isValidComponent } from './componentUtil';
 import { useDrop } from '@/hooks/useDrop';
 import { useShortcuts } from './useShortcuts';
 import ComponentWrapper from './ComponentWrapper';
@@ -25,7 +26,8 @@ function PanelStage({ data, selected }: PanelStage2Props) {
 
   const dropProps = useDrop({
     onDropDone: ({ data: type, x, y }) => {
-      const componentdata = createComponentData(type, { left: x - 20, top: y - 20 });
+      if (!type || !isValidComponent(type)) return;
+      const componentdata = createComponentData({ type, left: x - 20, top: y - 20 });
       dispatch(actions.add(componentdata));
     },
   });

@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { ComponentData, ComponentRect } from '@/types/editor';
+import { ComponentData } from '@/types/editor';
 
 export interface PanelCanvasProps {
   data: ComponentData[];
@@ -18,38 +18,37 @@ function PanelCanvas({ data, width, height }: PanelCanvasProps) {
     canvas.height = height;
     const ctx = canvas.getContext('2d')!;
     ctx.imageSmoothingEnabled = true;
-    const map: { [key: string]: ComponentRect } = {} as any;
+    const map: { [key: string]: ComponentData } = {} as any;
     data.forEach(v => {
-      map[v.id] = v.rect;
+      map[v.id] = v;
     });
     const lines = data
       .filter(v => v.association !== undefined && map[v.association])
-      .map(v => {
-        const targetRect = map[v.association!];
-        const rect = v.rect;
+      .map(current => {
+        const target = map[current.association!];
         const point = [
           [0, 0],
           [0, 0],
         ];
-        const mx1 = targetRect.left + targetRect.width / 2;
-        const my1 = targetRect.top + targetRect.height / 2;
-        const mx2 = rect.left + rect.width / 2;
-        const my2 = rect.top + rect.height / 2;
-        const slope1 = targetRect.height / targetRect.width;
-        const slope2 = rect.height / rect.width;
+        const mx1 = target.left + target.width / 2;
+        const my1 = target.top + target.height / 2;
+        const mx2 = current.left + current.width / 2;
+        const my2 = current.top + current.height / 2;
+        const slope1 = target.height / target.width;
+        const slope2 = current.height / current.width;
         const slope = (my1 - my2) / (mx1 - mx2);
         if (slope1 > Math.abs(slope)) {
-          point[0][0] = mx1 > mx2 ? targetRect.left : targetRect.left + targetRect.width;
+          point[0][0] = mx1 > mx2 ? target.left : target.left + target.width;
           point[0][1] = Math.floor(slope * (point[0][0] - mx1) + my1);
         } else {
-          point[0][1] = my1 > my2 ? targetRect.top : targetRect.top + targetRect.height;
+          point[0][1] = my1 > my2 ? target.top : target.top + target.height;
           point[0][0] = Math.floor((point[0][1] - my1) / slope + mx1);
         }
         if (slope2 > Math.abs(slope)) {
-          point[1][0] = mx2 > mx1 ? rect.left : rect.left + rect.width;
+          point[1][0] = mx2 > mx1 ? current.left : current.left + current.width;
           point[1][1] = Math.floor(slope * (point[1][0] - mx2) + my2);
         } else {
-          point[1][1] = my2 > my1 ? rect.top : rect.top + rect.height;
+          point[1][1] = my2 > my1 ? current.top : current.top + current.height;
           point[1][0] = Math.floor((point[1][1] - my2) / slope + mx2);
         }
         return point;

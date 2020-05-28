@@ -2,7 +2,8 @@ import { useRef, useEffect } from 'react';
 import { ActionCreators } from 'redux-undo';
 import { useHotkeys } from '../hooks/useHotkeys';
 import { useEditor } from './Context';
-import { actions, pasteComponentData } from './reducer';
+import { actions } from './reducer';
+import { pasteComponentData } from './componentUtil';
 
 export function useShortcuts(ref: React.RefObject<HTMLElement>) {
   const dispatch = useEditor();

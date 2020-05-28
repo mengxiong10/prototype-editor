@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { getComponent } from './registerComponents';
+import { getComponent } from './componentUtil';
 import { useEditor } from './Context';
 import { ComponentData, ComponentId } from '@/types/editor';
 import { actions } from './reducer';
@@ -22,7 +22,7 @@ function PanelDetailWrapper({ data, selected }: PanelDetailWrapper) {
 
   const handleChange = useCallback(
     (obj: any) => {
-      dispatch(actions.update(obj !== null ? { data: obj } : {}));
+      dispatch(obj === null ? actions.recordHistory() : actions.update({ data: obj }));
     },
     [dispatch]
   );

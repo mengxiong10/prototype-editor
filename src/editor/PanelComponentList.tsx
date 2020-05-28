@@ -1,7 +1,7 @@
 import React from 'react';
 import { Collapse } from 'antd';
 import ComponentItem from './PanelComponentItem';
-import { shortcuts } from './registerComponents';
+import { shortcuts } from './componentUtil';
 
 const { Panel } = Collapse;
 

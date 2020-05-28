@@ -1,7 +1,8 @@
 import React, { useRef } from 'react';
 import { ContextMenuOption } from '@/components/ContextMenu';
 import { useEditor } from './Context';
-import { actions, pasteComponentData, Store, clipboard } from './reducer';
+import { actions, Store } from './reducer';
+import { pasteComponentData, clipboard } from './componentUtil';
 
 export function useContextmenu({ selected }: Store) {
   const dispatch = useEditor();

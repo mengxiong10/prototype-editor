@@ -1,4 +1,4 @@
-import { registerComponent } from '@/editor/registerComponents';
+import { registerComponent } from '@/editor/componentUtil';
 import { buttonOptions } from './Button';
 import { inputOptions } from './Input';
 import { richEditorOptions } from './RichEditor';

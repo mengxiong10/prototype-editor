@@ -28,7 +28,7 @@ function ResizeHandlers({ selectedData }: ResizeHandlersProps) {
   let [outerLeft, outerTop, outerRight, outerBottom] = [Infinity, Infinity, 0, 0];
   let [minWidth, minHeight] = [Infinity, Infinity];
   selectedData.forEach(v => {
-    const { left, top, width, height } = v.rect;
+    const { left, top, width, height } = v;
     const bottom = top + height;
     const right = left + width;
     outerLeft = Math.min(outerLeft, left);
@@ -87,21 +87,18 @@ function ResizeHandlers({ selectedData }: ResizeHandlersProps) {
     const radioHeight = nextOuterHeight / outerHeight;
 
     dispatch(
-      actions.updateWithoutHistory({
-        rect: prev => {
-          const width = radioWidth * prev.width;
-          const height = radioHeight * prev.height;
-          const top = radioHeight * (prev.top - outerTop) + nextOuterTop;
-          const left = radioWidth * (prev.left - outerLeft) + nextOuterLeft;
-          return { width, height, top, left };
-        },
+      actions.updateWithoutHistory(prev => {
+        const width = radioWidth * prev.width;
+        const height = radioHeight * prev.height;
+        const top = radioHeight * (prev.top - outerTop) + nextOuterTop;
+        const left = radioWidth * (prev.left - outerLeft) + nextOuterLeft;
+        return { width, height, top, left };
       })
     );
   };
 
   const handleStop: DraggableHandler = () => {
-    // 更新一个空对象, 如果之前data有变化, undoable就会把最新的值入栈, 如果之前data没变化,不变
-    dispatch(actions.update({}));
+    dispatch(actions.recordHistory());
   };
 
   return (

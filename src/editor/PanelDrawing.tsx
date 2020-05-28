@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import DrawShape, { ShapeData } from '@/components/DrawShape';
 import { useEditor } from './Context';
-import { createComponentData, actions } from './reducer';
+import { actions } from './reducer';
+import { createComponentData } from './componentUtil';
 import { drawingEvent } from './event';
 import { useClickOutside } from '@/hooks/useClickOutside';
 
@@ -21,15 +22,20 @@ function PanelDrawing() {
     (value: ShapeData) => {
       hideDrawer();
       if (type === 'comment') {
-        const richData = createComponentData('rich', {
+        const richData = createComponentData({
+          type: 'rich',
           left: value.left + value.width + 200,
           top: value.top,
         });
-        const rect = createComponentData('rect', value, richData.id);
+        const rect = createComponentData({
+          ...value,
+          type: 'rect',
+          association: richData.id,
+        });
         dispatch(actions.add(rect));
         dispatch(actions.add(richData));
       } else {
-        const componentdata = createComponentData(type, value);
+        const componentdata = createComponentData({ type, ...value });
         dispatch(actions.add(componentdata));
       }
     },
