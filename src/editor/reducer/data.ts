@@ -33,7 +33,7 @@ const update: DataHandler<
     return state;
   }
   return state.map(item => {
-    if (ids.indexOf(item.id) !== -1) {
+    if (ids.includes(item.id)) {
       const updater = typeof payload === 'function' ? payload(item) : payload;
       const nextItem = { ...item, ...updater };
       if (updater.data) {
@@ -65,6 +65,51 @@ const sort: DataHandler<0 | -1> = (state, payload, store) => {
   return state;
 };
 
+// 对齐
+const align: DataHandler<
+  'left' | 'top' | 'bottom' | 'right' | 'verticalMiddle' | 'horizontalMiddle'
+> = (state, payload, store) => {
+  const ids = store.selected;
+  if (ids.length < 2) return state;
+  const selectedData = state.filter(v => ids.includes(v.id));
+  let [outerLeft, outerTop, outerRight, outerBottom] = [Infinity, Infinity, -Infinity, -Infinity];
+  selectedData.forEach(v => {
+    const { left, top, width, height } = v;
+    const bottom = top + height;
+    const right = left + width;
+    outerLeft = Math.min(outerLeft, left);
+    outerTop = Math.min(outerTop, top);
+    outerBottom = Math.max(outerBottom, bottom);
+    outerRight = Math.max(outerRight, right);
+  });
+  let updater:
+    | Partial<ComponentEditableData>
+    | ((obj: ComponentData) => Partial<ComponentEditableData>);
+  switch (payload) {
+    case 'left':
+      updater = { left: outerLeft };
+      break;
+    case 'top':
+      updater = { top: outerTop };
+      break;
+    case 'right':
+      updater = prev => ({ left: outerRight - prev.width });
+      break;
+    case 'bottom':
+      updater = prev => ({ top: outerBottom - prev.height });
+      break;
+    case 'verticalMiddle':
+      updater = prev => ({ left: (outerRight + outerLeft) / 2 - prev.width / 2 });
+      break;
+    case 'horizontalMiddle':
+      updater = prev => ({ top: (outerBottom + outerTop) / 2 - prev.height / 2 });
+      break;
+    default:
+      return state;
+  }
+  return update(state, updater, store);
+};
+
 // 该actions, 不更新数据, 只是检查当前值和上一次应该记录历史的值比较
 // 如果之前使用了updateWithouthistory, 没有记录之前值的历史, 调用可以把上一次应该记录的保存进去
 // https://github.com/omnidan/redux-undo/blob/b4edbb3603/src/reducer.js#L208
@@ -73,6 +118,6 @@ const recordHistory: DataHandler = state => state;
 // type 为 updateWithoutHistory 不记录历史
 const updateWithoutHistory = update;
 
-const handlers = { add, del, update, sort, copy, cut, updateWithoutHistory, recordHistory };
+const handlers = { add, del, update, sort, copy, cut, align, updateWithoutHistory, recordHistory };
 
 export const { actions, reducer } = createReducerWithActions(handlers);
