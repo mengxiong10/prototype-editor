@@ -60,7 +60,14 @@ module.exports = {
       {
         test: /\.svg$/,
         include: [resolve('src/svg')],
-        use: ['@svgr/webpack'],
+        use: [
+          {
+            loader: '@svgr/webpack',
+            options: {
+              svgProps: { className: 'svg-icon' },
+            },
+          },
+        ],
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,

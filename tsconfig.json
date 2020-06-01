@@ -23,5 +23,5 @@
     "typeRoots": ["./node_modules/@types", "./typings"],
     "experimentalDecorators": true
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "typings/**/*"]
 }

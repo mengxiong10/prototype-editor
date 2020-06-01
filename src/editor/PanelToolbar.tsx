@@ -3,13 +3,22 @@ import { RowFlex } from 'my-react-common';
 import { Tooltip, Button } from 'antd';
 import CommentOutlined from '@ant-design/icons/CommentOutlined';
 import BorderOutlined from '@ant-design/icons/BorderOutlined';
-import RedoOutlined from '@ant-design/icons/RedoOutlined';
-import UndoOutlined from '@ant-design/icons/UndoOutlined';
 import { ActionCreators } from 'redux-undo';
 import { ButtonProps } from 'antd/lib/button';
+import Redo from '@/svg/redo.svg';
+import Undo from '@/svg/undo.svg';
+import AlignLeft from '@/svg/align-left-fill.svg';
+import AlignTop from '@/svg/align-top-fill.svg';
+import AlignBottom from '@/svg/align-bottom-fill.svg';
+import AlignRight from '@/svg/align-right-fill.svg';
+import AlignCenter from '@/svg/align-center-fill.svg';
+import AlignVerticel from '@/svg/align-verticle-fill.svg';
+import HorizontalSpace from '@/svg/horizontal-space.svg';
+import VerticalSpace from '@/svg/vertical-space.svg';
 import { drawingEvent } from './event';
 import { useEditor } from './Context';
 import { Store } from './reducer';
+import { actions } from './reducer/data';
 
 export interface PanelToolbarProps extends Store {}
 
@@ -55,14 +64,14 @@ function PanelToolbar({ data }: PanelToolbarProps) {
         disabled={data.past.length === 0}
         onClick={() => dispatch(ActionCreators.undo())}
       >
-        <UndoOutlined />
+        <Undo />
       </ButtonIcon>
       <ButtonIcon
         title="重做(ctrl+shift+z)"
         disabled={data.future.length === 0}
         onClick={() => dispatch(ActionCreators.redo())}
       >
-        <RedoOutlined />
+        <Redo />
       </ButtonIcon>
       {divider}
       <ButtonIcon title="重点标记" onClick={() => drawingEvent.emit('rect')}>
@@ -73,6 +82,31 @@ function PanelToolbar({ data }: PanelToolbarProps) {
       <ButtonIcon title="添加批注" onClick={() => drawingEvent.emit('comment')}>
         <CommentOutlined />
         <span style={{ marginLeft: 4 }}>标注</span>
+      </ButtonIcon>
+      {divider}
+      <ButtonIcon title="左对齐" onClick={() => dispatch(actions.align('left'))}>
+        <AlignLeft />
+      </ButtonIcon>
+      <ButtonIcon title="水平居中" onClick={() => dispatch(actions.align('horizontal'))}>
+        <AlignCenter />
+      </ButtonIcon>
+      <ButtonIcon title="右对齐" onClick={() => dispatch(actions.align('right'))}>
+        <AlignRight />
+      </ButtonIcon>
+      <ButtonIcon title="顶对齐" onClick={() => dispatch(actions.align('top'))}>
+        <AlignTop />
+      </ButtonIcon>
+      <ButtonIcon title="垂直居中" onClick={() => dispatch(actions.align('vertical'))}>
+        <AlignVerticel />
+      </ButtonIcon>
+      <ButtonIcon title="底对齐" onClick={() => dispatch(actions.align('bottom'))}>
+        <AlignBottom />
+      </ButtonIcon>
+      <ButtonIcon title="水平等间距" onClick={() => dispatch(actions.space('horizontal'))}>
+        <HorizontalSpace />
+      </ButtonIcon>
+      <ButtonIcon title="垂直等间距" onClick={() => dispatch(actions.space('vertical'))}>
+        <VerticalSpace />
       </ButtonIcon>
     </RowFlex>
   );

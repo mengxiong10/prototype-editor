@@ -15,10 +15,8 @@ export const reducer = combineReducers<Store>({
   data: undoable(dataReducer, {
     limit: 10,
     filter: action => {
-      // updateWithouthistory 和 update 一样, 除了不记录历史
-      const whitelist = ['updateWithoutHistory'];
-
-      return !whitelist.includes(action.type);
+      // 以WithoutHistory结尾的type 不记录历史
+      return !/WithoutHistory$/.test(action.type);
     },
   }),
   selected: shallowArrayEqualEnhancer(selectedReducer),

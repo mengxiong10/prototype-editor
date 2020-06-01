@@ -24,6 +24,7 @@ function ComponentWrapper({ active, item }: ComponentWrapperProps) {
 
   // 拖动过程忽略历史记录
   const handleMove: DraggableHandler = coreData => {
+    // TODO: 上和左边, 不让为负值
     dispatch(
       actions.updateWithoutHistory(prev => {
         return {

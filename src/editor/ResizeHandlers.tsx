@@ -25,21 +25,14 @@ function ResizeHandlers({ selectedData }: ResizeHandlersProps) {
     canResizeHeight: false,
   });
 
-  let [outerLeft, outerTop, outerRight, outerBottom] = [Infinity, Infinity, 0, 0];
-  let [minWidth, minHeight] = [Infinity, Infinity];
-  selectedData.forEach(v => {
-    const { left, top, width, height } = v;
-    const bottom = top + height;
-    const right = left + width;
-    outerLeft = Math.min(outerLeft, left);
-    outerTop = Math.min(outerTop, top);
-    outerBottom = Math.max(outerBottom, bottom);
-    outerRight = Math.max(outerRight, right);
-    minWidth = Math.min(minWidth, width);
-    minHeight = Math.min(minHeight, height);
-  });
+  const outerLeft = Math.min(...selectedData.map(v => v.left));
+  const outerTop = Math.min(...selectedData.map(v => v.top));
+  const outerRight = Math.max(...selectedData.map(v => v.left + v.width));
+  const outerBottom = Math.max(...selectedData.map(v => v.top + v.height));
   const outerWidth = outerRight - outerLeft;
   const outerHeight = outerBottom - outerTop;
+  const minWidth = Math.min(...selectedData.map(v => v.width));
+  const minHeight = Math.min(...selectedData.map(v => v.height));
 
   const minOuterWidth = (outerWidth / minWidth) * 50; // 100默认的组件最小宽度;
   const minOuterHeight = (outerHeight / minHeight) * 20; // 20 默认组件最小高度;
