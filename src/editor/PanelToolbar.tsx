@@ -38,7 +38,7 @@ const ButtonIcon = ({ title, ...rest }: ButtonIconProps) => {
 
 const id = 'toolbar';
 
-function PanelToolbar({ data }: PanelToolbarProps) {
+function PanelToolbar({ data, selected }: PanelToolbarProps) {
   const dispatch = useEditor();
 
   const divider = (
@@ -82,28 +82,60 @@ function PanelToolbar({ data }: PanelToolbarProps) {
         <span style={{ marginLeft: 4 }}>标注</span>
       </ButtonIcon>
       {divider}
-      <ButtonIcon title="左对齐" onClick={() => dispatch(actions.align('left'))}>
+      <ButtonIcon
+        title="左对齐"
+        disabled={selected.length < 2}
+        onClick={() => dispatch(actions.align('left'))}
+      >
         <AlignLeft />
       </ButtonIcon>
-      <ButtonIcon title="水平居中" onClick={() => dispatch(actions.align('horizontal'))}>
+      <ButtonIcon
+        title="水平居中"
+        disabled={selected.length < 2}
+        onClick={() => dispatch(actions.align('horizontal'))}
+      >
         <AlignCenter />
       </ButtonIcon>
-      <ButtonIcon title="右对齐" onClick={() => dispatch(actions.align('right'))}>
+      <ButtonIcon
+        title="右对齐"
+        disabled={selected.length < 2}
+        onClick={() => dispatch(actions.align('right'))}
+      >
         <AlignRight />
       </ButtonIcon>
-      <ButtonIcon title="顶对齐" onClick={() => dispatch(actions.align('top'))}>
+      <ButtonIcon
+        title="顶对齐"
+        disabled={selected.length < 2}
+        onClick={() => dispatch(actions.align('top'))}
+      >
         <AlignTop />
       </ButtonIcon>
-      <ButtonIcon title="垂直居中" onClick={() => dispatch(actions.align('vertical'))}>
+      <ButtonIcon
+        title="垂直居中"
+        disabled={selected.length < 2}
+        onClick={() => dispatch(actions.align('vertical'))}
+      >
         <AlignVerticel />
       </ButtonIcon>
-      <ButtonIcon title="底对齐" onClick={() => dispatch(actions.align('bottom'))}>
+      <ButtonIcon
+        title="底对齐"
+        disabled={selected.length < 2}
+        onClick={() => dispatch(actions.align('bottom'))}
+      >
         <AlignBottom />
       </ButtonIcon>
-      <ButtonIcon title="水平等间距" onClick={() => dispatch(actions.space('horizontal'))}>
+      <ButtonIcon
+        title="水平等间距"
+        disabled={selected.length < 3}
+        onClick={() => dispatch(actions.space('horizontal'))}
+      >
         <HorizontalSpace />
       </ButtonIcon>
-      <ButtonIcon title="垂直等间距" onClick={() => dispatch(actions.space('vertical'))}>
+      <ButtonIcon
+        title="垂直等间距"
+        disabled={selected.length < 3}
+        onClick={() => dispatch(actions.space('vertical'))}
+      >
         <VerticalSpace />
       </ButtonIcon>
     </RowFlex>
