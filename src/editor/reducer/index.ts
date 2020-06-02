@@ -1,4 +1,4 @@
-import undoable, { StateWithHistory } from 'redux-undo';
+import undoable, { StateWithHistory, ActionCreators } from 'redux-undo';
 import { combineReducers, shallowArrayEqualEnhancer } from './reducerHelpers';
 import { ComponentData, ComponentId } from '@/types/editor';
 import { actions as dataActions, reducer as dataReducer } from './data';
@@ -9,7 +9,7 @@ export interface Store {
   selected: ComponentId[];
 }
 
-export const actions = { ...dataActions, ...selectedActions };
+export const actions = { ...ActionCreators, ...dataActions, ...selectedActions };
 
 export const reducer = combineReducers<Store>({
   data: undoable(dataReducer, {

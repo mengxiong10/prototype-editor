@@ -3,7 +3,6 @@ import { RowFlex } from 'my-react-common';
 import { Tooltip, Button } from 'antd';
 import CommentOutlined from '@ant-design/icons/CommentOutlined';
 import BorderOutlined from '@ant-design/icons/BorderOutlined';
-import { ActionCreators } from 'redux-undo';
 import { ButtonProps } from 'antd/lib/button';
 import Redo from '@/svg/redo.svg';
 import Undo from '@/svg/undo.svg';
@@ -17,8 +16,7 @@ import HorizontalSpace from '@/svg/horizontal-space.svg';
 import VerticalSpace from '@/svg/vertical-space.svg';
 import { drawingEvent } from './event';
 import { useEditor } from './Context';
-import { Store } from './reducer';
-import { actions } from './reducer/data';
+import { Store, actions } from './reducer';
 
 export interface PanelToolbarProps extends Store {}
 
@@ -62,14 +60,14 @@ function PanelToolbar({ data }: PanelToolbarProps) {
       <ButtonIcon
         title="撤销(ctrl+z)"
         disabled={data.past.length === 0}
-        onClick={() => dispatch(ActionCreators.undo())}
+        onClick={() => dispatch(actions.undo())}
       >
         <Undo />
       </ButtonIcon>
       <ButtonIcon
         title="重做(ctrl+shift+z)"
         disabled={data.future.length === 0}
-        onClick={() => dispatch(ActionCreators.redo())}
+        onClick={() => dispatch(actions.redo())}
       >
         <Redo />
       </ButtonIcon>
