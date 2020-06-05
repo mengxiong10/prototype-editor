@@ -6,6 +6,8 @@ import { useContextmenu } from './useContextMenu';
 import { actions, Store } from './reducer';
 import { createComponentData, isValidComponent } from './componentUtil';
 import { useDrop } from '@/hooks/useDrop';
+import PanelDrawing from './PanelDrawing';
+
 import { useShortcuts } from './useShortcuts';
 import ComponentWrapper from './ComponentWrapper';
 import PanelCanvas from './PanelCanvas';
@@ -60,6 +62,7 @@ function PanelStage({ data, selected }: PanelStage2Props) {
           ))}
           <PanelCanvas width={2000} height={1000} data={data.present} />
           {selectedData.length > 0 && <ResizeHandlers selectedData={selectedData} />}
+          <PanelDrawing />
         </div>
       </DrawShape>
     </ContextMenuTrigger>
