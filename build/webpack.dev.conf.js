@@ -14,8 +14,8 @@ function resolve(dir) {
   return path.join(__dirname, '..', dir);
 }
 
-const HOST = process.env.HOST;
-const PORT = process.env.PORT && Number(process.env.PORT);
+const HOST = process.env.HOST || config.dev.host;
+const PORT = (process.env.PORT && Number(process.env.PORT)) || config.dev.port;
 
 const devWebpackConfig = merge(baseWebpackConfig, {
   mode: 'development',
@@ -27,6 +27,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
 
   // these devServer options should be customized in /config/index.js
   devServer: {
+    disableHostCheck: true,
     clientLogLevel: 'warning',
     historyApiFallback: {
       rewrites: [{ from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'index.html') }],
@@ -35,8 +36,9 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     hot: true,
     contentBase: false, // since we use CopyWebpackPlugin.
     compress: true,
-    host: HOST || config.dev.host,
-    port: PORT || config.dev.port,
+    host: HOST,
+    port: PORT,
+    public: `${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}`,
     open: config.dev.autoOpenBrowser,
     overlay: config.dev.errorOverlay ? { warnings: false, errors: true } : false,
     publicPath: config.dev.assetsPublicPath,
