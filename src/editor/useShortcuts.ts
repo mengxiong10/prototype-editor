@@ -1,5 +1,5 @@
 import { useRef, useEffect } from 'react';
-import { useHotkeys } from '../hooks/useHotkeys';
+import { useHotkeys } from './useHotkeys';
 import { useEditor } from './Context';
 import { actions } from './reducer';
 import { pasteComponentData } from './componentUtil';

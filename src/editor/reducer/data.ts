@@ -1,17 +1,17 @@
+import _castArray from 'lodash/castArray';
 import { createReducerWithActions } from './reducerHelpers';
 import { ComponentData, ComponentId, ComponentEditableData } from '@/types/editor';
-import { SingleOrArray, transform2Array } from '@/utils';
 import { clipboard } from '../componentUtil';
 import { Store } from './index';
 
 type DataHandler<T = void> = (state: ComponentData[], payload: T, s: Store) => ComponentData[];
 
-const add: DataHandler<SingleOrArray<ComponentData>> = (state, payload) => {
+const add: DataHandler<ComponentData | ComponentData[]> = (state, payload) => {
   return state.concat(payload);
 };
 
-const del: DataHandler<SingleOrArray<ComponentId> | void> = (state, payload, store) => {
-  const id = payload ? transform2Array(payload) : store.selected;
+const del: DataHandler<ComponentId | ComponentId[] | void> = (state, payload, store) => {
+  const id = payload ? _castArray(payload) : store.selected;
   return state.filter(v => id.indexOf(v.id) === -1);
 };
 

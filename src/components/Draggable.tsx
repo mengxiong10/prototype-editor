@@ -1,5 +1,6 @@
 import React from 'react';
 import { rafThrottle } from '@/utils/rafThrottle';
+import { matchesSelectorAndParentsTo } from '@/utils/domFns';
 
 export interface DraggableData {
   x: number;
@@ -24,16 +25,6 @@ interface DraggableState {
   dragging: boolean;
   x: number;
   y: number;
-}
-
-export function parentToSelector(el: Element, selector: string, baseNode: Element): boolean {
-  let node: Element | null = el;
-  while (node) {
-    if (node.matches(selector)) return true;
-    if (node === baseNode) return false;
-    node = node.parentElement;
-  }
-  return false;
 }
 
 function offsetXY(data: { clientX: number; clientY: number; scale?: number }) {
@@ -88,8 +79,8 @@ class Draggable extends React.Component<DraggableProps, DraggableState> {
     const { handle, cancel } = this.props;
     // 只接受左键
     if (typeof evt.button === 'number' && evt.button !== 0) return;
-    if (handle && !parentToSelector(target, handle, currentTarget)) return;
-    if (cancel && parentToSelector(target, cancel, currentTarget)) return;
+    if (handle && !matchesSelectorAndParentsTo(target, handle, currentTarget)) return;
+    if (cancel && matchesSelectorAndParentsTo(target, cancel, currentTarget)) return;
     const position = offsetXY({ clientX: evt.clientX, clientY: evt.clientY });
     if (this.props.onStart && this.props.onStart(evt) === false) return;
     this.setState({

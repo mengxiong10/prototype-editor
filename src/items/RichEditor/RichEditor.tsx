@@ -1,5 +1,6 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { Editor, EditorState, RichUtils, Modifier } from 'draft-js';
+import { disableDragClassName } from '@/editor/config';
 import { InlineStyleControls, BlockStyleControls } from './StyleControls';
 import 'draft-js/dist/Draft.css';
 import './RichEditor.module.scss';
@@ -62,7 +63,7 @@ function RichEditor({ value, backgroundColor }: RichEditorProps) {
   return (
     <div style={{ backgroundColor, display: 'flex' }} styleName="rich-editor">
       <div
-        className="js-drag-cancel u-scroll"
+        className={`${disableDragClassName} u-scroll`}
         style={{ flex: 1, overflow: 'auto', padding: 5 }}
         onClick={focus}
       >

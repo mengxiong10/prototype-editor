@@ -136,7 +136,7 @@ feat: A new feature
   3. 注意菜单位置不超过 window.innerHeight 和 window.innerWidth
 
 - [x] 键盘快捷键(需要注意触发时机)
-- [ ] 组件的对齐
+- [x] 组件的对齐
       _ 左对齐/水平居中/右对齐/顶对齐/垂直居中/底对齐(2 个以上组件被选中)
       _ 水平等间距/垂直等间距(3 个以上组件被选中)
 - [ ] 双击调出编辑
@@ -169,6 +169,13 @@ componentWrapper 组件
 
 2. 表格
 
+#### 全局快捷键兼容处理
+
+editor 使用 hotkeys-js 注册事件， hotkeys-js 已经默认过滤 input/select/textarea/isContentEditable 的事件
+添加一个自定义类 disableShortcutClassName, 如果触发 keydown 的 target 向上能找到有这个自定义属性，就忽略全局的事件
+
+使用：针对表格、思维导图等内部有自定义快捷键的组件，在外部元素添加 disableShortcutClassName
+
 #### 组件节点的思考
 
 目前普通组件都是 HTML 节点, 但是有标记组件等矩形框, 要不要引入 canvas 层.
@@ -183,3 +190,61 @@ componentWrapper 组件
 ```
 
 因为现在只有矩形框的绘制, 还不必要引入 canvas 层, 先用 svg 处理.
+
+### 属性分类
+
+1. 顶部工具栏
+   作用对象： 画布，或者组件的其他属性（位置等非组件自定义属性）
+
+   1. 数据处理
+      - 撤销（ctrl+z
+      - 重做 (ctrl+shift+z)
+      - 保存
+   2. 标记组件（兼容方案，应该放到左边组件栏）
+      - 重点标记
+      - 添加批注
+   3. 对其 （当选中 2 个组件以上时可用）
+      - 左对齐
+      - 水平居中
+      - 右对齐
+      - 顶对齐
+      - 垂直居中
+      - 底对齐
+   4. 排列（当选中 3 个组件以上时可用）
+      - 水平等间距
+      - 垂直等间距
+   5. 图层
+      - 置于顶层
+      - 置于底层
+   6. 画布缩放
+      - 放大
+      - 缩小
+
+2. 右侧属性栏
+   作用对象：组件的自定义属性（背景颜色，边框等）
+3. 组件内部工具栏
+   作用对象：组件的内部功能（富文本编辑器的斜体、加粗等）, 也可以根据情况放到右侧属性栏
+
+### 数据结构
+
+```ts
+// 单个组件数据
+interface ComponentData<T = any> {
+  id: ComponentId; // 组件ID（唯一）
+  type: string; // 组件类型（对应不同的data）
+  data: T; // 组件自定义数据对象（右侧属性栏修改）
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+  index: number; // 图层位置
+  association?: ComponentId; // 关联组件
+  gid: ComponentId; // 组合而成的组的id
+}
+
+// group
+interface ComponentGroup {
+  id: ComponentId; // id
+  componentType: 1; // 标识类型为组
+}
+```

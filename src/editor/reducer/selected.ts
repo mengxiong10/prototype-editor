@@ -1,13 +1,13 @@
+import _castArray from 'lodash/castArray';
 import { createReducerWithActions } from './reducerHelpers';
 import { ComponentData, ComponentId } from '@/types/editor';
 import { ShapeData } from '@/components/DrawShape';
-import { SingleOrArray, transform2Array } from '@/utils';
 import { Store } from './index';
 
 type SelectHandler<T = void> = (state: ComponentId[], payload: T, s: Store) => ComponentId[];
 
-const add: SelectHandler<SingleOrArray<ComponentData>> = (state, payload) => {
-  return transform2Array(payload).map(v => v.id);
+const add: SelectHandler<ComponentData | ComponentData[]> = (state, payload) => {
+  return _castArray(payload).map(v => v.id);
 };
 
 const selectSingle: SelectHandler<ComponentId> = (state, payload) => {

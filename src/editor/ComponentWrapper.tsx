@@ -6,6 +6,7 @@ import { useEditor } from './Context';
 import { actions } from './reducer';
 import { getComponent } from './componentUtil';
 import { useComponent } from './useComponent';
+import { disableDragClassName } from './config';
 
 export interface ComponentWrapperProps {
   active: boolean;
@@ -57,7 +58,7 @@ function ComponentWrapper({ active, item }: ComponentWrapperProps) {
 
   return (
     <Draggable
-      cancel=".js-drag-cancel"
+      cancel={`.${disableDragClassName}`}
       onMouseDown={handleSelect}
       onMove={handleMove}
       onStop={handleStop}
