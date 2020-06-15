@@ -1,14 +1,16 @@
 import hotkeys, { KeyHandler } from 'hotkeys-js';
 import { useCallback, useEffect } from 'react';
 import { matchesSelectorAndParentsTo } from '@/utils/domFns';
-import { disableShortcutClassName } from './config';
+import { disableClassnames } from './DisableEditorFeature';
 
 const defaultFilter = hotkeys.filter;
 
 hotkeys.filter = function filter(evt: KeyboardEvent) {
   const target = evt.target as Element;
 
-  return defaultFilter(evt) && !matchesSelectorAndParentsTo(target, `.${disableShortcutClassName}`);
+  const classname = disableClassnames.keyboardShortcut;
+
+  return defaultFilter(evt) && !matchesSelectorAndParentsTo(target, `.${classname}`);
 };
 
 export function useHotkeys(keys: string, callback: KeyHandler, deps: any[] = []) {
