@@ -1,6 +1,7 @@
 import React from 'react';
 import { Collapse } from 'antd';
 import { itemMap } from './PanelDetailHelper';
+import { PanelChangeHandler } from './PanelDetailWrapper';
 
 const { Panel } = Collapse;
 
@@ -18,18 +19,11 @@ export interface DetailPanelGroup<P = string> {
 export interface DetailPanelProps {
   groups: DetailPanelGroup[];
   data: any;
-  onChange: (obj: any) => void;
-  onChangeWithoutHistory: (obj: any) => void;
+  onChange: PanelChangeHandler;
   children?: React.ReactNode;
 }
 
-function DetailPanel({
-  groups,
-  data,
-  children,
-  onChange,
-  onChangeWithoutHistory,
-}: DetailPanelProps) {
+function DetailPanel({ groups, data, children, onChange }: DetailPanelProps) {
   return (
     <Collapse
       className="pe-detail-panel"
@@ -48,7 +42,6 @@ function DetailPanel({
                 title,
                 value: data[prop],
                 onChange,
-                onChangeWithoutHistory,
               });
             })}
           </Panel>

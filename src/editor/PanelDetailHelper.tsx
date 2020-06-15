@@ -1,6 +1,7 @@
 import React from 'react';
 import { Input, Switch, InputNumber } from 'antd';
 import ColorPicker from '../components/ColorPicker';
+import { PanelChangeHandler } from './PanelDetailWrapper';
 
 const { TextArea } = Input;
 
@@ -8,44 +9,31 @@ export interface DetailPanelRowProps extends Object {
   title: string;
   prop: string;
   value: any;
-  onChange: (obj: any) => void;
-  onChangeWithoutHistory: (obj: any) => void;
+  onChange: PanelChangeHandler;
 }
 
-export const RowInput = ({
-  prop,
-  title,
-  value,
-  onChange,
-  onChangeWithoutHistory,
-}: DetailPanelRowProps) => {
+export const RowInput = ({ prop, title, value, onChange }: DetailPanelRowProps) => {
   return (
     <div className="pe-detail-panel-row">
       <span>{title}</span>
       <Input
         style={{ width: 120 }}
         value={value}
-        onChange={evt => onChangeWithoutHistory({ [prop]: evt.target.value })}
+        onChange={evt => onChange({ [prop]: evt.target.value }, { history: false })}
         onBlur={() => onChange(null)}
       />
     </div>
   );
 };
 
-export const RowTextArea = ({
-  prop,
-  title,
-  value,
-  onChange,
-  onChangeWithoutHistory,
-}: DetailPanelRowProps) => {
+export const RowTextArea = ({ prop, title, value, onChange }: DetailPanelRowProps) => {
   return (
     <div className="pe-detail-panel-row">
       <span>{title}</span>
       <TextArea
         style={{ width: 120 }}
         value={value}
-        onChange={evt => onChangeWithoutHistory({ [prop]: evt.target.value })}
+        onChange={evt => onChange({ [prop]: evt.target.value }, { history: false })}
         onBlur={() => onChange(null)}
       />
     </div>
@@ -70,13 +58,7 @@ export const RowSwitch = ({ prop, title, value, onChange }: DetailPanelRowProps)
   );
 };
 
-export const RowNumber = ({
-  prop,
-  title,
-  value,
-  onChange,
-  onChangeWithoutHistory,
-}: DetailPanelRowProps) => {
+export const RowNumber = ({ prop, title, value, onChange }: DetailPanelRowProps) => {
   return (
     <div className="pe-detail-panel-row">
       <span>{title}</span>
@@ -85,7 +67,7 @@ export const RowNumber = ({
         min={0}
         max={10}
         value={value}
-        onChange={v => onChangeWithoutHistory({ [prop]: v })}
+        onChange={v => onChange({ [prop]: v }, { history: false })}
         onBlur={() => onChange(null)}
       />
     </div>

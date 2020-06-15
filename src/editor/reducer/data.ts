@@ -31,9 +31,7 @@ type UpdatePayload =
 
 const update: DataHandler<UpdatePayload> = (state, payload, store) => {
   const ids = store.selected;
-  if (ids.length === 0) {
-    return state;
-  }
+  if (ids.length === 0) return state;
   return state.map(item => {
     if (ids.includes(item.id)) {
       const updater = typeof payload === 'function' ? payload(item) : payload;
@@ -42,7 +40,8 @@ const update: DataHandler<UpdatePayload> = (state, payload, store) => {
       }
       const nextItem = { ...item, ...updater };
       if (updater.data) {
-        nextItem.data = { ...item.data, ...updater.data };
+        const value = typeof updater.data === 'function' ? updater.data(item.data) : updater.data;
+        nextItem.data = { ...item.data, ...value };
       }
       // 避免参数传错, 导致id 和 type 被修改
       nextItem.id = item.id;

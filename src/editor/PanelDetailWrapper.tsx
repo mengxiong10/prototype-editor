@@ -10,6 +10,8 @@ export interface PanelDetailWrapper {
   selected: ComponentId[];
 }
 
+export type PanelChangeHandler = (data: any, config?: { history?: boolean }) => void;
+
 function PanelDetailWrapper({ data, selected }: PanelDetailWrapper) {
   const dispatch = useEditor();
 
@@ -20,16 +22,16 @@ function PanelDetailWrapper({ data, selected }: PanelDetailWrapper) {
 
   const component = isSelected ? getComponent(selectedData[0].type) : null;
 
-  const handleChange = useCallback(
-    (obj: any) => {
-      dispatch(obj === null ? actions.recordHistory() : actions.update({ data: obj }));
-    },
-    [dispatch]
-  );
-
-  const handleChangeWithoutHistory = useCallback(
-    (obj: any) => {
-      dispatch(actions.updateWithoutHistory({ data: obj }));
+  const handleChange: PanelChangeHandler = useCallback(
+    (value, config) => {
+      const { history } = { history: true, ...config };
+      if (!value) {
+        return dispatch(actions.recordHistory());
+      }
+      if (!history) {
+        return dispatch(actions.updateWithoutHistory({ data: value }));
+      }
+      return dispatch(actions.update({ data: value }));
     },
     [dispatch]
   );
@@ -43,7 +45,6 @@ function PanelDetailWrapper({ data, selected }: PanelDetailWrapper) {
       data={{ ...component.defaultData, ...selectedData[0].data }}
       groups={component.detailPanel}
       onChange={handleChange}
-      onChangeWithoutHistory={handleChangeWithoutHistory}
     />
   ) : (
     React.createElement(component.detailPanel as React.ElementType, {
