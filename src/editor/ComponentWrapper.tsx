@@ -20,7 +20,9 @@ function ComponentWrapper({ active, item }: ComponentWrapperProps) {
 
   // 选中组件
   const handleSelect = (evt: React.MouseEvent) => {
-    dispatch(evt.shiftKey ? actions.selectMultiple(id) : actions.selectSingle(id));
+    if (!active) {
+      dispatch(evt.shiftKey ? actions.selectAppend(id) : actions.select(id));
+    }
   };
 
   // 拖动过程忽略历史记录

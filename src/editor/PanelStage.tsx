@@ -37,7 +37,7 @@ function PanelStage({ data, selected }: PanelStage2Props) {
   const handleSelect = useCallback(
     (evt: React.MouseEvent) => {
       if (evt.target === evt.currentTarget) {
-        dispatch(actions.selectClear());
+        dispatch(actions.select([]));
       }
     },
     [dispatch]

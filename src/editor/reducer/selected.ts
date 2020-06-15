@@ -10,23 +10,12 @@ const add: SelectHandler<ComponentData | ComponentData[]> = (state, payload) => 
   return _castArray(payload).map(v => v.id);
 };
 
-const selectSingle: SelectHandler<ComponentId> = (state, payload) => {
-  // 如果选择的组件已经选中了,就不变, 否则就换成新的组件
-  if (state.indexOf(payload) !== -1) {
-    return state;
-  }
-  return [payload];
+const select: SelectHandler<ComponentId | ComponentId[]> = (state, payload) => {
+  return _castArray(payload);
 };
 
-const selectMultiple: SelectHandler<ComponentId> = (state, payload) => {
-  if (state.indexOf(payload) !== -1) {
-    return state;
-  }
-  return [...state, payload];
-};
-
-const selectClear: SelectHandler = () => {
-  return [];
+const selectAppend: SelectHandler<ComponentId | ComponentId[]> = (state, payload) => {
+  return state.concat(payload);
 };
 
 const selectArea: SelectHandler<ShapeData> = (state, payload, store) => {
@@ -43,6 +32,12 @@ const selectAll: SelectHandler = (state, payload, store) => {
   return store.data.present.map(v => v.id);
 };
 
-const handlers = { add, selectSingle, selectMultiple, selectAll, selectClear, selectArea };
+const handlers = {
+  add,
+  select,
+  selectAppend,
+  selectAll,
+  selectArea,
+};
 
 export const { reducer, actions } = createReducerWithActions(handlers);
