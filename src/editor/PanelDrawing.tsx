@@ -22,20 +22,18 @@ function PanelDrawing() {
     (value: ShapeData) => {
       hideDrawer();
       if (type === 'comment') {
-        const richData = createComponentData({
-          type: 'rich',
+        const richData = createComponentData('rich', {
           left: value.left + value.width + 200,
           top: value.top,
         });
-        const rect = createComponentData({
+        const rect = createComponentData('rect', {
           ...value,
-          type: 'rect',
           association: richData.id,
         });
         dispatch(actions.add(rect));
         dispatch(actions.add(richData));
       } else {
-        const componentdata = createComponentData({ type, ...value });
+        const componentdata = createComponentData(type, value);
         dispatch(actions.add(componentdata));
       }
     },

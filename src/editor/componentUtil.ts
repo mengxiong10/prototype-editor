@@ -46,13 +46,14 @@ export function getComponent(type: string) {
 }
 
 export const createComponentData = (
-  obj: { type: string } & Partial<ComponentEditableData>
+  type: string,
+  obj: Partial<ComponentEditableData>
 ): ComponentData => {
-  const { defaultSize } = getComponent(obj.type);
+  const { defaultSize } = getComponent(type);
   const id = randomId();
   const defaultConfig = { data: {}, left: 10, top: 10, width: 200, height: 100, ...defaultSize };
 
-  return { ...defaultConfig, ...obj, id };
+  return { ...defaultConfig, ...obj, id, type };
 };
 
 export const cloneComponentData = (

@@ -29,7 +29,7 @@ function PanelStage({ data, selected }: PanelStage2Props) {
   const dropProps = useDrop({
     onDropDone: ({ data: type, x, y }) => {
       if (!type || !isValidComponent(type)) return;
-      const componentdata = createComponentData({ type, left: x - 20, top: y - 20 });
+      const componentdata = createComponentData(type, { left: x - 20, top: y - 20 });
       dispatch(actions.add(componentdata));
     },
   });
