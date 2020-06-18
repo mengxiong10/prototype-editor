@@ -8,7 +8,18 @@ interface Shortcut {
 }
 
 // 左侧组件列表的显示
-export const shortcuts: { title: string; key: string; children: Shortcut[] }[] = [];
+export const shortcuts: { title: string; children: Shortcut[] }[] = [];
+
+function registerShortcut({ name, group, type }: { name: string; group: string; type: string }) {
+  let item = shortcuts.find(v => v.title === group);
+  if (!item) {
+    item = { title: group, children: [] };
+    shortcuts.push(item);
+  }
+  if (item.children.every(v => v.type !== type)) {
+    item.children.push({ name, type });
+  }
+}
 
 const components: { [key: string]: ComponentOptions } = {};
 
@@ -19,15 +30,7 @@ export function registerComponent(
 ) {
   components[type] = options;
   if (shortcut) {
-    const { name, group } = shortcut;
-    let item = shortcuts.find(v => v.title === group);
-    if (!item) {
-      item = { title: group, key: String(shortcuts.length), children: [] };
-      shortcuts.push(item);
-    }
-    if (item.children.every(v => v.type !== type)) {
-      item.children.push({ name, type });
-    }
+    registerShortcut({ ...shortcut, type });
   }
 }
 

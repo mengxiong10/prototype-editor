@@ -7,9 +7,9 @@ const { Panel } = Collapse;
 
 function ComponentList() {
   return (
-    <Collapse style={{ border: 0 }} defaultActiveKey={[shortcuts[0].key]}>
-      {shortcuts.map(item => (
-        <Panel header={item.title} key={item.key}>
+    <Collapse style={{ border: 0 }} defaultActiveKey={['0']}>
+      {shortcuts.map((item, index) => (
+        <Panel header={item.title} key={String(index)}>
           {item.children.map(v => (
             <ComponentItem key={v.type} type={v.type}>
               {v.name}
