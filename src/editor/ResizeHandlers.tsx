@@ -37,7 +37,6 @@ function ResizeHandlers({ selectedData }: ResizeHandlersProps) {
   const minOuterWidth = (outerWidth / minWidth) * 50; // 100默认的组件最小宽度;
   const minOuterHeight = (outerHeight / minHeight) * 20; // 20 默认组件最小高度;
 
-  // TODO: 拖动的时候, 应该设置body的cursor
   const handleDragStart = (evt: React.MouseEvent) => {
     const node = evt.target as HTMLSpanElement;
     const d = node.dataset.handler!;
@@ -48,6 +47,8 @@ function ResizeHandlers({ selectedData }: ResizeHandlersProps) {
       isResizeTop: d[0] === 'n',
     };
 
+    const cursor = window.getComputedStyle(node).getPropertyValue('cursor');
+    document.body.style.cursor = cursor;
     slack.current.x = 0;
     slack.current.y = 0;
   };
@@ -91,6 +92,7 @@ function ResizeHandlers({ selectedData }: ResizeHandlersProps) {
   };
 
   const handleStop: DraggableHandler = () => {
+    document.body.style.cursor = '';
     dispatch(actions.recordHistory());
   };
 
