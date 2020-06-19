@@ -1,6 +1,6 @@
 import React from 'react';
 import { Collapse } from 'antd';
-import { itemMap } from './PanelDetailHelper';
+import { itemMap, DetailPanelRowProps } from './PanelDetailHelper';
 import { PanelChangeHandler } from './PanelDetailWrapper';
 
 const { Panel } = Collapse;
@@ -8,7 +8,7 @@ const { Panel } = Collapse;
 export interface DetailPanelItem<P> {
   title: string;
   prop: P;
-  type: keyof typeof itemMap;
+  type: keyof typeof itemMap | React.JSXElementConstructor<DetailPanelRowProps>;
 }
 
 export interface DetailPanelGroup<P = string> {
