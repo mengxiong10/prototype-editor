@@ -21,7 +21,7 @@ function ComponentWrapper({ active, item }: ComponentWrapperProps) {
   // 选中组件
   const handleSelect = (evt: React.MouseEvent) => {
     if (!active) {
-      dispatch(evt.shiftKey ? actions.selectAppend(id) : actions.select(id));
+      dispatch(evt.ctrlKey ? actions.selectAppend(id) : actions.select(id));
     }
   };
 

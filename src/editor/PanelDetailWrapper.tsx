@@ -48,8 +48,7 @@ function PanelDetailWrapper({ data, selected }: PanelDetailWrapper) {
     />
   ) : (
     React.createElement(component.detailPanel as React.ElementType, {
-      ...component.defaultData,
-      ...selectedData[0].data,
+      data: { ...component.defaultData, ...selectedData[0].data },
       onChange: handleChange,
     })
   );

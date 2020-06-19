@@ -1,4 +1,4 @@
-import { registerComponent } from '@/editor/componentUtil';
+import { registerComponent as register } from '@/editor/componentUtil';
 import { buttonOptions } from './Button';
 import { inputOptions } from './Input';
 import { richEditorOptions } from './RichEditor';
@@ -7,13 +7,13 @@ import { textareaOptions } from './TextArea';
 import { checkboxOptions } from './Checkbox';
 import { radioOptions } from './Radio';
 
-const groupBase = '基础组件';
+const g1 = '基础组件';
 
-registerComponent('rect', rectOptions);
+register({ type: 'rect', options: rectOptions });
 
-registerComponent('button', buttonOptions, { group: groupBase, name: '按钮' });
-registerComponent('input', inputOptions, { group: groupBase, name: '单行输入' });
-registerComponent('textarea', textareaOptions, { group: groupBase, name: '多行输入' });
-registerComponent('rich', richEditorOptions, { group: groupBase, name: '富文本' });
-registerComponent('checkbox', checkboxOptions, { group: groupBase, name: '多选框' });
-registerComponent('radio', radioOptions, { group: groupBase, name: '单选框' });
+register({ type: 'button', options: buttonOptions, group: g1, name: '按钮' });
+register({ type: 'input', options: inputOptions, group: g1, name: '单行输入' });
+register({ type: 'textarea', options: textareaOptions, group: g1, name: '多行输入' });
+register({ type: 'rich', options: richEditorOptions, group: g1, name: '富文本' });
+register({ type: 'checkbox', options: checkboxOptions, group: g1, name: '多选框' });
+register({ type: 'radio', options: radioOptions, group: g1, name: '单选框' });

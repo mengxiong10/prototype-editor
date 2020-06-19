@@ -23,14 +23,16 @@ function registerShortcut({ name, group, type }: { name: string; group: string; 
 
 const components: { [key: string]: ComponentOptions } = {};
 
-export function registerComponent(
-  type: string,
-  options: ComponentOptions,
-  shortcut?: { name: string; group: string }
-) {
+export function registerComponent(data: {
+  type: string;
+  options: ComponentOptions;
+  name?: string;
+  group?: string;
+}) {
+  const { type, options, name, group } = data;
   components[type] = options;
-  if (shortcut) {
-    registerShortcut({ ...shortcut, type });
+  if (group && name) {
+    registerShortcut({ group, name, type });
   }
 }
 
