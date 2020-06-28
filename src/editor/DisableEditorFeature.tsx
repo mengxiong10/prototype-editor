@@ -1,6 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
-import _castArray from 'lodash/castArray';
+import { castArray } from 'lodash';
 
 // 拖动 | 快捷键
 type Feature = 'drag' | 'keyboardShortcut';
@@ -16,7 +16,7 @@ export const disableClassnames = {
 };
 
 function DisableEditorFeature({ children, disabled }: DisableDragProps) {
-  const arr = _castArray(disabled).map(v => disableClassnames[v]);
+  const arr = castArray(disabled).map(v => disableClassnames[v]);
 
   const className = classnames(children.props.className, arr);
 

@@ -1,4 +1,4 @@
-import _castArray from 'lodash/castArray';
+import { castArray } from 'lodash';
 import { createReducerWithActions } from './reducerHelpers';
 import { ComponentData, ComponentId } from '@/types/editor';
 import { ShapeData } from '@/components/DrawShape';
@@ -7,11 +7,11 @@ import { Store } from './index';
 type SelectHandler<T = void> = (state: ComponentId[], payload: T, s: Store) => ComponentId[];
 
 const add: SelectHandler<ComponentData | ComponentData[]> = (state, payload) => {
-  return _castArray(payload).map(v => v.id);
+  return castArray(payload).map(v => v.id);
 };
 
 const select: SelectHandler<ComponentId | ComponentId[]> = (state, payload) => {
-  return _castArray(payload);
+  return castArray(payload);
 };
 
 const selectAppend: SelectHandler<ComponentId | ComponentId[]> = (state, payload) => {

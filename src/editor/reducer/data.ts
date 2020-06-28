@@ -1,4 +1,4 @@
-import _castArray from 'lodash/castArray';
+import { castArray, merge } from 'lodash';
 import { createReducerWithActions } from './reducerHelpers';
 import { ComponentData, ComponentId, ComponentEditableData } from '@/types/editor';
 import { clipboard } from '../componentUtil';
@@ -11,7 +11,7 @@ const add: DataHandler<ComponentData | ComponentData[]> = (state, payload) => {
 };
 
 const del: DataHandler<ComponentId | ComponentId[] | void> = (state, payload, store) => {
-  const id = payload ? _castArray(payload) : store.selected;
+  const id = payload ? castArray(payload) : store.selected;
   return state.filter(v => id.indexOf(v.id) === -1);
 };
 
@@ -35,18 +35,9 @@ const update: DataHandler<UpdatePayload> = (state, payload, store) => {
   return state.map(item => {
     if (ids.includes(item.id)) {
       const updater = typeof payload === 'function' ? payload(item) : payload;
-      if (!updater || updater === item) {
-        return item;
+      if (updater && updater !== item) {
+        return merge({}, item, updater);
       }
-      const nextItem = { ...item, ...updater };
-      if (updater.data) {
-        const value = typeof updater.data === 'function' ? updater.data(item.data) : updater.data;
-        nextItem.data = { ...item.data, ...value };
-      }
-      // 避免参数传错, 导致id 和 type 被修改
-      nextItem.id = item.id;
-      nextItem.type = item.type;
-      return nextItem;
     }
     return item;
   });

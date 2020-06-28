@@ -6,6 +6,7 @@ import { rectOptions } from './Rect';
 import { textareaOptions } from './TextArea';
 import { checkboxOptions } from './Checkbox';
 import { radioOptions } from './Radio';
+import { groupOptions } from './Group';
 
 const g1 = '基础组件';
 
@@ -17,3 +18,5 @@ register({ type: 'textarea', options: textareaOptions, group: g1, name: '多行�
 register({ type: 'rich', options: richEditorOptions, group: g1, name: '富文本' });
 register({ type: 'checkbox', options: checkboxOptions, group: g1, name: '多选框' });
 register({ type: 'radio', options: radioOptions, group: g1, name: '单选框' });
+
+register({ type: 'group', options: groupOptions, group: g1, name: '组合' });
