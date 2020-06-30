@@ -21,18 +21,6 @@ module.exports = function(api) {
       'react-hot-loader/babel',
       'lodash',
       ['import', { libraryName: 'antd', libraryDirectory: 'es', style: 'css' }],
-      [
-        'react-css-modules',
-        {
-          generateScopedName: '[name]_[local]_[hash:base64:5]',
-          filetypes: {
-            '.scss': {
-              syntax: 'postcss-scss',
-            },
-          },
-          exclude: 'node_modules',
-        },
-      ],
     ],
   };
 };

@@ -1,6 +1,6 @@
 import { EditorState } from 'draft-js';
+import type { ComponentOptions } from 'src/types/editor';
 import RichEditor, { RichEditorProps } from './RichEditor';
-import { ComponentOptions } from '../../types/editor';
 
 export const richEditorOptions: ComponentOptions<RichEditorProps> = {
   component: RichEditor,

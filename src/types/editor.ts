@@ -1,4 +1,4 @@
-import { DetailPanelGroup } from '@/editor/PanelDetail';
+import type { DetailPanelGroup } from 'src/editor/PanelDetail';
 
 export type ComponentId = string;
 

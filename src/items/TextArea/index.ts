@@ -1,4 +1,4 @@
-import { ComponentOptions } from '@/types/editor';
+import type { ComponentOptions } from 'src/types/editor';
 import TextArea, { TextAreaProps } from './TextArea';
 
 export const textareaOptions: ComponentOptions<TextAreaProps> = {

@@ -1,19 +1,18 @@
 import React from 'react';
-import { RowFlex } from 'my-react-common';
 import { Tooltip, Button } from 'antd';
 import CommentOutlined from '@ant-design/icons/CommentOutlined';
 import BorderOutlined from '@ant-design/icons/BorderOutlined';
-import { ButtonProps } from 'antd/lib/button';
-import Redo from '@/svg/redo.svg';
-import Undo from '@/svg/undo.svg';
-import AlignLeft from '@/svg/align-left-fill.svg';
-import AlignTop from '@/svg/align-top-fill.svg';
-import AlignBottom from '@/svg/align-bottom-fill.svg';
-import AlignRight from '@/svg/align-right-fill.svg';
-import AlignCenter from '@/svg/align-center-fill.svg';
-import AlignVerticel from '@/svg/align-verticle-fill.svg';
-import HorizontalSpace from '@/svg/horizontal-space.svg';
-import VerticalSpace from '@/svg/vertical-space.svg';
+import type { ButtonProps } from 'antd/lib/button';
+import Redo from 'src/svg/redo.svg';
+import Undo from 'src/svg/undo.svg';
+import AlignLeft from 'src/svg/align-left-fill.svg';
+import AlignTop from 'src/svg/align-top-fill.svg';
+import AlignBottom from 'src/svg/align-bottom-fill.svg';
+import AlignRight from 'src/svg/align-right-fill.svg';
+import AlignCenter from 'src/svg/align-center-fill.svg';
+import AlignVerticel from 'src/svg/align-verticle-fill.svg';
+import HorizontalSpace from 'src/svg/horizontal-space.svg';
+import VerticalSpace from 'src/svg/vertical-space.svg';
 import { drawingEvent } from './event';
 import { useEditor } from './Context';
 import { Store, actions } from './reducer';
@@ -46,10 +45,11 @@ function PanelToolbar({ data, selected }: PanelToolbarProps) {
   );
 
   return (
-    <RowFlex
+    <div
       id={id}
-      align="middle"
       style={{
+        display: 'flex',
+        alignItems: 'center',
         height: 40,
         flex: '0 0 40px',
         padding: '0 16px',
@@ -138,7 +138,7 @@ function PanelToolbar({ data, selected }: PanelToolbarProps) {
       >
         <VerticalSpace />
       </ButtonIcon>
-    </RowFlex>
+    </div>
   );
 }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { rafThrottle } from '@/utils/rafThrottle';
+import { rafThrottle } from 'src/utils/rafThrottle';
 
 export interface ShapeData {
   left: number;

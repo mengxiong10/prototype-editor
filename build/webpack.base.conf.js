@@ -37,7 +37,7 @@ module.exports = {
     extensions: ['.ts', '.tsx', '.js', '.json'],
     alias: {
       'react-dom': '@hot-loader/react-dom',
-      '@': resolve('src'),
+      src: resolve('src'),
     },
   },
   externals: {},
@@ -64,7 +64,12 @@ module.exports = {
           {
             loader: '@svgr/webpack',
             options: {
-              svgProps: { className: 'svg-icon' },
+              svgProps: {
+                className: 'svg-icon',
+                width: '1em',
+                height: '1em',
+                fill: 'currentColor',
+              },
             },
           },
         ],

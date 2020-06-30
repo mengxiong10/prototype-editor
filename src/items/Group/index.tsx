@@ -1,7 +1,7 @@
 import React from 'react';
+import type { ComponentOptions } from 'src/types/editor';
 import Button, { ButtonProps } from '../Button/Button';
 import Input, { InputProps } from '../Input/Input';
-import { ComponentOptions } from '@/types/editor';
 
 export interface GroupProps {
   button: ButtonProps;

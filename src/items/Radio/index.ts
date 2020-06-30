@@ -1,6 +1,6 @@
 import { Radio } from 'antd';
-import { RadioProps } from 'antd/lib/radio';
-import { ComponentOptions } from '@/types/editor';
+import type { RadioProps } from 'antd/lib/radio';
+import type { ComponentOptions } from 'src/types/editor';
 
 export const radioOptions: ComponentOptions<RadioProps> = {
   component: Radio,

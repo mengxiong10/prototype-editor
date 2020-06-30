@@ -1,3 +1,13 @@
+declare module '*.scss' {
+  const value: any;
+  export = value;
+}
+
+declare module '*css' {
+  const value: any;
+  export = value;
+}
+
 declare module '*.png' {
   const value: any;
   export = value;
@@ -26,12 +36,6 @@ declare module '*.svg' {
 declare module '*.js' {
   const value: any;
   export = value;
-}
-
-declare namespace JSX {
-  interface IntrinsicAttributes {
-    styleName?: string;
-  }
 }
 
 interface Window {

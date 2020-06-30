@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { ContextMenuOption } from '@/components/ContextMenu';
+import type { ContextMenuOption } from 'src/components/ContextMenu';
 import { useEditor } from './Context';
 import { actions, Store } from './reducer';
 import { pasteComponentData, clipboard } from './componentUtil';

@@ -16,9 +16,10 @@
     "noImplicitReturns": true,
     "downlevelIteration": true,
     "moduleResolution": "node",
+    "importsNotUsedAsValues": "error",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "src/*": ["./src/*"]
     },
     "typeRoots": ["./node_modules/@types", "./typings"],
     "experimentalDecorators": true

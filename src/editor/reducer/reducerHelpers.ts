@@ -1,5 +1,5 @@
 import shallowEqual from 'shallowequal';
-import { shadowEqualArray } from '@/utils/shadowEqualArray';
+import { shadowEqualArray } from 'src/utils/shadowEqualArray';
 /**
  * *************
  * handlers 负责处理集体逻辑, 属性名就是type, 方法就是 处理函数

@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
+import type { ComponentData, ComponentId } from 'src/types/editor';
 import { getComponent } from './componentUtil';
 import { useEditor } from './Context';
-import { ComponentData, ComponentId } from '@/types/editor';
 import { actions } from './reducer';
 import DetailPanel from './PanelDetail';
 

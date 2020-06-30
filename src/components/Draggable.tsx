@@ -1,6 +1,6 @@
 import React from 'react';
-import { rafThrottle } from '@/utils/rafThrottle';
-import { matchesSelectorAndParentsTo } from '@/utils/domFns';
+import { rafThrottle } from 'src/utils/rafThrottle';
+import { matchesSelectorAndParentsTo } from 'src/utils/domFns';
 
 export interface DraggableData {
   x: number;

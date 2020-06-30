@@ -1,7 +1,7 @@
 import React from 'react';
 import { Collapse } from 'antd';
 import { itemMap, DetailPanelRowProps } from './PanelDetailHelper';
-import { PanelChangeHandler } from './PanelDetailWrapper';
+import type { PanelChangeHandler } from './PanelDetailWrapper';
 
 const { Panel } = Collapse;
 

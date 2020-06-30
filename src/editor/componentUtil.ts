@@ -1,6 +1,6 @@
+import type { ComponentOptions, ComponentEditableData, ComponentData } from 'src/types/editor';
+import { randomId } from 'src/utils/randomId';
 import NotFound from './NotFound';
-import { ComponentOptions, ComponentEditableData, ComponentData } from '@/types/editor';
-import { randomId } from '@/utils/randomId';
 
 interface Shortcut {
   name: string;

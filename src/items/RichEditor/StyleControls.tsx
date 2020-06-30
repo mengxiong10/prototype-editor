@@ -4,7 +4,7 @@ import UnorderedListOutlined from '@ant-design/icons/UnorderedListOutlined';
 import BoldOutlined from '@ant-design/icons/BoldOutlined';
 import ItalicOutlined from '@ant-design/icons/ItalicOutlined';
 import UnderlineOutlined from '@ant-design/icons/UnderlineOutlined';
-import { EditorState } from 'draft-js';
+import type { EditorState } from 'draft-js';
 
 const BLOCK_TYPES = [
   { label: <OrderedListOutlined />, style: 'ordered-list-item' },

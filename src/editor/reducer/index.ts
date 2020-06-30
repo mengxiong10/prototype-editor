@@ -1,6 +1,6 @@
 import undoable, { StateWithHistory, ActionCreators } from 'redux-undo';
+import type { ComponentData, ComponentId } from 'src/types/editor';
 import { combineReducers, shallowArrayEqualEnhancer } from './reducerHelpers';
-import { ComponentData, ComponentId } from '@/types/editor';
 import { actions as dataActions, reducer as dataReducer } from './data';
 import { actions as selectedActions, reducer as selectedReducer } from './selected';
 

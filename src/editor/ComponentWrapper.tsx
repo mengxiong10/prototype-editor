@@ -1,7 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
-import Draggable, { DraggableHandler } from '@/components/Draggable';
-import { ComponentData } from '@/types/editor';
+import Draggable, { DraggableHandler } from 'src/components/Draggable';
+import type { ComponentData } from 'src/types/editor';
 import { useEditor } from './Context';
 import { actions } from './reducer';
 import { getComponent } from './componentUtil';

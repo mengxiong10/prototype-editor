@@ -1,5 +1,5 @@
+import type { ComponentOptions } from 'src/types/editor';
 import Button, { ButtonProps } from './Button';
-import { ComponentOptions } from '../../types/editor';
 
 export const buttonOptions: ComponentOptions<ButtonProps> = {
   component: Button,

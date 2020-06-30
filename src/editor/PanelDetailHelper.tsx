@@ -1,7 +1,7 @@
 import React from 'react';
 import { Input, Switch, InputNumber } from 'antd';
 import ColorPicker from '../components/ColorPicker';
-import { PanelChangeHandler } from './PanelDetailWrapper';
+import type { PanelChangeHandler } from './PanelDetailWrapper';
 
 const { TextArea } = Input;
 

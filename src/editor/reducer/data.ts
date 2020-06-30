@@ -1,8 +1,9 @@
-import { castArray, merge } from 'lodash';
+import { castArray } from 'lodash';
+import type { ComponentData, ComponentId, ComponentEditableData } from 'src/types/editor';
+import { mergeDeepObject } from 'src/utils/object';
 import { createReducerWithActions } from './reducerHelpers';
-import { ComponentData, ComponentId, ComponentEditableData } from '@/types/editor';
 import { clipboard } from '../componentUtil';
-import { Store } from './index';
+import type { Store } from './index';
 
 type DataHandler<T = void> = (state: ComponentData[], payload: T, s: Store) => ComponentData[];
 
@@ -36,7 +37,7 @@ const update: DataHandler<UpdatePayload> = (state, payload, store) => {
     if (ids.includes(item.id)) {
       const updater = typeof payload === 'function' ? payload(item) : payload;
       if (updater && updater !== item) {
-        return merge({}, item, updater);
+        return mergeDeepObject(item, updater);
       }
     }
     return item;

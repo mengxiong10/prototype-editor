@@ -1,6 +1,6 @@
 import { Checkbox } from 'antd';
-import { CheckboxProps } from 'antd/lib/checkbox';
-import { ComponentOptions } from '@/types/editor';
+import type { CheckboxProps } from 'antd/lib/checkbox';
+import type { ComponentOptions } from 'src/types/editor';
 
 export const checkboxOptions: ComponentOptions<CheckboxProps> = {
   component: Checkbox,

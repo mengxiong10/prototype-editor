@@ -1,8 +1,8 @@
 import { castArray } from 'lodash';
+import type { ComponentData, ComponentId } from 'src/types/editor';
+import type { ShapeData } from 'src/components/DrawShape';
 import { createReducerWithActions } from './reducerHelpers';
-import { ComponentData, ComponentId } from '@/types/editor';
-import { ShapeData } from '@/components/DrawShape';
-import { Store } from './index';
+import type { Store } from './index';
 
 type SelectHandler<T = void> = (state: ComponentId[], payload: T, s: Store) => ComponentId[];
 

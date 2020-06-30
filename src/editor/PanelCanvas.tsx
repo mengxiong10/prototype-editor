@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { ComponentData } from '@/types/editor';
+import type { ComponentData } from 'src/types/editor';
 
 export interface PanelCanvasProps {
   data: ComponentData[];

@@ -1,4 +1,4 @@
-import { ComponentOptions } from '@/types/editor';
+import type { ComponentOptions } from 'src/types/editor';
 import Input, { InputProps } from './Input';
 
 export const inputOptions: ComponentOptions<InputProps> = {

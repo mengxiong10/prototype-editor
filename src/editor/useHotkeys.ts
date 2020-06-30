@@ -1,6 +1,6 @@
 import hotkeys, { KeyHandler } from 'hotkeys-js';
 import { useCallback, useEffect } from 'react';
-import { matchesSelectorAndParentsTo } from '@/utils/domFns';
+import { matchesSelectorAndParentsTo } from 'src/utils/domFns';
 import { disableClassnames } from './DisableEditorFeature';
 
 const defaultFilter = hotkeys.filter;

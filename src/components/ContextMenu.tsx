@@ -1,8 +1,8 @@
 import React, { useLayoutEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { Menu } from 'antd';
-import { ClickParam } from 'antd/lib/menu';
-import { useClickOutside } from '@/hooks/useClickOutside';
+import type { ClickParam } from 'antd/lib/menu';
+import { useClickOutside } from 'src/hooks/useClickOutside';
 import 'antd/es/dropdown/style/index.css';
 
 export interface ContextMenuItem {

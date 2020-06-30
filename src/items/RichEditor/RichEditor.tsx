@@ -1,9 +1,9 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { Editor, EditorState, RichUtils, Modifier } from 'draft-js';
-import DisableEditorFeature from '@/editor/DisableEditorFeature';
+import DisableEditorFeature from 'src/editor/DisableEditorFeature';
 import { InlineStyleControls, BlockStyleControls } from './StyleControls';
 import 'draft-js/dist/Draft.css';
-import './RichEditor.module.scss';
+import styles from './RichEditor.module.scss';
 
 export interface RichEditorProps {
   value: EditorState;
@@ -61,7 +61,7 @@ function RichEditor({ value, backgroundColor }: RichEditorProps) {
   }, [focus]);
 
   return (
-    <div style={{ backgroundColor, display: 'flex' }} styleName="rich-editor">
+    <div style={{ backgroundColor, display: 'flex' }} className={styles['rich-editor']}>
       <DisableEditorFeature disabled="drag">
         <div className="u-scroll" style={{ flex: 1, overflow: 'auto', padding: 5 }} onClick={focus}>
           <Editor
@@ -72,7 +72,7 @@ function RichEditor({ value, backgroundColor }: RichEditorProps) {
           />
         </div>
       </DisableEditorFeature>
-      <footer styleName="rich-editor-footer">
+      <footer className={styles['rich-editor-footer']}>
         <InlineStyleControls editorState={editorState} onToggle={toggleInlineStyle} />
         <BlockStyleControls editorState={editorState} onToggle={toggleBlockType} />
       </footer>

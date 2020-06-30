@@ -1,13 +1,12 @@
 import React, { useCallback, useRef } from 'react';
-import ContextMenuTrigger from '@/components/ContextMenuTrigger';
-import DrawShape, { ShapeData } from '@/components/DrawShape';
+import ContextMenuTrigger from 'src/components/ContextMenuTrigger';
+import DrawShape, { ShapeData } from 'src/components/DrawShape';
+import { useDrop } from 'src/hooks/useDrop';
 import { useEditor } from './Context';
 import { useContextmenu } from './useContextMenu';
 import { actions, Store } from './reducer';
 import { createComponentData, isValidComponent } from './componentUtil';
-import { useDrop } from '@/hooks/useDrop';
 import PanelDrawing from './PanelDrawing';
-
 import { useShortcuts } from './useShortcuts';
 import ComponentWrapper from './ComponentWrapper';
 import PanelCanvas from './PanelCanvas';

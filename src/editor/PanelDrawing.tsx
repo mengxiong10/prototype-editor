@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import DrawShape, { ShapeData } from '@/components/DrawShape';
+import DrawShape, { ShapeData } from 'src/components/DrawShape';
+import { useClickOutside } from 'src/hooks/useClickOutside';
 import { useEditor } from './Context';
 import { actions } from './reducer';
 import { createComponentData } from './componentUtil';
 import { drawingEvent } from './event';
-import { useClickOutside } from '@/hooks/useClickOutside';
 
 function PanelDrawing() {
   const dispatch = useEditor();

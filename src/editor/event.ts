@@ -1,3 +1,3 @@
-import { TypedEvent } from '@/utils/typedEvent';
+import { TypedEvent } from 'src/utils/typedEvent';
 
 export const drawingEvent = new TypedEvent<string>();
