@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import type { ComponentData, ComponentId } from 'src/types/editor';
+import { mergeDeepObject } from 'src/utils/object';
 import { getComponent } from './componentUtil';
 import { useEditor } from './Context';
 import { actions } from './reducer';
@@ -20,7 +21,7 @@ function PanelDetailWrapper({ data, selected }: PanelDetailWrapper) {
   const isSelected =
     selectedData.length > 0 && selectedData.every(v => v.type === selectedData[0].type);
 
-  const component = isSelected ? getComponent(selectedData[0].type) : null;
+  const componentOption = isSelected ? getComponent(selectedData[0].type) : null;
 
   const handleChange: PanelChangeHandler = useCallback(
     (value, config) => {
@@ -36,19 +37,21 @@ function PanelDetailWrapper({ data, selected }: PanelDetailWrapper) {
     [dispatch]
   );
 
-  if (!(component && component.detailPanel)) {
+  if (!(componentOption && componentOption.detailPanel)) {
     return null;
   }
 
-  return Array.isArray(component.detailPanel) ? (
+  const componentData = mergeDeepObject(componentOption.defaultData, selectedData[0].data)
+
+  return Array.isArray(componentOption.detailPanel) ? (
     <DetailPanel
-      data={{ ...component.defaultData, ...selectedData[0].data }}
-      groups={component.detailPanel}
+      data={componentData}
+      groups={componentOption.detailPanel}
       onChange={handleChange}
     />
   ) : (
-    React.createElement(component.detailPanel as React.ElementType, {
-      data: { ...component.defaultData, ...selectedData[0].data },
+    React.createElement(componentOption.detailPanel as React.ElementType, {
+      data: componentData,
       onChange: handleChange,
     })
   );
