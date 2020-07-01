@@ -9,7 +9,7 @@ function ComponentList() {
   return (
     <Collapse style={{ border: 0 }} defaultActiveKey={['0']}>
       {shortcuts.map((item, index) => (
-        <Panel header={item.title} key={String(index)}>
+        <Panel header={item.group} key={String(index)}>
           {item.children.map(v => (
             <ComponentItem key={v.type} type={v.type}>
               {v.name}

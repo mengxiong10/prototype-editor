@@ -1,39 +1,45 @@
 import type { ComponentOptions, ComponentEditableData, ComponentData } from 'src/types/editor';
 import { randomId } from 'src/utils/randomId';
+import _ from 'lodash';
 import NotFound from './NotFound';
 
 interface Shortcut {
-  name: string;
   type: string;
+  name?: string;
 }
 
-// 左侧组件列表的显示
-export const shortcuts: { title: string; children: Shortcut[] }[] = [];
-
-function registerShortcut({ name, group, type }: { name: string; group: string; type: string }) {
-  let item = shortcuts.find(v => v.title === group);
-  if (!item) {
-    item = { title: group, children: [] };
-    shortcuts.push(item);
-  }
-  if (item.children.every(v => v.type !== type)) {
-    item.children.push({ name, type });
-  }
+interface RegisterComponentParams extends Shortcut {
+  options: ComponentOptions;
 }
 
 const components: { [key: string]: ComponentOptions } = {};
 
-export function registerComponent(data: {
-  type: string;
-  options: ComponentOptions;
-  name?: string;
-  group?: string;
-}) {
-  const { type, options, name, group } = data;
-  components[type] = options;
-  if (group && name) {
-    registerShortcut({ group, name, type });
+function registerComponent(data: RegisterComponentParams | RegisterComponentParams[]) {
+  _.castArray(data).forEach(({ type, options }) => {
+    components[type] = options;
+  });
+}
+
+// 左侧组件列表的显示
+export const shortcuts: { group: string; children: Shortcut[] }[] = [];
+
+function registerShortcut(data: Shortcut | Shortcut[], group: string) {
+  let groupItem = shortcuts.find(v => v.group === group);
+  if (!groupItem) {
+    groupItem = { group, children: [] };
+    shortcuts.push(groupItem);
   }
+  _.castArray(data).forEach(({ type, name }) => {
+    if (groupItem!.children.every(v => v.type !== type)) {
+      groupItem!.children.push({ type, name });
+    }
+  });
+}
+
+export function register(data: RegisterComponentParams | RegisterComponentParams[]) {
+  registerComponent(data);
+
+  return (group: string) => registerShortcut(data, group);
 }
 
 export function isValidComponent(type: string) {
