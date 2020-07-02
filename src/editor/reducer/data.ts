@@ -1,23 +1,34 @@
-import { castArray } from 'lodash';
+import _ from 'lodash';
+import omit from 'object.omit';
 import type { ComponentData, ComponentId, ComponentEditableData } from 'src/types/editor';
 import { mergeDeepObject } from 'src/utils/object';
 import { createReducerWithActions } from './reducerHelpers';
 import { clipboard } from '../componentUtil';
 import type { Store } from './index';
 
-type DataHandler<T = void> = (state: ComponentData[], payload: T, s: Store) => ComponentData[];
+export type ComponentDataById = {[key: string]: ComponentData };
+
+type DataHandler<T = void> = (state: ComponentDataById, payload: T, s: Store) => ComponentDataById;
+
 
 const add: DataHandler<ComponentData | ComponentData[]> = (state, payload) => {
-  return state.concat(payload);
+  const maxZIndexItem = _.maxBy(Object.keys(state).map(id => state[id]), (o) => o.zIndex);
+  let maxZIndex = maxZIndexItem ? maxZIndexItem.zIndex : 10;
+
+  const arr = _.castArray(payload).map(v => {
+    if (!v.zIndex) v.zIndex = ++maxZIndex
+    return { [v.id]: v }
+  })
+
+  return Object.assign({}, state, ...arr);
 };
 
-const del: DataHandler<ComponentId | ComponentId[] | void> = (state, payload, store) => {
-  const id = payload ? castArray(payload) : store.selected;
-  return state.filter(v => id.indexOf(v.id) === -1);
+const del: DataHandler<ComponentId | ComponentId[] | void> = (state, payload, { selected }) => {
+  return omit(state, payload || selected);
 };
 
-const copy: DataHandler = (state, payload, { data, selected }) => {
-  clipboard.data = data.present.filter(v => selected.indexOf(v.id) !== -1);
+const copy: DataHandler = (state, payload, { selected }) => {
+  clipboard.data = selected.map(id => state[id]);
   return state;
 };
 
@@ -30,34 +41,44 @@ type UpdatePayload =
   | Partial<ComponentEditableData>
   | ((obj: ComponentData) => Partial<ComponentEditableData>);
 
-const update: DataHandler<UpdatePayload> = (state, payload, store) => {
-  const ids = store.selected;
-  if (ids.length === 0) return state;
-  return state.map(item => {
-    if (ids.includes(item.id)) {
-      const updater = typeof payload === 'function' ? payload(item) : payload;
-      if (updater && updater !== item) {
-        return mergeDeepObject(item, updater);
-      }
-    }
-    return item;
+const update: DataHandler<UpdatePayload> = (state, payload, { selected }) => {
+  const updaters = selected.filter(id => state[id]).map(id => {
+    return {[id]: typeof payload === 'function' ? payload(state[id]) : payload }
   });
+  return mergeDeepObject(state, ...updaters);
 };
 
-const sort: DataHandler<0 | -1> = (state, payload, store) => {
-  const value = payload;
-  const ids = store.selected;
-  const current: ComponentData[] = [];
-  const rest: ComponentData[] = [];
-  state.forEach(v => {
-    ids.includes(v.id) ? current.push(v) : rest.push(v);
-  });
-  if (value === 0) {
-    return current.concat(rest);
+const toTop: DataHandler = (state, payload, store) => {
+  const { selected } = store;
+  const maxZIndexItem = _.maxBy(_.without(Object.keys(state), ...selected).map(id => state[id]), (o) => o.zIndex);
+  let maxZIndex = maxZIndexItem ? maxZIndexItem.zIndex : 10;
+
+  selected.map(id => state[id]).sort((a, b) => a.zIndex - b.zIndex).map(v => ({[v.id]: ++maxZIndex}))
+
+  const updater: UpdatePayload = () => {
+    return { zIndex: ++maxZIndex }
   }
-  if (value === -1) {
-    return rest.concat(current);
-  }
+
+  return update(state, updater, store);
+}
+
+// 0 置顶 -1 置底
+const sort: DataHandler<0 | -1> = (state, payload, { selected }) => {
+
+
+  // const value = payload;
+  // const ids = store.selected;
+  // const current: ComponentData[] = [];
+  // const rest: ComponentData[] = [];
+  // state.forEach(v => {
+  //   ids.includes(v.id) ? current.push(v) : rest.push(v);
+  // });
+  // if (value === 0) {
+  //   return current.concat(rest);
+  // }
+  // if (value === -1) {
+  //   return rest.concat(current);
+  // }
   return state;
 };
 
@@ -65,8 +86,7 @@ type AlignPayload = 'left' | 'top' | 'bottom' | 'right' | 'vertical' | 'horizont
 
 // 对齐
 const align: DataHandler<AlignPayload> = (state, payload, store) => {
-  const ids = store.selected;
-  const selectedData = state.filter(v => ids.includes(v.id));
+  const selectedData = store.selected.map(id => state[id]);
   if (selectedData.length < 2) {
     return state;
   }
@@ -104,8 +124,7 @@ const align: DataHandler<AlignPayload> = (state, payload, store) => {
 
 // 等间距排列
 const space: DataHandler<'vertical' | 'horizontal'> = (state, payload, store) => {
-  const ids = store.selected;
-  const selectedData = state.filter(v => ids.includes(v.id));
+  const selectedData = store.selected.map(id => state[id]);
   if (selectedData.length < 3) {
     return state;
   }

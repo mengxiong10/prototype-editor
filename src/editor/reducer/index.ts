@@ -5,7 +5,7 @@ import { actions as dataActions, reducer as dataReducer } from './data';
 import { actions as selectedActions, reducer as selectedReducer } from './selected';
 
 export interface Store {
-  data: StateWithHistory<ComponentData[]>;
+  data: StateWithHistory<{[key: string]: ComponentData}>;
   selected: ComponentId[];
 }
 

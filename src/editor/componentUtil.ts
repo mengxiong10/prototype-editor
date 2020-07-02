@@ -62,7 +62,7 @@ export const createComponentData = (
 ): ComponentData => {
   const { defaultSize } = getComponent(type);
   const id = randomId();
-  const defaultConfig = { data: {}, left: 10, top: 10, width: 200, height: 100, ...defaultSize };
+  const defaultConfig = { data: {}, left: 10, top: 10, width: 200, height: 100, zIndex: 0, ...defaultSize };
 
   return { ...defaultConfig, ...obj, id, type };
 };

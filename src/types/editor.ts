@@ -10,6 +10,7 @@ export interface ComponentData<T = any> {
   top: number;
   width: number;
   height: number;
+  zIndex: number;
   data: T;
   association?: ComponentId;
 }
