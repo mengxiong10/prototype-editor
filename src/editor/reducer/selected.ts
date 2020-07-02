@@ -7,7 +7,7 @@ import type { Store } from './index';
 type SelectHandler<T = void> = (state: ComponentId[], payload: T, s: Store) => ComponentId[];
 
 const add: SelectHandler<ComponentData | ComponentData[]> = (state, payload) => {
-  return castArray(payload).map(v => v.id);
+  return castArray(payload).map((v) => v.id);
 };
 
 const select: SelectHandler<ComponentId | ComponentId[]> = (state, payload) => {
@@ -21,15 +21,15 @@ const selectAppend: SelectHandler<ComponentId | ComponentId[]> = (state, payload
 const selectArea: SelectHandler<ShapeData> = (state, payload, store) => {
   const { left, top, width, height } = payload;
   return store.data.present
-    .filter(v => {
+    .filter((v) => {
       const { left: l, top: t, width: w, height: h } = v;
       return left <= l && top <= t && left + width >= l + w && top + height >= t + h;
     })
-    .map(v => v.id);
+    .map((v) => v.id);
 };
 
 const selectAll: SelectHandler = (state, payload, store) => {
-  return store.data.present.map(v => v.id);
+  return store.data.present.map((v) => v.id);
 };
 
 const handlers = {

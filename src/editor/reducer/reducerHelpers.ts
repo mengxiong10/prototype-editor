@@ -41,7 +41,7 @@ type Handlers = { [key: string]: Handler };
 
 function createActions<T extends Handlers>(handlers: T): ReturnAction<T> {
   const actions: any = {};
-  Object.keys(handlers).forEach(key => {
+  Object.keys(handlers).forEach((key) => {
     actions[key] = (payload: any) => ({ type: key, payload });
   });
 

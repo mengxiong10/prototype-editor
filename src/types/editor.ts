@@ -1,4 +1,5 @@
-import type { DetailPanelGroup } from 'src/editor/PanelDetail';
+import type { DetailPanelGroup } from 'src/editor/PanelDetailDefault';
+import type { PanelDetailBaseProps } from 'src/editor/PanelDetail';
 
 export type ComponentId = string;
 
@@ -17,10 +18,14 @@ export interface ComponentData<T = any> {
 // 可编辑属性
 export type ComponentEditableData<T = any> = Omit<ComponentData<T>, 'id' | 'type'>;
 
+export type DetailPanelType<T = any> =
+  | React.ComponentType<PanelDetailBaseProps>
+  | DetailPanelGroup<T>[];
+
 export interface ComponentOptions<T = any> {
-  component: React.ElementType;
+  component: React.ComponentType<T>;
   wrapperStyle?: React.CSSProperties;
   defaultData: T;
   defaultSize?: { width: number; height: number };
-  detailPanel?: React.ElementType | DetailPanelGroup<Extract<keyof T, string>>[];
+  detailPanel?: DetailPanelType<T>;
 }

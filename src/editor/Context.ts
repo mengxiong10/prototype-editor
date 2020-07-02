@@ -4,6 +4,8 @@ export type EditorDispatch = Dispatch<any>;
 
 export const EditorContext = React.createContext<EditorDispatch>(() => {});
 
-export const EditorProvider = EditorContext.Provider;
-
 export const useEditor = () => useContext(EditorContext);
+
+export const ComponentIdContext = React.createContext('');
+
+export const useComponentId = () => useContext(ComponentIdContext);

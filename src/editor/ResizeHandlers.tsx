@@ -25,14 +25,14 @@ function ResizeHandlers({ selectedData }: ResizeHandlersProps) {
     canResizeHeight: false,
   });
 
-  const outerLeft = Math.min(...selectedData.map(v => v.left));
-  const outerTop = Math.min(...selectedData.map(v => v.top));
-  const outerRight = Math.max(...selectedData.map(v => v.left + v.width));
-  const outerBottom = Math.max(...selectedData.map(v => v.top + v.height));
+  const outerLeft = Math.min(...selectedData.map((v) => v.left));
+  const outerTop = Math.min(...selectedData.map((v) => v.top));
+  const outerRight = Math.max(...selectedData.map((v) => v.left + v.width));
+  const outerBottom = Math.max(...selectedData.map((v) => v.top + v.height));
   const outerWidth = outerRight - outerLeft;
   const outerHeight = outerBottom - outerTop;
-  const minWidth = Math.min(...selectedData.map(v => v.width));
-  const minHeight = Math.min(...selectedData.map(v => v.height));
+  const minWidth = Math.min(...selectedData.map((v) => v.width));
+  const minHeight = Math.min(...selectedData.map((v) => v.height));
 
   const minOuterWidth = (outerWidth / minWidth) * 50; // 100默认的组件最小宽度;
   const minOuterHeight = (outerHeight / minHeight) * 20; // 20 默认组件最小高度;
@@ -53,7 +53,7 @@ function ResizeHandlers({ selectedData }: ResizeHandlersProps) {
     slack.current.y = 0;
   };
 
-  const handleMove: DraggableHandler = coreData => {
+  const handleMove: DraggableHandler = (coreData) => {
     const { isResizeLeft, isResizeTop, canResizeHeight, canResizeWidth } = resizeData.current;
     let nextWidth = outerWidth;
     let nextHeight = outerHeight;
@@ -81,7 +81,7 @@ function ResizeHandlers({ selectedData }: ResizeHandlersProps) {
     const radioHeight = nextOuterHeight / outerHeight;
 
     dispatch(
-      actions.updateWithoutHistory(prev => {
+      actions.updateWithoutHistory((prev) => {
         const width = radioWidth * prev.width;
         const height = radioHeight * prev.height;
         const top = radioHeight * (prev.top - outerTop) + nextOuterTop;
@@ -114,7 +114,7 @@ function ResizeHandlers({ selectedData }: ResizeHandlersProps) {
           outline: '1px solid #007dfc',
         }}
       >
-        {handlers.map(d => (
+        {handlers.map((d) => (
           <span
             key={d}
             data-handler={d}

@@ -1,60 +1,57 @@
-import React, { useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { ComponentData, ComponentId } from 'src/types/editor';
 import { mergeDeepObject } from 'src/utils/object';
+import { get } from 'dot-prop-immutable';
 import { getComponent } from './componentUtil';
-import { useEditor } from './Context';
-import { actions } from './reducer';
-import DetailPanel from './PanelDetail';
+import PanelDetail from './PanelDetail';
+import { detailChangeEvent, DetailChangeEvent } from './event';
 
-export interface PanelDetailWrapper {
+export interface PanelDetailWrapperProps {
   data: ComponentData[];
   selected: ComponentId[];
 }
 
-export type PanelChangeHandler = (data: any, config?: { history?: boolean }) => void;
+function PanelDetailWrapper({ data, selected }: PanelDetailWrapperProps) {
+  const [detail, setDetail] = useState<DetailChangeEvent | null>(null);
 
-function PanelDetailWrapper({ data, selected }: PanelDetailWrapper) {
-  const dispatch = useEditor();
+  const { path, type } = detail || { path: '', type: '' };
 
-  const selectedData = data.filter(v => selected.indexOf(v.id) !== -1);
+  useEffect(() => detailChangeEvent.on(setDetail), []);
 
+  const selectedData = data.filter((v) => selected.indexOf(v.id) !== -1);
+
+  // 选择的组件都是同一个类型
   const isSelected =
-    selectedData.length > 0 && selectedData.every(v => v.type === selectedData[0].type);
+    selectedData.length > 0 && selectedData.every((v) => v.type === selectedData[0].type);
 
-  const componentOption = isSelected ? getComponent(selectedData[0].type) : null;
-
-  const handleChange: PanelChangeHandler = useCallback(
-    (value, config) => {
-      const { history } = { history: true, ...config };
-      if (!value) {
-        return dispatch(actions.recordHistory());
-      }
-      if (!history) {
-        return dispatch(actions.updateWithoutHistory({ data: value }));
-      }
-      return dispatch(actions.update({ data: value }));
-    },
-    [dispatch]
-  );
-
-  if (!(componentOption && componentOption.detailPanel)) {
+  if (!isSelected) {
     return null;
   }
 
-  const componentData = mergeDeepObject(componentOption.defaultData, selectedData[0].data)
+  // 当只有一个组件选中, 而且自定义的type属性是当前选中组件的子组件
+  const isValidType = type && selectedData.length === 1 && type.indexOf(selectedData[0].type) === 0;
 
-  return Array.isArray(componentOption.detailPanel) ? (
-    <DetailPanel
-      data={componentData}
-      groups={componentOption.detailPanel}
-      onChange={handleChange}
-    />
-  ) : (
-    React.createElement(componentOption.detailPanel as React.ElementType, {
-      data: componentData,
-      onChange: handleChange,
-    })
-  );
+  const resolvedType = isValidType ? type : selectedData[0].type;
+
+  const resolvedPath = isValidType ? path : '';
+
+  const componentOption = getComponent(resolvedType);
+
+  if (!componentOption || !componentOption.detailPanel) {
+    return null;
+  }
+
+  const { detailPanel, defaultData } = componentOption;
+
+  let componentData = selectedData[0].data;
+
+  if (resolvedPath) {
+    componentData = get(componentData, resolvedPath);
+  }
+
+  componentData = mergeDeepObject(defaultData, componentData || {});
+
+  return <PanelDetail data={componentData} detailPanel={detailPanel} path={resolvedPath} />;
 }
 
 export default PanelDetailWrapper;

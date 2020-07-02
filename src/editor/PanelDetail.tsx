@@ -1,55 +1,56 @@
 import React from 'react';
-import { Collapse } from 'antd';
-import { itemMap, DetailPanelRowProps } from './PanelDetailHelper';
-import type { PanelChangeHandler } from './PanelDetailWrapper';
+import { set, get } from 'dot-prop-immutable';
+import type { DetailPanelType } from 'src/types/editor';
+import { useEditor } from './Context';
+import { actions } from './reducer';
+import PanelDetailDefault from './PanelDetailDefault';
 
-const { Panel } = Collapse;
-
-export interface DetailPanelItem<P> {
-  title: string;
-  prop: P;
-  type: keyof typeof itemMap | React.JSXElementConstructor<DetailPanelRowProps>;
+export interface PanelDetailProps<T = any> {
+  path: string;
+  data: T;
+  detailPanel: DetailPanelType<T>;
 }
 
-export interface DetailPanelGroup<P = string> {
-  title: string;
-  list: DetailPanelItem<P>[];
-}
+export type PanelChangeHandler = (data: { prop: string; value: any; history?: boolean }) => void;
 
-export interface DetailPanelProps {
-  groups: DetailPanelGroup[];
+export interface PanelDetailBaseProps {
   data: any;
   onChange: PanelChangeHandler;
-  children?: React.ReactNode;
 }
 
-function DetailPanel({ groups, data, children, onChange }: DetailPanelProps) {
+function PanelDetail({ data, path, detailPanel }: PanelDetailProps) {
+  const dispatch = useEditor();
+
+  const handleChange: PanelChangeHandler = ({ prop, value, history = true }) => {
+    const action = history ? actions.update : actions.updateWithoutHistory;
+    dispatch(
+      action((item) => {
+        return { data: set(item.data, path ? `${path}.${prop}` : prop, value) };
+      })
+    );
+  };
+
+  // 代理blur事件记录历史
+  const handleBlur = (evt: React.FocusEvent) => {
+    const { target } = evt;
+    const { tagName } = target;
+    if (tagName === 'INPUT' || tagName === 'TEXTAREA') {
+      dispatch(actions.recordHistory());
+    }
+  };
+
   return (
-    <Collapse
-      className="pe-detail-panel"
-      style={{ border: 0 }}
-      defaultActiveKey={groups.map((v, i) => String(i))}
-    >
-      {groups.map((group, i) => {
-        return (
-          <Panel header={group.title} key={String(i)}>
-            {group.list.map(({ type, title, prop, ...rest }) => {
-              const com = typeof type === 'string' ? itemMap[type] : type;
-              return React.createElement(com, {
-                ...rest,
-                key: prop,
-                prop,
-                title,
-                value: data[prop],
-                onChange,
-              });
-            })}
-          </Panel>
-        );
-      })}
-      {children}
-    </Collapse>
+    <div onBlur={handleBlur}>
+      {Array.isArray(detailPanel) ? (
+        <PanelDetailDefault onChange={handleChange} data={data} groups={detailPanel} />
+      ) : (
+        React.createElement(detailPanel, {
+          data,
+          onChange: handleChange,
+        })
+      )}
+    </div>
   );
 }
 
-export default DetailPanel;
+export default PanelDetail;

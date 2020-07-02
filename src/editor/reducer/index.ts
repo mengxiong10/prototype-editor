@@ -14,7 +14,7 @@ export const actions = { ...ActionCreators, ...dataActions, ...selectedActions }
 export const reducer = combineReducers<Store>({
   data: undoable(dataReducer, {
     limit: 10,
-    filter: action => {
+    filter: (action) => {
       // 以WithoutHistory结尾的type 不记录历史
       return !/WithoutHistory$/.test(action.type);
     },

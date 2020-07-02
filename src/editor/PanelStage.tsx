@@ -17,7 +17,7 @@ export interface PanelStage2Props extends Store {}
 function PanelStage({ data, selected }: PanelStage2Props) {
   const dispatch = useEditor();
 
-  const selectedData = data.present.filter(v => selected.indexOf(v.id) !== -1);
+  const selectedData = data.present.filter((v) => selected.indexOf(v.id) !== -1);
 
   const contextmenuProps = useContextmenu({ data, selected });
 
@@ -56,7 +56,7 @@ function PanelStage({ data, selected }: PanelStage2Props) {
           tabIndex={-1}
           {...dropProps}
         >
-          {data.present.map(item => (
+          {data.present.map((item) => (
             <ComponentWrapper key={item.id} item={item} active={selected.indexOf(item.id) !== -1} />
           ))}
           <PanelCanvas width={2000} height={1000} data={data.present} />

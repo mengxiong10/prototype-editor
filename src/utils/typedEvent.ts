@@ -21,15 +21,15 @@ export class TypedEvent<T = void> {
   };
 
   public off = (listener: Listener<T>) => {
-    this.listeners = this.listeners.filter(v => {
+    this.listeners = this.listeners.filter((v) => {
       return v !== listener;
     });
   };
 
   public emit = (event: T) => {
-    this.listeners.forEach(listener => listener(event));
+    this.listeners.forEach((listener) => listener(event));
 
-    this.listenersOncer.forEach(listener => listener(event));
+    this.listenersOncer.forEach((listener) => listener(event));
 
     this.listenersOncer = [];
   };

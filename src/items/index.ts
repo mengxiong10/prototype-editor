@@ -17,5 +17,11 @@ register([
   { type: 'rich', options: richEditorOptions, name: '富文本' },
   { type: 'checkbox', options: checkboxOptions, name: '多选框' },
   { type: 'radio', options: radioOptions, name: '单选框' },
-  { type: 'group', options: groupOptions, name: '组合' },
 ])('基础组件');
+
+register([{ type: 'group', options: groupOptions, name: '组合' }])('测试');
+
+register([
+  { type: 'group.button', options: buttonOptions },
+  { type: 'group.input', options: inputOptions },
+]);

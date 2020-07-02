@@ -19,12 +19,12 @@ function PanelCanvas({ data, width, height }: PanelCanvasProps) {
     const ctx = canvas.getContext('2d')!;
     ctx.imageSmoothingEnabled = true;
     const map: { [key: string]: ComponentData } = {} as any;
-    data.forEach(v => {
+    data.forEach((v) => {
       map[v.id] = v;
     });
     const lines = data
-      .filter(v => v.association !== undefined && map[v.association])
-      .map(current => {
+      .filter((v) => v.association !== undefined && map[v.association])
+      .map((current) => {
         const target = map[current.association!];
         const point = [
           [0, 0],
@@ -57,7 +57,7 @@ function PanelCanvas({ data, width, height }: PanelCanvasProps) {
     ctx.beginPath();
     ctx.strokeStyle = 'rgb(221, 208, 0)';
     ctx.lineWidth = 2;
-    lines.forEach(points => {
+    lines.forEach((points) => {
       ctx.moveTo(points[0][0], points[0][1]);
       ctx.lineTo(points[1][0], points[1][1]);
     });

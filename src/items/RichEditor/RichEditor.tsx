@@ -40,13 +40,13 @@ function RichEditor({ value, backgroundColor }: RichEditorProps) {
   };
 
   const toggleBlockType = (blockType: string) => {
-    changeEditorState(prev => {
+    changeEditorState((prev) => {
       return RichUtils.toggleBlockType(prev, blockType);
     });
   };
 
   const toggleInlineStyle = (blockType: string) => {
-    changeEditorState(prev => {
+    changeEditorState((prev) => {
       return RichUtils.toggleInlineStyle(prev, blockType);
     });
   };

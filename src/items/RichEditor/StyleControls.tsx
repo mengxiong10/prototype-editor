@@ -62,7 +62,7 @@ export const BlockStyleControls = (props: StyleControlsProps) => {
 
   return (
     <div className="RichEditor-controls">
-      {BLOCK_TYPES.map(type => (
+      {BLOCK_TYPES.map((type) => (
         <StyleButton
           key={type.style}
           active={type.style === blockType}
@@ -79,7 +79,7 @@ export const InlineStyleControls = (props: StyleControlsProps) => {
 
   return (
     <div className="RichEditor-controls">
-      {INLINE_STYLES.map(type => (
+      {INLINE_STYLES.map((type) => (
         <StyleButton
           key={type.style}
           active={currentStyle.has(type.style)}

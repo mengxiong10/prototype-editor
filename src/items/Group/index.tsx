@@ -1,7 +1,12 @@
 import React from 'react';
 import type { ComponentOptions } from 'src/types/editor';
+import { useEditor, useComponentId } from 'src/editor/Context';
+import { actions } from 'src/editor/reducer';
+import { detailChangeEvent } from 'src/editor/event';
 import Button, { ButtonProps } from '../Button/Button';
 import Input, { InputProps } from '../Input/Input';
+import { inputOptions } from '../Input';
+import { buttonOptions } from '../Button';
 
 export interface GroupProps {
   button: ButtonProps;
@@ -9,22 +14,37 @@ export interface GroupProps {
   title: string;
 }
 
-function Wrapper({ prop, children }: { prop: string; children: React.ReactNode }) {
-  const handleClick = () => {
-    console.log(prop);
+function Wrapper({
+  path,
+  type,
+  children,
+}: {
+  path: string;
+  type: string;
+  children: React.ReactNode;
+}) {
+  const id = useComponentId();
+  const dispatch = useEditor();
+
+  const handleClick = (evt: React.MouseEvent) => {
+    if (!evt.ctrlKey) {
+      evt.stopPropagation();
+      dispatch(actions.select(id));
+      detailChangeEvent.emit({ path, type });
+    }
   };
 
-  return <span onClick={handleClick}>{children}</span>;
+  return <span onMouseDown={handleClick}>{children}</span>;
 }
 
 function Group(props: GroupProps) {
   return (
     <div>
       <div>{props.title}</div>
-      <Wrapper prop="button">
+      <Wrapper path="button" type="group.button">
         <Button {...props.button} />
       </Wrapper>
-      <Wrapper prop="input">
+      <Wrapper path="input" type="group.input">
         <Input {...props.input} />
       </Wrapper>
     </div>
@@ -39,23 +59,8 @@ export const groupOptions: ComponentOptions<GroupProps> = {
   },
   defaultData: {
     title: '复合组件',
-    button: {
-      circle: false,
-      backgroundColor: '#fff',
-      borderColor: '#d9d9d9',
-      borderWidth: 1,
-      color: 'rgba(0, 0, 0, 0.65)',
-      textContent: '按钮',
-      disabled: false,
-    },
-    input: {
-      backgroundColor: '#fff',
-      borderColor: '#d9d9d9',
-      color: 'rgba(0, 0, 0, 0.65)',
-      borderWidth: 1,
-      value: '',
-      placeholder: 'input text',
-    },
+    button: buttonOptions.defaultData,
+    input: inputOptions.defaultData,
   },
   detailPanel: [
     {

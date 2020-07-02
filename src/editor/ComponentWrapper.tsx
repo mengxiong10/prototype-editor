@@ -2,7 +2,8 @@ import React from 'react';
 import classnames from 'classnames';
 import Draggable, { DraggableHandler } from 'src/components/Draggable';
 import type { ComponentData } from 'src/types/editor';
-import { useEditor } from './Context';
+import { useEditor, ComponentIdContext } from './Context';
+import { detailChangeEvent } from './event';
 import { actions } from './reducer';
 import { getComponent } from './componentUtil';
 import { useComponent } from './useComponent';
@@ -20,16 +21,17 @@ function ComponentWrapper({ active, item }: ComponentWrapperProps) {
 
   // 选中组件
   const handleSelect = (evt: React.MouseEvent) => {
+    detailChangeEvent.emit(null);
     if (!active) {
       dispatch(evt.ctrlKey ? actions.selectAppend(id) : actions.select(id));
     }
   };
 
   // 拖动过程忽略历史记录
-  const handleMove: DraggableHandler = coreData => {
+  const handleMove: DraggableHandler = (coreData) => {
     // TODO: 上和左边, 不让为负值
     dispatch(
-      actions.updateWithoutHistory(prev => {
+      actions.updateWithoutHistory((prev) => {
         return {
           left: prev.left + coreData.deltaX,
           top: prev.top + coreData.deltaY,
@@ -59,16 +61,18 @@ function ComponentWrapper({ active, item }: ComponentWrapperProps) {
   });
 
   return (
-    <Draggable
-      cancel={`.${disableClassnames.drag}`}
-      onMouseDown={handleSelect}
-      onMove={handleMove}
-      onStop={handleStop}
-    >
-      <div className={classNames} style={style} data-id={item.id}>
-        {component}
-      </div>
-    </Draggable>
+    <ComponentIdContext.Provider value={id}>
+      <Draggable
+        cancel={`.${disableClassnames.drag}`}
+        onMouseDown={handleSelect}
+        onMove={handleMove}
+        onStop={handleStop}
+      >
+        <div className={classNames} style={style} data-id={item.id}>
+          {component}
+        </div>
+      </Draggable>
+    </ComponentIdContext.Provider>
   );
 }
 

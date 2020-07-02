@@ -16,7 +16,7 @@ export const disableClassnames = {
 };
 
 function DisableEditorFeature({ children, disabled }: DisableDragProps) {
-  const arr = castArray(disabled).map(v => disableClassnames[v]);
+  const arr = castArray(disabled).map((v) => disableClassnames[v]);
 
   const className = classnames(children.props.className, arr);
 

@@ -1,6 +1,6 @@
 import type { ComponentOptions, ComponentEditableData, ComponentData } from 'src/types/editor';
 import { randomId } from 'src/utils/randomId';
-import _ from 'lodash';
+import { castArray } from 'lodash';
 import NotFound from './NotFound';
 
 interface Shortcut {
@@ -15,7 +15,7 @@ interface RegisterComponentParams extends Shortcut {
 const components: { [key: string]: ComponentOptions } = {};
 
 function registerComponent(data: RegisterComponentParams | RegisterComponentParams[]) {
-  _.castArray(data).forEach(({ type, options }) => {
+  castArray(data).forEach(({ type, options }) => {
     components[type] = options;
   });
 }
@@ -24,13 +24,13 @@ function registerComponent(data: RegisterComponentParams | RegisterComponentPara
 export const shortcuts: { group: string; children: Shortcut[] }[] = [];
 
 function registerShortcut(data: Shortcut | Shortcut[], group: string) {
-  let groupItem = shortcuts.find(v => v.group === group);
+  let groupItem = shortcuts.find((v) => v.group === group);
   if (!groupItem) {
     groupItem = { group, children: [] };
     shortcuts.push(groupItem);
   }
-  _.castArray(data).forEach(({ type, name }) => {
-    if (groupItem!.children.every(v => v.type !== type)) {
+  castArray(data).forEach(({ type, name }) => {
+    if (groupItem!.children.every((v) => v.type !== type)) {
       groupItem!.children.push({ type, name });
     }
   });
@@ -83,11 +83,11 @@ export const clipboard: { data: ComponentData[] } = { data: [] };
 
 export const pasteComponentData = ({ x, y }: { x: number; y: number }) => {
   if (clipboard.data.length === 0) return [];
-  const minX = Math.min(...clipboard.data.map(v => v.left));
-  const minY = Math.min(...clipboard.data.map(v => v.top));
+  const minX = Math.min(...clipboard.data.map((v) => v.left));
+  const minY = Math.min(...clipboard.data.map((v) => v.top));
   const diffX = x - minX;
   const diffY = y - minY;
-  return clipboard.data.map(v => {
+  return clipboard.data.map((v) => {
     return cloneComponentData(v, { left: v.left + diffX, top: v.top + diffY });
   });
 };
