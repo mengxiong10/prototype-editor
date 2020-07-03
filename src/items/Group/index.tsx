@@ -34,7 +34,7 @@ function Wrapper({
     }
   };
 
-  return <span onMouseDown={handleClick}>{children}</span>;
+  return <div onMouseDown={handleClick}>{children}</div>;
 }
 
 function Group(props: GroupProps) {

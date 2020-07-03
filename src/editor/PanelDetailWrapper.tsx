@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { ComponentData, ComponentId } from 'src/types/editor';
-import { mergeDeepObject } from 'src/utils/object';
+import { mergeObjectDeep } from 'src/utils/object';
 import { get } from 'dot-prop-immutable';
 import { getComponent } from './componentUtil';
 import PanelDetail from './PanelDetail';
@@ -24,12 +24,16 @@ function PanelDetailWrapper({ data, selected }: PanelDetailWrapperProps) {
   const isSelected =
     selectedData.length > 0 && selectedData.every((v) => v.type === selectedData[0].type);
 
+  // 当只有一个组件选中, 而且自定义的type属性是当前选中组件的子组件
+  const isValidType = type && selectedData.length === 1 && type.indexOf(selectedData[0].type) === 0;
+
+  if (type && !isValidType) {
+    setDetail(null);
+  }
+
   if (!isSelected) {
     return null;
   }
-
-  // 当只有一个组件选中, 而且自定义的type属性是当前选中组件的子组件
-  const isValidType = type && selectedData.length === 1 && type.indexOf(selectedData[0].type) === 0;
 
   const resolvedType = isValidType ? type : selectedData[0].type;
 
@@ -49,7 +53,7 @@ function PanelDetailWrapper({ data, selected }: PanelDetailWrapperProps) {
     componentData = get(componentData, resolvedPath);
   }
 
-  componentData = mergeDeepObject(defaultData, componentData || {});
+  componentData = mergeObjectDeep(defaultData, componentData || {});
 
   return <PanelDetail data={componentData} detailPanel={detailPanel} path={resolvedPath} />;
 }

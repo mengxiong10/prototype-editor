@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { mergeDeepObject } from 'src/utils/object';
+import { mergeObjectDeep } from 'src/utils/object';
 import { getComponent } from './componentUtil';
 
 export function useComponent({ type, data }: { type: string; data: any }) {
@@ -8,7 +8,7 @@ export function useComponent({ type, data }: { type: string; data: any }) {
 
     return React.createElement(
       componentOption.component,
-      mergeDeepObject(componentOption.defaultData, data)
+      mergeObjectDeep(componentOption.defaultData, data)
     );
   }, [data, type]);
 

@@ -1,6 +1,6 @@
 import { isPlainObject } from 'lodash';
 
-export function mergeDeepObject<T extends Record<string, any>>(target: T, ...sources: any[]): T {
+export function mergeObjectDeep<T extends Record<string, any>>(target: T, ...sources: any[]): T {
   if (sources.length === 0) {
     return target;
   }
@@ -13,8 +13,8 @@ export function mergeDeepObject<T extends Record<string, any>>(target: T, ...sou
   const newValue = { ...target };
 
   Object.keys(source).forEach((key: keyof T) => {
-    newValue[key] = mergeDeepObject(newValue[key], source[key]);
+    newValue[key] = mergeObjectDeep(newValue[key], source[key]);
   });
 
-  return mergeDeepObject(newValue, ...rest);
+  return mergeObjectDeep(newValue, ...rest);
 }

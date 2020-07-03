@@ -1,5 +1,5 @@
 import React from 'react';
-import { set, get } from 'dot-prop-immutable';
+import { set } from 'dot-prop-immutable';
 import type { DetailPanelType } from 'src/types/editor';
 import { useEditor } from './Context';
 import { actions } from './reducer';
