@@ -17,7 +17,7 @@ import { drawingEvent } from './event';
 import { useEditor } from './Context';
 import { Store, actions } from './reducer';
 
-export interface PanelToolbarProps extends Store {}
+export type PanelToolbarProps = Pick<Store, 'data' | 'selected'>;
 
 export interface ButtonIconProps extends Omit<ButtonProps, 'title'> {
   title: React.ReactNode;

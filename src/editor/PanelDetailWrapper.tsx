@@ -1,43 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import type { ComponentData, ComponentId } from 'src/types/editor';
+import React from 'react';
+import type { ComponentData, ComponentId, ComponentStatusMap } from 'src/types/editor';
 import { mergeObjectDeep } from 'src/utils/object';
 import { get } from 'dot-prop-immutable';
 import { getComponent } from './componentUtil';
 import PanelDetail from './PanelDetail';
-import { detailChangeEvent, DetailChangeEvent } from './event';
 
 export interface PanelDetailWrapperProps {
   data: ComponentData[];
   selected: ComponentId[];
+  status: ComponentStatusMap;
 }
 
-function PanelDetailWrapper({ data, selected }: PanelDetailWrapperProps) {
-  const [detail, setDetail] = useState<DetailChangeEvent | null>(null);
-
-  const { path, type } = detail || { path: '', type: '' };
-
-  useEffect(() => detailChangeEvent.on(setDetail), []);
-
+function PanelDetailWrapper({ data, selected, status }: PanelDetailWrapperProps) {
   const selectedData = data.filter((v) => selected.indexOf(v.id) !== -1);
 
   // 选择的组件都是同一个类型
   const isSelected =
     selectedData.length > 0 && selectedData.every((v) => v.type === selectedData[0].type);
 
-  // 当只有一个组件选中, 而且自定义的type属性是当前选中组件的子组件
-  const isValidType = type && selectedData.length === 1 && type.indexOf(selectedData[0].type) === 0;
-
-  if (type && !isValidType) {
-    setDetail(null);
-  }
-
   if (!isSelected) {
     return null;
   }
 
-  const resolvedType = isValidType ? type : selectedData[0].type;
+  let resolvedData = selectedData[0];
 
-  const resolvedPath = isValidType ? path : '';
+  let resolvedPath = '';
+
+  let resolvedType = resolvedData.type;
+
+  if (selectedData.length === 1 && status[resolvedData.id]) {
+    resolvedPath = status[resolvedData.id].selectedPath;
+    resolvedType = status[resolvedData.id].selectedType;
+  }
+
+  if (resolvedPath) {
+    resolvedData = get(resolvedData, resolvedPath);
+  }
 
   const componentOption = getComponent(resolvedType);
 
@@ -47,15 +45,9 @@ function PanelDetailWrapper({ data, selected }: PanelDetailWrapperProps) {
 
   const { detailPanel, defaultData } = componentOption;
 
-  let componentData = selectedData[0].data;
+  resolvedData = mergeObjectDeep(defaultData, resolvedData || {});
 
-  if (resolvedPath) {
-    componentData = get(componentData, resolvedPath);
-  }
-
-  componentData = mergeObjectDeep(defaultData, componentData || {});
-
-  return <PanelDetail data={componentData} detailPanel={detailPanel} path={resolvedPath} />;
+  return <PanelDetail data={resolvedData} detailPanel={detailPanel} path={resolvedPath} />;
 }
 
 export default PanelDetailWrapper;

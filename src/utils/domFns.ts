@@ -11,3 +11,12 @@ export function matchesSelectorAndParentsTo(
   }
   return false;
 }
+
+export function closestUntil(node: HTMLElement, s: string, until: HTMLElement = document.body) {
+  let el: HTMLElement | null = node;
+  while (el !== null && el !== until) {
+    if (el.matches(s)) return el;
+    el = el.parentElement;
+  }
+  return null;
+}

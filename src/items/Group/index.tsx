@@ -1,8 +1,6 @@
 import React from 'react';
+import ChildComponentWrapper from 'src/editor/ChildComponentWrapper';
 import type { ComponentOptions } from 'src/types/editor';
-import { useEditor, useComponentId } from 'src/editor/Context';
-import { actions } from 'src/editor/reducer';
-import { detailChangeEvent } from 'src/editor/event';
 import Button, { ButtonProps } from '../Button/Button';
 import Input, { InputProps } from '../Input/Input';
 import { inputOptions } from '../Input';
@@ -14,39 +12,16 @@ export interface GroupProps {
   title: string;
 }
 
-function Wrapper({
-  path,
-  type,
-  children,
-}: {
-  path: string;
-  type: string;
-  children: React.ReactNode;
-}) {
-  const id = useComponentId();
-  const dispatch = useEditor();
-
-  const handleClick = (evt: React.MouseEvent) => {
-    if (!evt.ctrlKey) {
-      evt.stopPropagation();
-      dispatch(actions.select(id));
-      detailChangeEvent.emit({ path, type });
-    }
-  };
-
-  return <div onMouseDown={handleClick}>{children}</div>;
-}
-
 function Group(props: GroupProps) {
   return (
     <div>
       <div>{props.title}</div>
-      <Wrapper path="button" type="group.button">
+      <ChildComponentWrapper path="button" type="group.button">
         <Button {...props.button} />
-      </Wrapper>
-      <Wrapper path="input" type="group.input">
+      </ChildComponentWrapper>
+      <ChildComponentWrapper path="input" type="group.input">
         <Input {...props.input} />
-      </Wrapper>
+      </ChildComponentWrapper>
     </div>
   );
 }

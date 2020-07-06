@@ -18,6 +18,15 @@ export interface ComponentData<T = any> {
 // 可编辑属性
 export type ComponentEditableData<T = any> = Omit<ComponentData<T>, 'id' | 'type'>;
 
+export interface ComponentStatus {
+  selectedPath: string;
+  selectedType: string;
+}
+
+export interface ComponentStatusMap {
+  [key: string]: ComponentStatus;
+}
+
 export type DetailPanelType<T = any> =
   | React.ComponentType<PanelDetailBaseProps>
   | DetailPanelGroup<T>[];

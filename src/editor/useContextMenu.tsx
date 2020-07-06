@@ -4,7 +4,7 @@ import { useEditor } from './Context';
 import { actions, Store } from './reducer';
 import { pasteComponentData, clipboard } from './componentUtil';
 
-export function useContextmenu({ selected }: Store) {
+export function useContextmenu({ selected }: Pick<Store, 'data' | 'selected'>) {
   const dispatch = useEditor();
 
   const position = useRef({ x: 0, y: 0 });
