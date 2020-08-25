@@ -7,6 +7,7 @@ import { actions } from './reducer';
 import { getComponent } from './componentUtil';
 import { useComponent } from './useComponent';
 import { disableClassnames } from './DisableEditorFeature';
+import { EventCompositeSelect } from './event';
 
 export interface ComponentWrapperProps {
   active: boolean;
@@ -23,6 +24,11 @@ function ComponentWrapper({ active, item }: ComponentWrapperProps) {
     if (!active) {
       dispatch(evt.ctrlKey ? actions.selectAppend(id) : actions.select(id));
     }
+  };
+
+  const handleComponentClick = () => {
+    // 清除复合组件的状态, 其余的清除在PanelDetail里面实现
+    EventCompositeSelect.emit(null);
   };
 
   // 拖动过程忽略历史记录
@@ -66,7 +72,7 @@ function ComponentWrapper({ active, item }: ComponentWrapperProps) {
         onMove={handleMove}
         onStop={handleStop}
       >
-        <div className={classNames} style={style} data-id={item.id}>
+        <div onClick={handleComponentClick} className={classNames} style={style} data-id={item.id}>
           {component}
         </div>
       </Draggable>

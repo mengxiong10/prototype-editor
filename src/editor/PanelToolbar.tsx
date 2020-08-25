@@ -13,7 +13,7 @@ import AlignCenter from 'src/svg/align-center-fill.svg';
 import AlignVerticel from 'src/svg/align-verticle-fill.svg';
 import HorizontalSpace from 'src/svg/horizontal-space.svg';
 import VerticalSpace from 'src/svg/vertical-space.svg';
-import { drawingEvent } from './event';
+import { EventDrawing } from './event';
 import { useEditor } from './Context';
 import { Store, actions } from './reducer';
 
@@ -72,12 +72,12 @@ function PanelToolbar({ data, selected }: PanelToolbarProps) {
         <Redo />
       </ButtonIcon>
       {divider}
-      <ButtonIcon title="重点标记" onClick={() => drawingEvent.emit('rect')}>
+      <ButtonIcon title="重点标记" onClick={() => EventDrawing.emit('rect')}>
         <BorderOutlined />
         <span style={{ marginLeft: 4 }}>方框</span>
       </ButtonIcon>
       {divider}
-      <ButtonIcon title="添加批注" onClick={() => drawingEvent.emit('comment')}>
+      <ButtonIcon title="添加批注" onClick={() => EventDrawing.emit('comment')}>
         <CommentOutlined />
         <span style={{ marginLeft: 4 }}>标注</span>
       </ButtonIcon>

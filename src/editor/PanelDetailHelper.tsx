@@ -1,9 +1,8 @@
 import React from 'react';
 import { Input, Switch, InputNumber } from 'antd';
 import ColorPicker from '../components/ColorPicker';
-import type { PanelChangeHandler } from './PanelDetail';
 
-const { TextArea } = Input;
+export type PanelChangeHandler = (data: { prop: string; value: any; history?: boolean }) => void;
 
 export interface DetailPanelRowProps extends Object {
   title: string;
@@ -11,6 +10,8 @@ export interface DetailPanelRowProps extends Object {
   value: any;
   onChange: PanelChangeHandler;
 }
+
+const { TextArea } = Input;
 
 export const RowInput = ({ prop, title, value, onChange }: DetailPanelRowProps) => {
   return (

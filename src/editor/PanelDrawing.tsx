@@ -4,7 +4,7 @@ import { useClickOutside } from 'src/hooks/useClickOutside';
 import { useEditor } from './Context';
 import { actions } from './reducer';
 import { createComponentData } from './componentUtil';
-import { drawingEvent } from './event';
+import { EventDrawing } from './event';
 
 function PanelDrawing() {
   const dispatch = useEditor();
@@ -41,7 +41,7 @@ function PanelDrawing() {
   );
 
   useEffect(() => {
-    return drawingEvent.on((value: string) => {
+    return EventDrawing.on((value: string) => {
       setType(value);
     });
   }, []);

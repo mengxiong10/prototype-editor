@@ -1,5 +1,5 @@
 import React from 'react';
-import ChildComponentWrapper from 'src/editor/ChildComponentWrapper';
+import CompositeWrapper from 'src/editor/CompositeWrapper';
 import type { ComponentOptions } from 'src/types/editor';
 import Button, { ButtonProps } from '../Button/Button';
 import Input, { InputProps } from '../Input/Input';
@@ -16,12 +16,12 @@ function Group(props: GroupProps) {
   return (
     <div>
       <div>{props.title}</div>
-      <ChildComponentWrapper path="button" type="group.button">
+      <CompositeWrapper path="button" type="button">
         <Button {...props.button} />
-      </ChildComponentWrapper>
-      <ChildComponentWrapper path="input" type="group.input">
+      </CompositeWrapper>
+      <CompositeWrapper path="input" type="input">
         <Input {...props.input} />
-      </ChildComponentWrapper>
+      </CompositeWrapper>
     </div>
   );
 }

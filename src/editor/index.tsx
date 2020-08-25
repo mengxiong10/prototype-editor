@@ -2,7 +2,7 @@ import React, { useReducer } from 'react';
 import { EditorContext } from './Context';
 import PanelComponentList from './PanelComponentList';
 import PanelStage from './PanelStage';
-import PanelDetailWrapper from './PanelDetailWrapper';
+import PanelDetail from './PanelDetail';
 import PanelToolbar from './PanelToolbar';
 import { reducer, Store } from './reducer';
 
@@ -30,7 +30,7 @@ function Editor() {
         </div>
       </main>
       <aside className="pe-right-sider">
-        <PanelDetailWrapper data={data.present} selected={selected} />
+        <PanelDetail data={data.present} selected={selected} />
       </aside>
     </EditorContext.Provider>
   );

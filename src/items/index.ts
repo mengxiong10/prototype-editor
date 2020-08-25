@@ -42,8 +42,3 @@ leftComponentTree.forEach((item) => {
 });
 
 registerComponent('rect', rectOptions);
-
-// registerComponent([
-//   { type: 'group.button', options: buttonOptions },
-//   { type: 'group.input', options: inputOptions },
-// ]);
