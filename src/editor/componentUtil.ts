@@ -1,54 +1,20 @@
 import type { ComponentOptions, ComponentEditableData, ComponentData } from 'src/types/editor';
 import { randomId } from 'src/utils/randomId';
-import { castArray } from 'lodash';
 import NotFound from './NotFound';
 
-interface Shortcut {
-  type: string;
-  name?: string;
-}
+const componentMap = new Map<string, ComponentOptions>();
 
-interface RegisterComponentParams extends Shortcut {
-  options: ComponentOptions;
-}
-
-const components: { [key: string]: ComponentOptions } = {};
-
-function registerComponent(data: RegisterComponentParams | RegisterComponentParams[]) {
-  castArray(data).forEach(({ type, options }) => {
-    components[type] = options;
-  });
-}
-
-// 左侧组件列表的显示
-export const shortcuts: { group: string; children: Shortcut[] }[] = [];
-
-function registerShortcut(data: Shortcut | Shortcut[], group: string) {
-  let groupItem = shortcuts.find((v) => v.group === group);
-  if (!groupItem) {
-    groupItem = { group, children: [] };
-    shortcuts.push(groupItem);
-  }
-  castArray(data).forEach(({ type, name }) => {
-    if (groupItem!.children.every((v) => v.type !== type)) {
-      groupItem!.children.push({ type, name });
-    }
-  });
-}
-
-export function register(data: RegisterComponentParams | RegisterComponentParams[]) {
-  registerComponent(data);
-
-  return (group: string) => registerShortcut(data, group);
+export function registerComponent(type: string, options: ComponentOptions) {
+  componentMap.set(type, options);
 }
 
 export function isValidComponent(type: string) {
-  return Object.prototype.hasOwnProperty.call(components, type);
+  return componentMap.has(type);
 }
 
 export function getComponent(type: string) {
   return (
-    components[type] || {
+    componentMap.get(type) || {
       component: NotFound,
       defaultData: { type },
       defaultSize: { width: 200, height: 40 },

@@ -1,4 +1,5 @@
-import { register } from 'src/editor/componentUtil';
+import { registerComponent } from 'src/editor/componentUtil';
+import type { ComponentOptions } from 'src/types/editor';
 import { buttonOptions } from './Button';
 import { inputOptions } from './Input';
 import { richEditorOptions } from './RichEditor';
@@ -8,20 +9,41 @@ import { checkboxOptions } from './Checkbox';
 import { radioOptions } from './Radio';
 import { groupOptions } from './Group';
 
-register({ type: 'rect', options: rectOptions });
+interface LeftComponentTree {
+  key: string;
+  name: string;
+  children: { type: string; options: ComponentOptions; name: string }[];
+}
 
-register([
-  { type: 'button', options: buttonOptions, name: '按钮' },
-  { type: 'input', options: inputOptions, name: '单行输入' },
-  { type: 'textarea', options: textareaOptions, name: '多行输入' },
-  { type: 'rich', options: richEditorOptions, name: '富文本' },
-  { type: 'checkbox', options: checkboxOptions, name: '多选框' },
-  { type: 'radio', options: radioOptions, name: '单选框' },
-])('基础组件');
+export const leftComponentTree: LeftComponentTree[] = [
+  {
+    key: 'base',
+    name: '基础组件',
+    children: [
+      { type: 'button', options: buttonOptions, name: '按钮' },
+      { type: 'input', options: inputOptions, name: '单行输入' },
+      { type: 'textarea', options: textareaOptions, name: '多行输入' },
+      { type: 'rich', options: richEditorOptions, name: '富文本' },
+      { type: 'checkbox', options: checkboxOptions, name: '多选框' },
+      { type: 'radio', options: radioOptions, name: '单选框' },
+    ],
+  },
+  {
+    key: 'test',
+    name: '测试',
+    children: [{ type: 'group', options: groupOptions, name: '组合' }],
+  },
+];
 
-register([{ type: 'group', options: groupOptions, name: '组合' }])('测试');
+leftComponentTree.forEach((item) => {
+  item.children.forEach((v) => {
+    registerComponent(v.type, v.options);
+  });
+});
 
-register([
-  { type: 'group.button', options: buttonOptions },
-  { type: 'group.input', options: inputOptions },
-]);
+registerComponent('rect', rectOptions);
+
+// registerComponent([
+//   { type: 'group.button', options: buttonOptions },
+//   { type: 'group.input', options: inputOptions },
+// ]);
