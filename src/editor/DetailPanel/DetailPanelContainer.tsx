@@ -1,18 +1,18 @@
 import React from 'react';
 import type { DetailPanelType } from 'src/types/editor';
 import { set } from 'dot-prop-immutable';
-import { useEditor } from './Context';
-import { actions } from './reducer';
-import PanelDetailDefault from './PanelDetailDefault';
-import type { PanelChangeHandler } from './PanelDetailHelper';
+import { useEditor } from 'src/editor/Context';
+import { actions } from 'src/editor/reducer';
+import DetailPanelDefault from './DetailPanelDefault';
+import type { PanelChangeHandler } from './Helpers';
 
-export interface PanelDetailContainerProps<T = any> {
+export interface DetailPanelContainerProps<T = any> {
   data: T;
   path: string;
   detailPanel: DetailPanelType<T>;
 }
 
-function PanelDetailContainer({ data, detailPanel, path }: PanelDetailContainerProps) {
+function DetailPanelContainer({ data, detailPanel, path }: DetailPanelContainerProps) {
   const dispatch = useEditor();
   // 代理blur事件记录历史
   const handleBlur = (evt: React.FocusEvent) => {
@@ -35,7 +35,7 @@ function PanelDetailContainer({ data, detailPanel, path }: PanelDetailContainerP
   return (
     <div onBlur={handleBlur}>
       {Array.isArray(detailPanel) ? (
-        <PanelDetailDefault data={data} groups={detailPanel} onChange={handleChange} />
+        <DetailPanelDefault data={data} groups={detailPanel} onChange={handleChange} />
       ) : (
         React.createElement(detailPanel, {
           data,
@@ -46,4 +46,4 @@ function PanelDetailContainer({ data, detailPanel, path }: PanelDetailContainerP
   );
 }
 
-export default PanelDetailContainer;
+export default DetailPanelContainer;

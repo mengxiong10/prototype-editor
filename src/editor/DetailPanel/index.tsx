@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import type { ComponentData, ComponentId } from 'src/types/editor';
 import { mergeObjectDeep } from 'src/utils/object';
 import { get } from 'dot-prop-immutable';
-import { getComponent } from './componentUtil';
-import PanelDetailContainer from './PanelDetailContainer';
-import { EventCompositeSelect, EventCompositeSelectProps } from './event';
+import { getComponent } from 'src/editor/componentUtil';
+import { EventCompositeSelect, EventCompositeSelectProps } from 'src/editor/event';
+import DetailPanelContainer from './DetailPanelContainer';
 
 export interface PanelDetailProps {
   data: ComponentData[];
@@ -56,7 +56,7 @@ function PanelDetail({ data, selected }: PanelDetailProps) {
 
   resolvedData = mergeObjectDeep(defaultData, resolvedData || {});
 
-  return <PanelDetailContainer data={resolvedData} detailPanel={detailPanel} path={path} />;
+  return <DetailPanelContainer data={resolvedData} detailPanel={detailPanel} path={path} />;
 }
 
 export default PanelDetail;

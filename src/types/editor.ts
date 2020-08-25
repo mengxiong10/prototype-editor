@@ -1,5 +1,5 @@
-import type { DetailPanelGroup } from 'src/editor/PanelDetailDefault';
-import type { PanelChangeHandler } from 'src/editor/PanelDetailHelper';
+import type { DetailPanelGroup } from 'src/editor/DetailPanel/DetailPanelDefault';
+import type { PanelChangeHandler } from 'src/editor/DetailPanel/Helpers';
 
 export type ComponentId = string;
 

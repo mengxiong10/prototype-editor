@@ -1,8 +1,6 @@
 import React from 'react';
-import { Tooltip, Button } from 'antd';
 import CommentOutlined from '@ant-design/icons/CommentOutlined';
 import BorderOutlined from '@ant-design/icons/BorderOutlined';
-import type { ButtonProps } from 'antd/lib/button';
 import Redo from 'src/svg/redo.svg';
 import Undo from 'src/svg/undo.svg';
 import AlignLeft from 'src/svg/align-left-fill.svg';
@@ -13,31 +11,16 @@ import AlignCenter from 'src/svg/align-center-fill.svg';
 import AlignVerticel from 'src/svg/align-verticle-fill.svg';
 import HorizontalSpace from 'src/svg/horizontal-space.svg';
 import VerticalSpace from 'src/svg/vertical-space.svg';
-import { EventDrawing } from './event';
-import { useEditor } from './Context';
-import { Store, actions } from './reducer';
+import { EventDrawing } from 'src/editor/event';
+import { useEditor } from 'src/editor/Context';
+import { Store, actions } from 'src/editor/reducer';
+import IconButton from './IconButton';
 
 export type PanelToolbarProps = Pick<Store, 'data' | 'selected'>;
 
-export interface ButtonIconProps extends Omit<ButtonProps, 'title'> {
-  title: React.ReactNode;
-}
-
-const ButtonIcon = ({ title, ...rest }: ButtonIconProps) => {
-  return (
-    <Tooltip title={title}>
-      <Button
-        size="small"
-        style={{ height: '100%', border: 'none', background: 'none' }}
-        {...rest}
-      />
-    </Tooltip>
-  );
-};
-
 const id = 'toolbar';
 
-function PanelToolbar({ data, selected }: PanelToolbarProps) {
+function Toolbar({ data, selected }: PanelToolbarProps) {
   const dispatch = useEditor();
 
   const divider = (
@@ -57,89 +40,89 @@ function PanelToolbar({ data, selected }: PanelToolbarProps) {
         borderBottom: '1px solid #e8e8e8',
       }}
     >
-      <ButtonIcon
+      <IconButton
         title="撤销(ctrl+z)"
         disabled={data.past.length === 0}
         onClick={() => dispatch(actions.undo())}
       >
         <Undo />
-      </ButtonIcon>
-      <ButtonIcon
+      </IconButton>
+      <IconButton
         title="重做(ctrl+shift+z)"
         disabled={data.future.length === 0}
         onClick={() => dispatch(actions.redo())}
       >
         <Redo />
-      </ButtonIcon>
+      </IconButton>
       {divider}
-      <ButtonIcon title="重点标记" onClick={() => EventDrawing.emit('rect')}>
+      <IconButton title="重点标记" onClick={() => EventDrawing.emit('rect')}>
         <BorderOutlined />
         <span style={{ marginLeft: 4 }}>方框</span>
-      </ButtonIcon>
+      </IconButton>
       {divider}
-      <ButtonIcon title="添加批注" onClick={() => EventDrawing.emit('comment')}>
+      <IconButton title="添加批注" onClick={() => EventDrawing.emit('comment')}>
         <CommentOutlined />
         <span style={{ marginLeft: 4 }}>标注</span>
-      </ButtonIcon>
+      </IconButton>
       {divider}
-      <ButtonIcon
+      <IconButton
         title="左对齐"
         disabled={selected.length < 2}
         onClick={() => dispatch(actions.align('left'))}
       >
         <AlignLeft />
-      </ButtonIcon>
-      <ButtonIcon
+      </IconButton>
+      <IconButton
         title="水平居中"
         disabled={selected.length < 2}
         onClick={() => dispatch(actions.align('horizontal'))}
       >
         <AlignCenter />
-      </ButtonIcon>
-      <ButtonIcon
+      </IconButton>
+      <IconButton
         title="右对齐"
         disabled={selected.length < 2}
         onClick={() => dispatch(actions.align('right'))}
       >
         <AlignRight />
-      </ButtonIcon>
-      <ButtonIcon
+      </IconButton>
+      <IconButton
         title="顶对齐"
         disabled={selected.length < 2}
         onClick={() => dispatch(actions.align('top'))}
       >
         <AlignTop />
-      </ButtonIcon>
-      <ButtonIcon
+      </IconButton>
+      <IconButton
         title="垂直居中"
         disabled={selected.length < 2}
         onClick={() => dispatch(actions.align('vertical'))}
       >
         <AlignVerticel />
-      </ButtonIcon>
-      <ButtonIcon
+      </IconButton>
+      <IconButton
         title="底对齐"
         disabled={selected.length < 2}
         onClick={() => dispatch(actions.align('bottom'))}
       >
         <AlignBottom />
-      </ButtonIcon>
-      <ButtonIcon
+      </IconButton>
+      <IconButton
         title="水平等间距"
         disabled={selected.length < 3}
         onClick={() => dispatch(actions.space('horizontal'))}
       >
         <HorizontalSpace />
-      </ButtonIcon>
-      <ButtonIcon
+      </IconButton>
+      <IconButton
         title="垂直等间距"
         disabled={selected.length < 3}
         onClick={() => dispatch(actions.space('vertical'))}
       >
         <VerticalSpace />
-      </ButtonIcon>
+      </IconButton>
     </div>
   );
 }
 
-export default PanelToolbar;
+export default Toolbar;

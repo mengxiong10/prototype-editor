@@ -1,6 +1,6 @@
 import React from 'react';
 import { Input, Switch, InputNumber } from 'antd';
-import ColorPicker from '../components/ColorPicker';
+import ColorPicker from 'src/components/ColorPicker';
 
 export type PanelChangeHandler = (data: { prop: string; value: any; history?: boolean }) => void;
 

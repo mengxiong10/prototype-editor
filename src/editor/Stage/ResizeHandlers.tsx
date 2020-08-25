@@ -1,8 +1,8 @@
 import React, { useRef } from 'react';
 import type { ComponentData } from 'src/types/editor';
 import Draggable, { DraggableHandler } from 'src/components/Draggable';
-import { useEditor } from './Context';
-import { actions } from './reducer';
+import { useEditor } from 'src/editor/Context';
+import { actions } from 'src/editor/reducer';
 
 interface ResizeHandlersProps {
   selectedData: ComponentData[];

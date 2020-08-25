@@ -1,12 +1,12 @@
 import React from 'react';
 import FileAddOutlined from '@ant-design/icons/FileAddOutlined';
 
-export interface ComponentItemProps {
+export interface PanelItemProps {
   children: React.ReactNode;
   type: string;
 }
 
-function ComponentItem({ type, children }: ComponentItemProps) {
+function PanelItem({ type, children }: PanelItemProps) {
   const handleDragStart = (evt: React.DragEvent<HTMLDivElement>) => {
     evt.dataTransfer.setData('type', type);
   };
@@ -19,4 +19,4 @@ function ComponentItem({ type, children }: ComponentItemProps) {
   );
 }
 
-export default ComponentItem;
+export default PanelItem;

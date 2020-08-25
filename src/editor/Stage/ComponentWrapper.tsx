@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import classnames from 'classnames';
 import Draggable, { DraggableHandler } from 'src/components/Draggable';
 import type { ComponentData } from 'src/types/editor';
-import { useEditor, ComponentIdContext } from './Context';
-import { actions } from './reducer';
-import { getComponent } from './componentUtil';
-import { useComponent } from './useComponent';
-import { disableClassnames } from './DisableEditorFeature';
-import { EventCompositeSelect } from './event';
+import { useEditor, ComponentIdContext } from 'src/editor/Context';
+import { actions } from 'src/editor/reducer';
+import { getComponent } from 'src/editor/componentUtil';
+import { disableClassnames } from 'src/editor/DisableEditorFeature';
+import { EventCompositeSelect } from 'src/editor/event';
+import { mergeObjectDeep } from 'src/utils/object';
 
 export interface ComponentWrapperProps {
   active: boolean;
@@ -49,8 +49,6 @@ function ComponentWrapper({ active, item }: ComponentWrapperProps) {
     dispatch(actions.recordHistory());
   };
 
-  const component = useComponent({ type, data });
-
   const style: React.CSSProperties = {
     ...getComponent(type).wrapperStyle,
     position: 'absolute',
@@ -63,6 +61,15 @@ function ComponentWrapper({ active, item }: ComponentWrapperProps) {
   const classNames = classnames('pe-component-wrapper', {
     active,
   });
+
+  const component = useMemo(() => {
+    const componentOption = getComponent(type);
+
+    return React.createElement(
+      componentOption.component,
+      mergeObjectDeep(componentOption.defaultData, data)
+    );
+  }, [data, type]);
 
   return (
     <ComponentIdContext.Provider value={id}>

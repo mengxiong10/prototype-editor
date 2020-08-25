@@ -9,13 +9,13 @@ import { checkboxOptions } from './Checkbox';
 import { radioOptions } from './Radio';
 import { groupOptions } from './Group';
 
-interface LeftComponentTree {
+interface ItemPanelTreeItem {
   key: string;
   name: string;
   children: { type: string; options: ComponentOptions; name: string }[];
 }
 
-export const leftComponentTree: LeftComponentTree[] = [
+export const itemPanelTree: ItemPanelTreeItem[] = [
   {
     key: 'base',
     name: '基础组件',
@@ -35,7 +35,7 @@ export const leftComponentTree: LeftComponentTree[] = [
   },
 ];
 
-leftComponentTree.forEach((item) => {
+itemPanelTree.forEach((item) => {
   item.children.forEach((v) => {
     registerComponent(v.type, v.options);
   });

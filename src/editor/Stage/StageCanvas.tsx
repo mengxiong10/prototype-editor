@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import type { ComponentData } from 'src/types/editor';
 
-export interface PanelCanvasProps {
+export interface StageCanvasProps {
   data: ComponentData[];
   width: number;
   height: number;
@@ -9,7 +9,7 @@ export interface PanelCanvasProps {
 
 // 主要是绘制页面上不需要响应鼠标事件的图形
 // * 标注的连接线
-function PanelCanvas({ data, width, height }: PanelCanvasProps) {
+function StageCanvas({ data, width, height }: StageCanvasProps) {
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -69,4 +69,4 @@ function PanelCanvas({ data, width, height }: PanelCanvasProps) {
   );
 }
 
-export default PanelCanvas;
+export default StageCanvas;

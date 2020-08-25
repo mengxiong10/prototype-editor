@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import DrawShape, { ShapeData } from 'src/components/DrawShape';
 import { useClickOutside } from 'src/hooks/useClickOutside';
-import { useEditor } from './Context';
-import { actions } from './reducer';
-import { createComponentData } from './componentUtil';
-import { EventDrawing } from './event';
+import { useEditor } from 'src/editor/Context';
+import { actions } from 'src/editor/reducer';
+import { createComponentData } from 'src/editor/componentUtil';
+import { EventDrawing } from 'src/editor/event';
 
-function PanelDrawing() {
+function StageDrawing() {
   const dispatch = useEditor();
   const [type, setType] = useState('');
 
@@ -65,4 +65,4 @@ function PanelDrawing() {
   );
 }
 
-export default React.memo(PanelDrawing);
+export default React.memo(StageDrawing);

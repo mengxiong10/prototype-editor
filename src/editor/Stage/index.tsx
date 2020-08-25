@@ -2,19 +2,19 @@ import React, { useCallback, useRef } from 'react';
 import ContextMenuTrigger from 'src/components/ContextMenuTrigger';
 import DrawShape, { ShapeData } from 'src/components/DrawShape';
 import { useDrop } from 'src/hooks/useDrop';
-import { useEditor } from './Context';
-import { useContextmenu } from './useContextMenu';
-import { actions, Store } from './reducer';
-import { createComponentData, isValidComponent } from './componentUtil';
-import PanelDrawing from './PanelDrawing';
-import { useShortcuts } from './useShortcuts';
+import { useEditor } from 'src/editor/Context';
+import { useContextmenu } from 'src/editor/useContextMenu';
+import { actions, Store } from 'src/editor/reducer';
+import { createComponentData, isValidComponent } from 'src/editor/componentUtil';
+import { useShortcuts } from 'src/editor/useShortcuts';
+import StageDrawing from './StageDrawing';
 import ComponentWrapper from './ComponentWrapper';
-import PanelCanvas from './PanelCanvas';
+import StageCanvas from './StageCanvas';
 import ResizeHandlers from './ResizeHandlers';
 
-export type PanelStage2Props = Pick<Store, 'data' | 'selected'>;
+export type StageProps = Pick<Store, 'data' | 'selected'>;
 
-function PanelStage({ data, selected }: PanelStage2Props) {
+function Stage({ data, selected }: StageProps) {
   const dispatch = useEditor();
 
   const selectedData = data.present.filter((v) => selected.indexOf(v.id) !== -1);
@@ -59,13 +59,13 @@ function PanelStage({ data, selected }: PanelStage2Props) {
           {data.present.map((item) => (
             <ComponentWrapper key={item.id} item={item} active={selected.indexOf(item.id) !== -1} />
           ))}
-          <PanelCanvas width={2000} height={1000} data={data.present} />
+          <StageCanvas width={2000} height={1000} data={data.present} />
           {selectedData.length > 0 && <ResizeHandlers selectedData={selectedData} />}
-          <PanelDrawing />
+          <StageDrawing />
         </div>
       </DrawShape>
     </ContextMenuTrigger>
   );
 }
 
-export default PanelStage;
+export default Stage;
