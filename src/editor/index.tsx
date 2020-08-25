@@ -13,11 +13,10 @@ const initialState: Store = {
     future: [],
   },
   selected: [],
-  status: {},
 };
 
 function Editor() {
-  const [{ data, selected, status }, dispatch] = useReducer(reducer, initialState);
+  const [{ data, selected }, dispatch] = useReducer(reducer, initialState);
 
   return (
     <EditorContext.Provider value={dispatch}>
@@ -27,11 +26,11 @@ function Editor() {
       <main className="pe-main">
         <PanelToolbar data={data} selected={selected} />
         <div className="pe-content u-scroll">
-          <PanelStage data={data} selected={selected} status={status} />
+          <PanelStage data={data} selected={selected} />
         </div>
       </main>
       <aside className="pe-right-sider">
-        <PanelDetailWrapper data={data.present} selected={selected} status={status} />
+        <PanelDetailWrapper data={data.present} selected={selected} />
       </aside>
     </EditorContext.Provider>
   );

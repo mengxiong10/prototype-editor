@@ -12,9 +12,9 @@ import ComponentWrapper from './ComponentWrapper';
 import PanelCanvas from './PanelCanvas';
 import ResizeHandlers from './ResizeHandlers';
 
-export type PanelStage2Props = Pick<Store, 'data' | 'selected' | 'status'>;
+export type PanelStage2Props = Pick<Store, 'data' | 'selected'>;
 
-function PanelStage({ data, selected, status }: PanelStage2Props) {
+function PanelStage({ data, selected }: PanelStage2Props) {
   const dispatch = useEditor();
 
   const selectedData = data.present.filter((v) => selected.indexOf(v.id) !== -1);
@@ -57,12 +57,7 @@ function PanelStage({ data, selected, status }: PanelStage2Props) {
           {...dropProps}
         >
           {data.present.map((item) => (
-            <ComponentWrapper
-              key={item.id}
-              item={item}
-              active={selected.indexOf(item.id) !== -1}
-              status={status[item.id]}
-            />
+            <ComponentWrapper key={item.id} item={item} active={selected.indexOf(item.id) !== -1} />
           ))}
           <PanelCanvas width={2000} height={1000} data={data.present} />
           {selectedData.length > 0 && <ResizeHandlers selectedData={selectedData} />}

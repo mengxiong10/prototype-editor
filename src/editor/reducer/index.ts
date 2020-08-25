@@ -1,17 +1,15 @@
 import undoable, { StateWithHistory, ActionCreators } from 'redux-undo';
-import type { ComponentData, ComponentId, ComponentStatus } from 'src/types/editor';
+import type { ComponentData, ComponentId } from 'src/types/editor';
 import { combineReducers, shallowArrayEqualEnhancer } from './reducerHelpers';
 import { actions as dataActions, reducer as dataReducer } from './data';
 import { actions as selectedActions, reducer as selectedReducer } from './selected';
-import { actions as statusActions, reducer as statusReducer } from './status';
 
 export interface Store {
   data: StateWithHistory<ComponentData[]>;
   selected: ComponentId[];
-  status: { [key: string]: ComponentStatus };
 }
 
-export const actions = { ...ActionCreators, ...dataActions, ...selectedActions, ...statusActions };
+export const actions = { ...ActionCreators, ...dataActions, ...selectedActions };
 
 export const reducer = combineReducers<Store>({
   data: undoable(dataReducer, {
@@ -22,5 +20,4 @@ export const reducer = combineReducers<Store>({
     },
   }),
   selected: shallowArrayEqualEnhancer(selectedReducer),
-  status: statusReducer,
 });

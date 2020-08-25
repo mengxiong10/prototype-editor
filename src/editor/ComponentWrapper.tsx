@@ -1,50 +1,22 @@
 import React from 'react';
 import classnames from 'classnames';
 import Draggable, { DraggableHandler } from 'src/components/Draggable';
-import type { ComponentData, ComponentStatus } from 'src/types/editor';
-import { closestUntil } from 'src/utils/domFns';
+import type { ComponentData } from 'src/types/editor';
 import { useEditor, ComponentIdContext } from './Context';
 import { actions } from './reducer';
 import { getComponent } from './componentUtil';
 import { useComponent } from './useComponent';
 import { disableClassnames } from './DisableEditorFeature';
-import { childComponentClassName } from './ChildComponentWrapper';
 
 export interface ComponentWrapperProps {
   active: boolean;
   item: ComponentData;
-  status?: ComponentStatus;
 }
 
-function ComponentWrapper({ active, item, status }: ComponentWrapperProps) {
+function ComponentWrapper({ active, item }: ComponentWrapperProps) {
   const { id, type, left, top, width, height, data } = item;
 
   const dispatch = useEditor();
-
-  if (!active && status) {
-    dispatch(actions.deleteStatus(item.id));
-  }
-
-  const handleDoubleClick = (evt: React.MouseEvent<HTMLDivElement>) => {
-    const child = closestUntil(
-      evt.target as HTMLElement,
-      `.${childComponentClassName}`,
-      evt.currentTarget
-    );
-    if (child && child.dataset.path && child.dataset.type) {
-      dispatch(
-        actions.setStatus({
-          [id]: {
-            selectedPath: child.dataset.path,
-            selectedType: child.dataset.type,
-          },
-        })
-      );
-    } else {
-      dispatch(actions.deleteStatus(id));
-    }
-    dispatch(actions.select(id));
-  };
 
   // 选中组件
   const handleSelect = (evt: React.MouseEvent<HTMLDivElement>) => {
@@ -94,12 +66,7 @@ function ComponentWrapper({ active, item, status }: ComponentWrapperProps) {
         onMove={handleMove}
         onStop={handleStop}
       >
-        <div
-          onDoubleClick={handleDoubleClick}
-          className={classNames}
-          style={style}
-          data-id={item.id}
-        >
+        <div className={classNames} style={style} data-id={item.id}>
           {component}
         </div>
       </Draggable>

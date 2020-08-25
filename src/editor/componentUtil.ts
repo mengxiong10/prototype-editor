@@ -14,11 +14,12 @@ export function isValidComponent(type: string) {
 
 export function getComponent(type: string) {
   return (
-    componentMap.get(type) || {
+    componentMap.get(type) ||
+    ({
       component: NotFound,
       defaultData: { type },
       defaultSize: { width: 200, height: 40 },
-    }
+    } as ComponentOptions)
   );
 }
 
