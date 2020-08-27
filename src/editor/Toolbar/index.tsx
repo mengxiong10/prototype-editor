@@ -13,7 +13,8 @@ import HorizontalSpace from 'src/svg/horizontal-space.svg';
 import VerticalSpace from 'src/svg/vertical-space.svg';
 import { EventDrawing } from 'src/editor/event';
 import { useEditor } from 'src/editor/Context';
-import { Store, actions } from 'src/editor/reducer';
+import { actions } from 'src/editor/reducer';
+import type { Store } from 'src/editor/reducer/type';
 import IconButton from './IconButton';
 
 export type PanelToolbarProps = Pick<Store, 'data' | 'selected'>;

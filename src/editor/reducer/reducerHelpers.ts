@@ -35,11 +35,15 @@ type ReducersMapObject<S = any> = {
   [K in keyof S]: ReturnReducer<S[K]>;
 };
 
-type Handler<S = any, P = any, Store = any> = (state: S, payload: P, Store?: Store) => S;
+export type ReducerHandler<S = any, P = any, Store = any> = (
+  state: S,
+  payload: P,
+  Store?: Store
+) => S;
 
-type Handlers = { [key: string]: Handler };
+type ReducerHandlers = { [key: string]: ReducerHandler };
 
-function createActions<T extends Handlers>(handlers: T): ReturnAction<T> {
+function createActions<T extends ReducerHandlers>(handlers: T): ReturnAction<T> {
   const actions: any = {};
   Object.keys(handlers).forEach((key) => {
     actions[key] = (payload: any) => ({ type: key, payload });
@@ -48,7 +52,7 @@ function createActions<T extends Handlers>(handlers: T): ReturnAction<T> {
   return actions;
 }
 
-function createReducer<T extends Handlers>(handlers: T) {
+function createReducer<T extends ReducerHandlers>(handlers: T) {
   type S = ReturnState<T[keyof T]>;
   return (state: S, action: any, ...args: any[]): S => {
     if (handlers.hasOwnProperty(action.type)) {
@@ -58,7 +62,7 @@ function createReducer<T extends Handlers>(handlers: T) {
   };
 }
 
-export function createReducerWithActions<T extends Handlers>(handlers: T) {
+export function createReducerWithActions<T extends ReducerHandlers>(handlers: T) {
   return {
     actions: createActions(handlers),
     reducer: createReducer(handlers),

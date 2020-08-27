@@ -2,7 +2,6 @@ import { useRef, useEffect } from 'react';
 import { useHotkeys } from './useHotkeys';
 import { useEditor } from './Context';
 import { actions } from './reducer';
-import { pasteComponentData } from './componentUtil';
 
 export function useShortcuts(ref: React.RefObject<HTMLElement>) {
   const dispatch = useEditor();
@@ -32,11 +31,12 @@ export function useShortcuts(ref: React.RefObject<HTMLElement>) {
   });
 
   useHotkeys('ctrl+c', () => {
+    console.log('copy');
     dispatch(actions.copy());
   });
 
   useHotkeys('ctrl+v', () => {
-    dispatch(actions.add(pasteComponentData(position.current)));
+    dispatch(actions.paste(position.current));
   });
 
   useHotkeys('ctrl+a', () => {

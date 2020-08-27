@@ -1,28 +1,32 @@
-import { castArray } from 'lodash';
-import type { ComponentData, ComponentId, ComponentEditableData } from 'src/types/editor';
+import type { ComponentData, ComponentEditableData } from 'src/types/editor';
 import { createReducerWithActions } from './reducerHelpers';
-import { clipboard } from '../componentUtil';
-import type { Store } from './index';
+import { createComponentData, cloneComponentData } from '../componentUtil';
+import type { SliceReducerHandler } from './type';
 
-type DataHandler<T = void> = (state: ComponentData[], payload: T, s: Store) => ComponentData[];
+type DataHandler<P = void> = SliceReducerHandler<ComponentData[], P>;
 
-const add: DataHandler<ComponentData | ComponentData[]> = (state, payload) => {
-  return state.concat(payload);
+const add: DataHandler<Partial<ComponentData> & Pick<ComponentData, 'type'>> = (state, payload) => {
+  return state.concat(createComponentData(payload));
 };
 
-const del: DataHandler<ComponentId | ComponentId[] | void> = (state, payload, store) => {
-  const id = payload ? castArray(payload) : store.selected;
+const del: DataHandler = (state, payload, store) => {
+  const id = store.selected;
   return state.filter((v) => id.indexOf(v.id) === -1);
 };
 
-const copy: DataHandler = (state, payload, { data, selected }) => {
-  clipboard.data = data.present.filter((v) => selected.indexOf(v.id) !== -1);
-  return state;
-};
+const cut = del;
 
-const cut: DataHandler = (...rest) => {
-  copy(...rest);
-  return del(...rest);
+const paste: DataHandler<{ x: number; y: number }> = (state, { x, y }, { clipboard }) => {
+  if (clipboard.length === 0) return state;
+  const minX = Math.min(...clipboard.map((v) => v.left));
+  const minY = Math.min(...clipboard.map((v) => v.top));
+  const diffX = x - minX;
+  const diffY = y - minY;
+  const newData = clipboard.map((v) => {
+    return cloneComponentData(v, { left: v.left + diffX, top: v.top + diffY });
+  });
+
+  return state.concat(newData);
 };
 
 type UpdatePayload =
@@ -143,10 +147,10 @@ const updateWithoutHistory = update;
 const handlers = {
   add,
   del,
+  cut,
+  paste,
   update,
   sort,
-  copy,
-  cut,
   align,
   space,
   updateWithoutHistory,

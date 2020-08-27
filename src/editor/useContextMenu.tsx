@@ -1,10 +1,13 @@
 import React, { useRef } from 'react';
 import type { ContextMenuOption } from 'src/components/ContextMenu';
 import { useEditor } from './Context';
-import { actions, Store } from './reducer';
-import { pasteComponentData, clipboard } from './componentUtil';
+import { actions } from './reducer';
+import type { Store } from './reducer/type';
 
-export function useContextmenu({ selected }: Pick<Store, 'data' | 'selected'>) {
+export function useContextmenu({
+  selected,
+  clipboard,
+}: Pick<Store, 'data' | 'selected' | 'clipboard'>) {
   const dispatch = useEditor();
 
   const position = useRef({ x: 0, y: 0 });
@@ -57,9 +60,9 @@ export function useContextmenu({ selected }: Pick<Store, 'data' | 'selected'>) {
       {
         title: '粘贴',
         shortcut: 'Ctrl+V',
-        disabled: clipboard.data.length === 0,
+        disabled: clipboard.length === 0,
         key: 'paste',
-        handler: () => dispatch(actions.add(pasteComponentData(position.current))),
+        handler: () => dispatch(actions.paste(position.current)),
       },
     ];
 

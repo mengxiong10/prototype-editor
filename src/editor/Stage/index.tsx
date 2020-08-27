@@ -4,22 +4,23 @@ import DrawShape, { ShapeData } from 'src/components/DrawShape';
 import { useDrop } from 'src/hooks/useDrop';
 import { useEditor } from 'src/editor/Context';
 import { useContextmenu } from 'src/editor/useContextMenu';
-import { actions, Store } from 'src/editor/reducer';
-import { createComponentData, isValidComponent } from 'src/editor/componentUtil';
+import { actions } from 'src/editor/reducer';
+import type { Store } from 'src/editor/reducer/type';
+import { isValidComponent } from 'src/editor/componentUtil';
 import { useShortcuts } from 'src/editor/useShortcuts';
 import StageDrawing from './StageDrawing';
 import ComponentWrapper from './ComponentWrapper';
 import StageCanvas from './StageCanvas';
 import ResizeHandlers from './ResizeHandlers';
 
-export type StageProps = Pick<Store, 'data' | 'selected'>;
+export type StageProps = Pick<Store, 'data' | 'selected' | 'clipboard'>;
 
-function Stage({ data, selected }: StageProps) {
+function Stage({ data, selected, clipboard }: StageProps) {
   const dispatch = useEditor();
 
   const selectedData = data.present.filter((v) => selected.indexOf(v.id) !== -1);
 
-  const contextmenuProps = useContextmenu({ data, selected });
+  const contextmenuProps = useContextmenu({ data, selected, clipboard });
 
   const stageRef = useRef<HTMLDivElement>(null);
 
@@ -28,8 +29,7 @@ function Stage({ data, selected }: StageProps) {
   const dropProps = useDrop({
     onDropDone: ({ data: type, x, y }) => {
       if (!type || !isValidComponent(type)) return;
-      const componentdata = createComponentData(type, { left: x - 20, top: y - 20 });
-      dispatch(actions.add(componentdata));
+      dispatch(actions.add({ type, left: x - 20, top: y - 20 }));
     },
   });
 

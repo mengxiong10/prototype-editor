@@ -3,8 +3,8 @@ import DrawShape, { ShapeData } from 'src/components/DrawShape';
 import { useClickOutside } from 'src/hooks/useClickOutside';
 import { useEditor } from 'src/editor/Context';
 import { actions } from 'src/editor/reducer';
-import { createComponentData } from 'src/editor/componentUtil';
 import { EventDrawing } from 'src/editor/event';
+import { createComponentData } from '../componentUtil';
 
 function StageDrawing() {
   const dispatch = useEditor();
@@ -22,19 +22,20 @@ function StageDrawing() {
     (value: ShapeData) => {
       hideDrawer();
       if (type === 'comment') {
-        const richData = createComponentData('rich', {
+        const richData = createComponentData({
           left: value.left + value.width + 200,
           top: value.top,
+          type: 'rich',
         });
-        const rect = createComponentData('rect', {
+        const rect = createComponentData({
           ...value,
+          type: 'rect',
           association: richData.id,
         });
         dispatch(actions.add(rect));
         dispatch(actions.add(richData));
       } else {
-        const componentdata = createComponentData(type, value);
-        dispatch(actions.add(componentdata));
+        dispatch(actions.add({ ...value, type }));
       }
     },
     [dispatch, hideDrawer, type]

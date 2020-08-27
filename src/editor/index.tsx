@@ -4,7 +4,8 @@ import Toolbar from './Toolbar';
 import DetailPanel from './DetailPanel';
 import ItemPanel from './ItemPanel';
 import Stage from './Stage';
-import { reducer, Store } from './reducer';
+import { reducer } from './reducer';
+import type { Store } from './reducer/type';
 
 const initialState: Store = {
   data: {
@@ -13,10 +14,11 @@ const initialState: Store = {
     future: [],
   },
   selected: [],
+  clipboard: [],
 };
 
 function Editor() {
-  const [{ data, selected }, dispatch] = useReducer(reducer, initialState);
+  const [{ data, selected, clipboard }, dispatch] = useReducer(reducer, initialState);
 
   return (
     <EditorContext.Provider value={dispatch}>
@@ -26,7 +28,7 @@ function Editor() {
       <main className="pe-main">
         <Toolbar data={data} selected={selected} />
         <div className="pe-content u-scroll">
-          <Stage data={data} selected={selected} />
+          <Stage data={data} selected={selected} clipboard={clipboard} />
         </div>
       </main>
       <aside className="pe-right-sider">

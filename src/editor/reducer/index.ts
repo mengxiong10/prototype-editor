@@ -1,17 +1,19 @@
-import undoable, { StateWithHistory, ActionCreators } from 'redux-undo';
-import type { ComponentData, ComponentId } from 'src/types/editor';
+import undoable, { ActionCreators } from 'redux-undo';
 import { combineReducers, shallowArrayEqualEnhancer } from './reducerHelpers';
 import { actions as dataActions, reducer as dataReducer } from './data';
 import { actions as selectedActions, reducer as selectedReducer } from './selected';
+import { actions as clipboardActions, reducer as clipboardReducer } from './clipboard';
+import { reducer as globalCross } from './globalCross';
+import type { Store } from './type';
 
-export interface Store {
-  data: StateWithHistory<ComponentData[]>;
-  selected: ComponentId[];
-}
+export const actions = {
+  ...ActionCreators,
+  ...dataActions,
+  ...selectedActions,
+  ...clipboardActions,
+};
 
-export const actions = { ...ActionCreators, ...dataActions, ...selectedActions };
-
-export const reducer = combineReducers<Store>({
+const combinedReducer = combineReducers<Store>({
   data: undoable(dataReducer, {
     limit: 10,
     filter: (action) => {
@@ -20,4 +22,12 @@ export const reducer = combineReducers<Store>({
     },
   }),
   selected: shallowArrayEqualEnhancer(selectedReducer),
+  clipboard: clipboardReducer,
 });
+
+export const reducer = (state: Store, action: any) => {
+  const intermediateState = combinedReducer(state, action);
+  const finalState = globalCross(intermediateState, action);
+
+  return finalState;
+};

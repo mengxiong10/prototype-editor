@@ -1,14 +1,10 @@
 import { castArray } from 'lodash';
-import type { ComponentData, ComponentId } from 'src/types/editor';
+import type { ComponentId } from 'src/types/editor';
 import type { ShapeData } from 'src/components/DrawShape';
 import { createReducerWithActions } from './reducerHelpers';
-import type { Store } from './index';
+import type { SliceReducerHandler } from './type';
 
-type SelectHandler<T = void> = (state: ComponentId[], payload: T, s: Store) => ComponentId[];
-
-const add: SelectHandler<ComponentData | ComponentData[]> = (state, payload) => {
-  return castArray(payload).map((v) => v.id);
-};
+type SelectHandler<P = void> = SliceReducerHandler<ComponentId[], P>;
 
 const select: SelectHandler<ComponentId | ComponentId[]> = (state, payload) => {
   return castArray(payload);
@@ -32,12 +28,18 @@ const selectAll: SelectHandler = (state, payload, store) => {
   return store.data.present.map((v) => v.id);
 };
 
+// TODO: redo, undo的时候也可能添加和删除item, 导致selected的id无效
+const del: SelectHandler = () => {
+  return [];
+};
+
 const handlers = {
-  add,
   select,
   selectAppend,
   selectAll,
   selectArea,
+  del,
+  cut: del,
 };
 
 export const { reducer, actions } = createReducerWithActions(handlers);

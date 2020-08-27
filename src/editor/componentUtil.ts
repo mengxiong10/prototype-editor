@@ -24,14 +24,21 @@ export function getComponent(type: string) {
 }
 
 export const createComponentData = (
-  type: string,
-  obj: Partial<ComponentEditableData>
+  obj: Partial<ComponentData> & Pick<ComponentData, 'type'>
 ): ComponentData => {
-  const { defaultSize } = getComponent(type);
+  const { defaultSize } = getComponent(obj.type);
   const id = randomId();
-  const defaultConfig = { data: {}, left: 10, top: 10, width: 200, height: 100, ...defaultSize };
+  const defaultConfig = {
+    id,
+    data: {},
+    left: 10,
+    top: 10,
+    width: 200,
+    height: 100,
+    ...defaultSize,
+  };
 
-  return { ...defaultConfig, ...obj, id, type };
+  return { ...defaultConfig, ...obj };
 };
 
 export const cloneComponentData = (
@@ -43,18 +50,4 @@ export const cloneComponentData = (
   newData.id = randomId();
 
   return newData;
-};
-
-// 组件剪切板
-export const clipboard: { data: ComponentData[] } = { data: [] };
-
-export const pasteComponentData = ({ x, y }: { x: number; y: number }) => {
-  if (clipboard.data.length === 0) return [];
-  const minX = Math.min(...clipboard.data.map((v) => v.left));
-  const minY = Math.min(...clipboard.data.map((v) => v.top));
-  const diffX = x - minX;
-  const diffY = y - minY;
-  return clipboard.data.map((v) => {
-    return cloneComponentData(v, { left: v.left + diffX, top: v.top + diffY });
-  });
 };
