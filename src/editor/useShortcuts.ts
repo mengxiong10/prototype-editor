@@ -31,7 +31,6 @@ export function useShortcuts(ref: React.RefObject<HTMLElement>) {
   });
 
   useHotkeys('ctrl+c', () => {
-    console.log('copy');
     dispatch(actions.copy());
   });
 

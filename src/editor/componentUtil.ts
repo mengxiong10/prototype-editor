@@ -28,17 +28,8 @@ export const createComponentData = (
 ): ComponentData => {
   const { defaultSize } = getComponent(obj.type);
   const id = randomId();
-  const defaultConfig = {
-    id,
-    data: {},
-    left: 10,
-    top: 10,
-    width: 200,
-    height: 100,
-    ...defaultSize,
-  };
 
-  return { ...defaultConfig, ...obj };
+  return { id, data: {}, left: 10, top: 10, width: 200, height: 100, ...defaultSize, ...obj };
 };
 
 export const cloneComponentData = (
