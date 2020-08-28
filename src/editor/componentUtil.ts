@@ -32,6 +32,13 @@ export const createComponentData = (
   return { id, data: {}, left: 10, top: 10, width: 200, height: 100, ...defaultSize, ...obj };
 };
 
+/**
+ * 回忆如此玄妙
+ * 她总会抹去坏的
+ * 放大好的
+ * 正因如此
+ * 我们才得以承担过去的重负
+ */
 export const cloneComponentData = (
   base: ComponentData,
   obj: Partial<ComponentEditableData>
