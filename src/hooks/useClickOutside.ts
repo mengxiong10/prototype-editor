@@ -11,20 +11,26 @@ export function useClickOutside<T extends Element = HTMLDivElement>({
 }: ClickOutsideProps) {
   const node = useRef<T>(null);
 
+  const saveCallback = useRef(onClick);
+
+  useEffect(() => {
+    saveCallback.current = onClick;
+  }, [onClick]);
+
   useEffect(() => {
     const handleClick = (evt: MouseEvent) => {
       const { current } = node;
       if (!current || current.contains(evt.target as Element)) {
         return;
       }
-      onClick(evt);
+      saveCallback.current(evt);
     };
 
     document.addEventListener(eventName, handleClick);
     return () => {
       document.addEventListener(eventName, handleClick);
     };
-  }, [eventName, onClick]);
+  }, [eventName]);
 
   return node;
 }
