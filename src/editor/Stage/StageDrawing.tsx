@@ -6,7 +6,7 @@ import { actions } from 'src/editor/reducer';
 import { EventDrawing } from 'src/editor/event';
 import { createComponentData } from '../componentUtil';
 
-function StageDrawing() {
+function StageDrawing({ scale = 1 }: { scale?: number }) {
   const dispatch = useEditor();
   const [type, setType] = useState('');
 
@@ -21,6 +21,9 @@ function StageDrawing() {
   const handleStop = useCallback(
     (value: ShapeData) => {
       hideDrawer();
+      Object.keys(value).forEach((k: keyof ShapeData) => {
+        value[k] /= scale;
+      });
       if (type === 'comment') {
         const richData = createComponentData({
           left: value.left + value.width + 200,
@@ -38,7 +41,7 @@ function StageDrawing() {
         dispatch(actions.add({ ...value, type }));
       }
     },
-    [dispatch, hideDrawer, type]
+    [dispatch, hideDrawer, scale, type]
   );
 
   useEffect(() => {

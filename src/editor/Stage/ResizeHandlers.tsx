@@ -6,11 +6,12 @@ import { actions } from 'src/editor/reducer';
 
 interface ResizeHandlersProps {
   selectedData: ComponentData[];
+  scale?: number;
 }
 
 const handlers = ['n', 'e', 's', 'w', 'nw', 'ne', 'se', 'sw'];
 
-function ResizeHandlers({ selectedData }: ResizeHandlersProps) {
+function ResizeHandlers({ selectedData, scale = 1 }: ResizeHandlersProps) {
   const dispatch = useEditor();
 
   const slack = useRef({
@@ -102,15 +103,16 @@ function ResizeHandlers({ selectedData }: ResizeHandlersProps) {
       onMove={handleMove}
       onStop={handleStop}
       onStart={handleDragStart}
+      scale={scale}
     >
       <div
         style={{
           position: 'absolute',
           pointerEvents: 'none',
-          left: outerLeft,
-          top: outerTop,
-          width: outerWidth,
-          height: outerHeight,
+          left: outerLeft * scale,
+          top: outerTop * scale,
+          width: outerWidth * scale,
+          height: outerHeight * scale,
           outline: '1px solid #007dfc',
         }}
       >

@@ -12,9 +12,10 @@ import { mergeObjectDeep } from 'src/utils/object';
 export interface ComponentWrapperProps {
   active: boolean;
   item: ComponentData;
+  scale?: number;
 }
 
-function ComponentWrapper({ active, item }: ComponentWrapperProps) {
+function ComponentWrapper({ active, item, scale = 1 }: ComponentWrapperProps) {
   const { id, type, left, top, width, height, data } = item;
 
   const dispatch = useEditor();
@@ -78,6 +79,7 @@ function ComponentWrapper({ active, item }: ComponentWrapperProps) {
         onMouseDown={handleSelect}
         onMove={handleMove}
         onStop={handleStop}
+        scale={scale}
       >
         <div onClick={handleComponentClick} className={classNames} style={style} data-id={item.id}>
           {component}

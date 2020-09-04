@@ -12,7 +12,9 @@ export type ShapeRectHandler = (data: ShapeData) => void;
 
 export interface DrawShapeProps extends React.HTMLAttributes<HTMLElement> {
   children: React.ReactElement;
+  scale?: number;
   shapeStyle?: React.CSSProperties;
+  onStart?: (evt: React.MouseEvent) => boolean | void;
   onMove?: ShapeRectHandler;
   onStop?: ShapeRectHandler;
 }
@@ -25,34 +27,32 @@ export interface DrawShapeState {
   dragging: boolean;
 }
 
-const getStyle = ({ x1, x2, y1, y2 }: Omit<DrawShapeState, 'dragging'>) => {
-  const left = Math.min(x1, x2);
-  const top = Math.min(y1, y2);
-  const width = Math.abs(x1 - x2);
-  const height = Math.abs(y1 - y2);
-  return { left, top, width, height };
-};
-
 const defaultShapeStyle = {
   backgroundColor: 'rgba(16, 142, 233, 0.05)',
   border: '1px solid #108ee9',
 };
 
-export function offsetFromParent(
-  evt: { clientX: number; clientY: number },
-  offsetParent: Element,
-  scale = 1
-) {
+export function offsetFromParent({
+  x,
+  y,
+  offsetParent,
+  scale = 1,
+}: {
+  x: number;
+  y: number;
+  offsetParent: Element;
+  scale?: number;
+}) {
   const isBody = offsetParent === document.body;
   const offsetParentRect = isBody ? { left: 0, top: 0 } : offsetParent.getBoundingClientRect();
-  const x = (evt.clientX + offsetParent.scrollLeft - offsetParentRect.left) / scale;
-  const y = (evt.clientY + offsetParent.scrollTop - offsetParentRect.top) / scale;
+  x = (x + offsetParent.scrollLeft - offsetParentRect.left) / scale;
+  y = (y + offsetParent.scrollTop - offsetParentRect.top) / scale;
 
   return { x, y };
 }
 
 class DrawShape extends React.Component<DrawShapeProps, DrawShapeState> {
-  parentElement: Element | null;
+  el = React.createRef<HTMLDivElement>();
 
   constructor(props: DrawShapeProps) {
     super(props);
@@ -63,21 +63,32 @@ class DrawShape extends React.Component<DrawShapeProps, DrawShapeState> {
       y2: 0,
       dragging: false,
     };
-    this.parentElement = null;
   }
 
+  getStyle = () => {
+    const { x1, x2, y1, y2 } = this.state;
+    const { scale = 1 } = this.props;
+    const x = Math.min(x1, x2);
+    const y = Math.min(y1, y2);
+    const width = Math.abs(x1 - x2) / scale;
+    const height = Math.abs(y1 - y2) / scale;
+    const offsetParent = (this.el.current && this.el.current.offsetParent) || document.body;
+
+    const { x: left, y: top } = offsetFromParent({ x, y, offsetParent, scale });
+
+    return { left, top, width, height };
+  };
+
   handleMouseDown = (evt: React.MouseEvent<HTMLElement>) => {
-    if (this.props.onMouseDown) {
-      this.props.onMouseDown(evt);
+    if (this.props.onStart && this.props.onStart(evt) === false) {
+      return;
     }
-    const currentTarget = evt.currentTarget as HTMLElement;
-    const target = evt.target as HTMLElement;
-    if (target !== currentTarget) return;
     // 只接受左键
     if (typeof evt.button === 'number' && evt.button !== 0) return;
-    this.parentElement = currentTarget.offsetParent!;
-    const { x, y } = offsetFromParent(evt, this.parentElement);
+
     document.body.style.userSelect = 'none';
+    const x = evt.clientX;
+    const y = evt.clientY;
     this.setState({
       x1: x,
       y1: y,
@@ -90,10 +101,11 @@ class DrawShape extends React.Component<DrawShapeProps, DrawShapeState> {
   };
 
   handleDrag = rafThrottle((evt: MouseEvent) => {
-    if (!this.parentElement) {
-      return;
-    }
-    const { x, y } = offsetFromParent(evt, this.parentElement);
+    const { dragging } = this.state;
+    const el = this.el.current;
+    if (!el || !dragging) return;
+    const x = evt.clientX;
+    const y = evt.clientY;
     this.setState(
       {
         x2: x,
@@ -101,28 +113,26 @@ class DrawShape extends React.Component<DrawShapeProps, DrawShapeState> {
       },
       () => {
         if (this.props.onMove) {
-          this.props.onMove(getStyle(this.state));
+          this.props.onMove(this.getStyle());
         }
       }
     );
   });
 
   handleDragEnd = () => {
-    if (!this.parentElement) {
-      return;
+    const { dragging } = this.state;
+    const el = this.el.current;
+    if (!el || !dragging) return;
+    if (this.props.onStop) {
+      this.props.onStop(this.getStyle());
     }
     this.setState({ dragging: false });
-    if (this.props.onStop) {
-      this.props.onStop(getStyle(this.state));
-    }
-    this.parentElement = null;
     document.body.style.userSelect = '';
     window.removeEventListener('mousemove', this.handleDrag);
     window.removeEventListener('mouseup', this.handleDragEnd);
   };
 
   componentWillUnmount() {
-    this.parentElement = null;
     document.body.style.userSelect = '';
     window.removeEventListener('mousemove', this.handleDrag);
     window.removeEventListener('mouseup', this.handleDragEnd);
@@ -131,18 +141,21 @@ class DrawShape extends React.Component<DrawShapeProps, DrawShapeState> {
   render() {
     // 需要把上层的oncontextmenu 等传进来
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { children, shapeStyle, onMove, onStop, ...restProps } = this.props;
+    const { children, shapeStyle, scale, onMove, onStop, onStart, ...restProps } = this.props;
     const { dragging } = this.state;
+
     const shapeElement = dragging && (
       <div
-        key="dragSelect"
+        ref={this.el}
+        key="shape-element"
         style={{
-          ...getStyle(this.state),
+          ...this.getStyle(),
           ...(shapeStyle || defaultShapeStyle),
           position: 'absolute',
         }}
       />
     );
+
     return React.cloneElement(children, {
       ...restProps,
       onMouseDown: this.handleMouseDown,

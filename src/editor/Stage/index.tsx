@@ -18,6 +18,8 @@ export type StageProps = Pick<Store, 'data' | 'selected' | 'clipboard'>;
 function Stage({ data, selected, clipboard }: StageProps) {
   const dispatch = useEditor();
 
+  const scale = 0.8;
+
   const selectedData = data.present.filter((v) => selected.indexOf(v.id) !== -1);
 
   const contextmenuProps = useContextmenu({ data, selected, clipboard });
@@ -29,7 +31,7 @@ function Stage({ data, selected, clipboard }: StageProps) {
   const dropProps = useDrop({
     onDropDone: ({ data: type, x, y }) => {
       if (!type || !isValidComponent(type)) return;
-      dispatch(actions.add({ type, left: x - 20, top: y - 20 }));
+      dispatch(actions.add({ type, left: x / scale - 20, top: y / scale - 20 }));
     },
   });
 
@@ -37,31 +39,50 @@ function Stage({ data, selected, clipboard }: StageProps) {
     (evt: React.MouseEvent) => {
       if (evt.target === evt.currentTarget) {
         dispatch(actions.select([]));
+        return true;
       }
+      return false;
     },
     [dispatch]
   );
 
-  const handleDragMove = (value: ShapeData) => {
-    dispatch(actions.selectArea(value));
+  const handleDragMove = ({ left, top, width, height }: ShapeData) => {
+    dispatch(
+      actions.selectArea({
+        left: left / scale,
+        top: top / scale,
+        width: width / scale,
+        height: height / scale,
+      })
+    );
   };
 
   return (
     <ContextMenuTrigger {...contextmenuProps}>
-      <DrawShape onMouseDown={handleSelect} onMove={handleDragMove}>
+      <DrawShape onStart={handleSelect} onMove={handleDragMove}>
         <div
           ref={stageRef}
           className="pe-editor-stage"
-          style={{ width: 2000, height: 1000 }}
+          style={{
+            width: 2000,
+            height: 1000,
+          }}
           tabIndex={-1}
           {...dropProps}
         >
-          {data.present.map((item) => (
-            <ComponentWrapper key={item.id} item={item} active={selected.indexOf(item.id) !== -1} />
-          ))}
-          <StageCanvas width={2000} height={1000} data={data.present} />
-          {selectedData.length > 0 && <ResizeHandlers selectedData={selectedData} />}
-          <StageDrawing />
+          <div style={{ transform: `scale(${scale})`, transformOrigin: 'left top' }}>
+            {data.present.map((item) => (
+              <ComponentWrapper
+                key={item.id}
+                item={item}
+                active={selected.indexOf(item.id) !== -1}
+                scale={scale}
+              />
+            ))}
+            <StageCanvas width={2000} height={1000} data={data.present} />
+          </div>
+          {selectedData.length > 0 && <ResizeHandlers scale={scale} selectedData={selectedData} />}
+          <StageDrawing scale={scale} />
         </div>
       </DrawShape>
     </ContextMenuTrigger>

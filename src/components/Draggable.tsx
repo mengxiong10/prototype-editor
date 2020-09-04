@@ -15,6 +15,7 @@ export interface DraggableProps {
   children: React.ReactElement;
   handle?: string;
   cancel?: string;
+  scale?: number;
   onMouseDown?: (evt: React.MouseEvent) => void;
   onStart?: (evt: React.MouseEvent) => any;
   onMove: DraggableHandler;
@@ -81,7 +82,11 @@ class Draggable extends React.Component<DraggableProps, DraggableState> {
     if (typeof evt.button === 'number' && evt.button !== 0) return;
     if (handle && !matchesSelectorAndParentsTo(target, handle, currentTarget)) return;
     if (cancel && matchesSelectorAndParentsTo(target, cancel, currentTarget)) return;
-    const position = offsetXY({ clientX: evt.clientX, clientY: evt.clientY });
+    const position = offsetXY({
+      clientX: evt.clientX,
+      clientY: evt.clientY,
+      scale: this.props.scale,
+    });
     if (this.props.onStart && this.props.onStart(evt) === false) return;
     this.setState({
       dragging: true,
@@ -102,6 +107,7 @@ class Draggable extends React.Component<DraggableProps, DraggableState> {
       clientY: evt.clientY,
       x,
       y,
+      scale: this.props.scale,
     });
     this.setState({
       x: coreData.x,
@@ -118,6 +124,7 @@ class Draggable extends React.Component<DraggableProps, DraggableState> {
       clientY: evt.clientY,
       x,
       y,
+      scale: this.props.scale,
     });
     if (this.props.onStop) {
       this.props.onStop(coreData);
