@@ -13,12 +13,10 @@ import ComponentWrapper from './ComponentWrapper';
 import StageCanvas from './StageCanvas';
 import ResizeHandlers from './ResizeHandlers';
 
-export type StageProps = Pick<Store, 'data' | 'selected' | 'clipboard'>;
+export type StageProps = Pick<Store, 'data' | 'selected' | 'clipboard' | 'scale'>;
 
-function Stage({ data, selected, clipboard }: StageProps) {
+function Stage({ data, selected, clipboard, scale }: StageProps) {
   const dispatch = useEditor();
-
-  const scale = 0.8;
 
   const selectedData = data.present.filter((v) => selected.indexOf(v.id) !== -1);
 

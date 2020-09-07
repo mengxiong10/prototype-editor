@@ -29,6 +29,16 @@ body {
   border-left: 1px solid #e8e8e8;
 }
 
+.pe-toolbar {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  flex: 0 0 40px;
+  padding: 0 16px;
+  line-height: 1;
+  border-bottom: 1px solid #e8e8e8;
+}
+
 .pe-main {
   display: flex;
   flex-direction: column;

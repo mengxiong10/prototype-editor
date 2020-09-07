@@ -3,6 +3,7 @@ import { combineReducers, shallowArrayEqualEnhancer } from './reducerHelpers';
 import { actions as dataActions, reducer as dataReducer } from './data';
 import { actions as selectedActions, reducer as selectedReducer } from './selected';
 import { actions as clipboardActions, reducer as clipboardReducer } from './clipboard';
+import { actions as scaleActions, reducer as scaleReducer } from './scale';
 import { reducer as globalCross } from './globalCross';
 import type { Store } from './type';
 
@@ -10,6 +11,7 @@ export const actions = {
   ...ActionCreators,
   ...dataActions,
   ...selectedActions,
+  ...scaleActions,
   ...clipboardActions,
 };
 
@@ -23,6 +25,7 @@ const combinedReducer = combineReducers<Store>({
   }),
   selected: shallowArrayEqualEnhancer(selectedReducer),
   clipboard: clipboardReducer,
+  scale: scaleReducer,
 });
 
 export const reducer = (state: Store, action: any) => {

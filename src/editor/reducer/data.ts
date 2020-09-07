@@ -49,6 +49,9 @@ const update: DataHandler<UpdatePayload> = (state, payload, store) => {
   });
 };
 
+// type 为 updateWithoutHistory 不记录历史
+const updateWithoutHistory = update;
+
 const sort: DataHandler<0 | -1> = (state, payload, store) => {
   const value = payload;
   const ids = store.selected;
@@ -140,9 +143,6 @@ const space: DataHandler<'vertical' | 'horizontal'> = (state, payload, store) =>
 // 如果之前使用了updateWithouthistory, 没有记录之前值的历史, 调用可以把上一次应该记录的保存进去
 // https://github.com/omnidan/redux-undo/blob/b4edbb3603/src/reducer.js#L208
 const recordHistory: DataHandler = (state) => state;
-
-// type 为 updateWithoutHistory 不记录历史
-const updateWithoutHistory = update;
 
 const handlers = {
   add,

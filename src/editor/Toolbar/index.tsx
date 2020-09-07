@@ -15,13 +15,12 @@ import { EventDrawing } from 'src/editor/event';
 import { useEditor } from 'src/editor/Context';
 import { actions } from 'src/editor/reducer';
 import type { Store } from 'src/editor/reducer/type';
+import { InputNumber } from 'antd';
 import IconButton from './IconButton';
 
-export type PanelToolbarProps = Pick<Store, 'data' | 'selected'>;
+export type PanelToolbarProps = Pick<Store, 'data' | 'selected' | 'scale'>;
 
-const id = 'toolbar';
-
-function Toolbar({ data, selected }: PanelToolbarProps) {
+function Toolbar({ data, selected, scale }: PanelToolbarProps) {
   const dispatch = useEditor();
 
   const divider = (
@@ -29,18 +28,7 @@ function Toolbar({ data, selected }: PanelToolbarProps) {
   );
 
   return (
-    <div
-      id={id}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        height: 40,
-        flex: '0 0 40px',
-        padding: '0 16px',
-        lineHeight: 1,
-        borderBottom: '1px solid #e8e8e8',
-      }}
-    >
+    <div className="pe-toolbar">
       <IconButton
         title="撤销(ctrl+z)"
         disabled={data.past.length === 0}
@@ -122,6 +110,23 @@ function Toolbar({ data, selected }: PanelToolbarProps) {
       >
         <VerticalSpace />
       </IconButton>
+      <span style={{ flex: 1 }}></span>
+      <InputNumber
+        size="small"
+        style={{ width: 70 }}
+        value={Math.floor(scale * 100)}
+        min={50}
+        max={150}
+        step={10}
+        formatter={(value) => `${value}%`}
+        parser={(value: string) => value.replace('%', '')}
+        onChange={(value: number) => {
+          if (value < 50 || value > 150) {
+            return;
+          }
+          dispatch(actions.setScale(value / 100));
+        }}
+      />
     </div>
   );
 }

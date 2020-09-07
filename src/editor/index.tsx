@@ -15,10 +15,13 @@ const initialState: Store = {
   },
   selected: [],
   clipboard: [],
+  scale: 1,
 };
 
 function Editor() {
-  const [{ data, selected, clipboard }, dispatch] = useReducer(reducer, initialState);
+  const [store, dispatch] = useReducer(reducer, initialState);
+
+  const { data, selected, clipboard, scale } = store;
 
   return (
     <EditorContext.Provider value={dispatch}>
@@ -26,9 +29,9 @@ function Editor() {
         <ItemPanel />
       </aside>
       <main className="pe-main">
-        <Toolbar data={data} selected={selected} />
+        <Toolbar data={data} selected={selected} scale={scale} />
         <div className="pe-content u-scroll">
-          <Stage data={data} selected={selected} clipboard={clipboard} />
+          <Stage data={data} selected={selected} clipboard={clipboard} scale={scale} />
         </div>
       </main>
       <aside className="pe-right-sider">
