@@ -36,7 +36,6 @@ module.exports = {
     mainFields: ['module', 'main'],
     extensions: ['.ts', '.tsx', '.js', '.json'],
     alias: {
-      'react-dom': '@hot-loader/react-dom',
       src: resolve('src'),
     },
   },

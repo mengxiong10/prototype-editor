@@ -1,5 +1,5 @@
-module.exports = function(api) {
-  api.cache(true);
+module.exports = function (api) {
+  api.cache.using(() => process.env.NODE_ENV);
   return {
     presets: [
       [
@@ -18,9 +18,9 @@ module.exports = function(api) {
       ['@babel/plugin-proposal-decorators', { legacy: true }],
       ['@babel/plugin-proposal-class-properties', { loose: true }],
       ['@babel/plugin-proposal-optional-chaining'],
-      'react-hot-loader/babel',
       'lodash',
       ['import', { libraryName: 'antd', libraryDirectory: 'es', style: 'css' }],
-    ],
+      !api.env('production') && 'react-refresh/babel',
+    ].filter(Boolean),
   };
 };

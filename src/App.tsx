@@ -1,7 +1,6 @@
 import { ConfigProvider } from 'antd';
 import zh from 'antd/lib/locale-provider/zh_CN';
 import React from 'react';
-import { hot } from 'react-hot-loader/root';
 import Editor from './editor';
 import './items';
 
@@ -17,4 +16,4 @@ const App = () => {
   );
 };
 
-export default hot(App);
+export default App;
