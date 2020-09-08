@@ -4,7 +4,6 @@ import DrawShape, { ShapeData } from 'src/components/DrawShape';
 import { useDrop } from 'src/hooks/useDrop';
 import { useEditor } from 'src/editor/Context';
 import { useContextmenu } from 'src/editor/useContextMenu';
-import { actions } from 'src/editor/reducer';
 import type { Store } from 'src/editor/reducer/type';
 import { isValidComponent } from 'src/editor/componentUtil';
 import { useShortcuts } from 'src/editor/useShortcuts';
@@ -16,7 +15,7 @@ import ResizeHandlers from './ResizeHandlers';
 export type StageProps = Pick<Store, 'data' | 'selected' | 'clipboard' | 'scale'>;
 
 function Stage({ data, selected, clipboard, scale }: StageProps) {
-  const dispatch = useEditor();
+  const execCommand = useEditor();
 
   const selectedData = data.present.filter((v) => selected.indexOf(v.id) !== -1);
 
@@ -29,30 +28,28 @@ function Stage({ data, selected, clipboard, scale }: StageProps) {
   const dropProps = useDrop({
     onDropDone: ({ data: type, x, y }) => {
       if (!type || !isValidComponent(type)) return;
-      dispatch(actions.add({ type, left: x / scale - 20, top: y / scale - 20 }));
+      execCommand('add', { type, left: x / scale - 20, top: y / scale - 20 });
     },
   });
 
   const handleSelect = useCallback(
     (evt: React.MouseEvent) => {
       if (evt.target === evt.currentTarget) {
-        dispatch(actions.select([]));
+        execCommand('select', []);
         return true;
       }
       return false;
     },
-    [dispatch]
+    [execCommand]
   );
 
   const handleDragMove = ({ left, top, width, height }: ShapeData) => {
-    dispatch(
-      actions.selectArea({
-        left: left / scale,
-        top: top / scale,
-        width: width / scale,
-        height: height / scale,
-      })
-    );
+    execCommand('selectArea', {
+      left: left / scale,
+      top: top / scale,
+      width: width / scale,
+      height: height / scale,
+    });
   };
 
   return (

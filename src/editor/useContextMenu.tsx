@@ -1,14 +1,13 @@
 import React, { useRef } from 'react';
 import type { ContextMenuOption } from 'src/components/ContextMenu';
 import { useEditor } from './Context';
-import { actions } from './reducer';
 import type { Store } from './reducer/type';
 
 export function useContextmenu({
   selected,
   clipboard,
 }: Pick<Store, 'data' | 'selected' | 'clipboard'>) {
-  const dispatch = useEditor();
+  const execCommand = useEditor();
 
   const position = useRef({ x: 0, y: 0 });
 
@@ -24,35 +23,36 @@ export function useContextmenu({
         title: '删除',
         shortcut: 'Del',
         key: 'del',
-        handler: () => dispatch(actions.del()),
+        handler: () => execCommand('del'),
       },
-      { type: 'Divider' },
+      { type: 'Divider', key: 'd1' },
       {
         title: '剪切',
         shortcut: 'Ctrl+X',
         key: 'cut',
-        handler: () => dispatch(actions.cut()),
+        handler: () => execCommand('cut'),
       },
       {
         title: '复制',
         shortcut: 'Ctrl+C',
         key: 'copy',
-        handler: () => dispatch(actions.copy()),
+        handler: () => execCommand('copy'),
       },
       {
         type: 'Divider',
+        key: 'd2',
       },
       {
         title: '置顶',
         key: 'top',
         shortcut: 'Ctrl+Shift+↑',
-        handler: () => dispatch(actions.sort(-1)),
+        handler: () => execCommand('sortToTop'),
       },
       {
         title: '置底',
         key: 'bottom',
         shortcut: 'Ctrl+Shift+↓',
-        handler: () => dispatch(actions.sort(0)),
+        handler: () => execCommand('sortToBottom'),
       },
     ];
 
@@ -62,7 +62,7 @@ export function useContextmenu({
         shortcut: 'Ctrl+V',
         disabled: clipboard.length === 0,
         key: 'paste',
-        handler: () => dispatch(actions.paste(position.current)),
+        handler: () => execCommand('paste', position.current),
       },
     ];
 

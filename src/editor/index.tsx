@@ -1,10 +1,10 @@
-import React, { useReducer } from 'react';
-import { EditorContext } from './Context';
+import React, { useCallback, useReducer } from 'react';
+import { EditorContext, EditorExecCommand } from './Context';
 import Toolbar from './Toolbar';
 import DetailPanel from './DetailPanel';
 import ItemPanel from './ItemPanel';
 import Stage from './Stage';
-import { reducer } from './reducer';
+import { reducer, actions } from './reducer';
 import type { Store } from './reducer/type';
 
 const initialState: Store = {
@@ -23,8 +23,15 @@ function Editor() {
 
   const { data, selected, clipboard, scale } = store;
 
+  const execCommand: EditorExecCommand = useCallback(
+    (command, ...params) => {
+      dispatch((actions[command] as any)(...params));
+    },
+    [dispatch]
+  );
+
   return (
-    <EditorContext.Provider value={dispatch}>
+    <EditorContext.Provider value={execCommand}>
       <aside className="pe-left-sider">
         <ItemPanel />
       </aside>

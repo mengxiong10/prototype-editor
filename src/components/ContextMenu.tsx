@@ -11,10 +11,11 @@ export interface ContextMenuItem {
   shortcut?: string;
   disabled?: boolean;
   key: string;
-  handler: () => any;
+  handler: (evt?: ClickParam) => any;
 }
 
 export interface ContextMenuDivider {
+  key: string;
   type: 'Divider';
 }
 
@@ -30,22 +31,26 @@ export interface ContextMenuProps {
   onChangePosition: (v: MenuPosition) => void;
   getMenu: () => ContextMenuOption[];
   onClose: () => void;
+  onClick?: (evt?: ClickParam) => void;
 }
 
 function ContextMenu(props: ContextMenuProps) {
-  const { getMenu, onClose, position, onChangePosition } = props;
+  const { getMenu, onClose, position, onChangePosition, onClick } = props;
 
   const menu = getMenu();
 
   const node = useClickOutside({ onClick: onClose });
 
-  const handleMenuClick = ({ key }: ClickParam) => {
-    const item = menu.find((o: ContextMenuItem) => o.key === key) as ContextMenuItem;
-    if (item && item.handler) {
-      Promise.resolve(item.handler()).then(() => {
-        onClose();
-      });
+  const handleMenuClick = (evt: ClickParam) => {
+    const { key } = evt;
+    const item = menu.find((o: ContextMenuOption) => o.key === key) as ContextMenuOption;
+    if (!item || item.type === 'Divider') {
+      return;
     }
+    const handler = item.handler || onClick || (() => {});
+    Promise.resolve(handler(evt)).then(() => {
+      onClose();
+    });
   };
 
   useLayoutEffect(() => {

@@ -13,7 +13,6 @@ import HorizontalSpace from 'src/svg/horizontal-space.svg';
 import VerticalSpace from 'src/svg/vertical-space.svg';
 import { EventDrawing } from 'src/editor/event';
 import { useEditor } from 'src/editor/Context';
-import { actions } from 'src/editor/reducer';
 import type { Store } from 'src/editor/reducer/type';
 import { InputNumber } from 'antd';
 import IconButton from './IconButton';
@@ -21,7 +20,7 @@ import IconButton from './IconButton';
 export type PanelToolbarProps = Pick<Store, 'data' | 'selected' | 'scale'>;
 
 function Toolbar({ data, selected, scale }: PanelToolbarProps) {
-  const dispatch = useEditor();
+  const execCommand = useEditor();
 
   const divider = (
     <div style={{ height: '60%', width: 1, background: '#e8e8e8', margin: '0 8px' }}></div>
@@ -32,14 +31,14 @@ function Toolbar({ data, selected, scale }: PanelToolbarProps) {
       <IconButton
         title="撤销(ctrl+z)"
         disabled={data.past.length === 0}
-        onClick={() => dispatch(actions.undo())}
+        onClick={() => execCommand('undo')}
       >
         <Undo />
       </IconButton>
       <IconButton
         title="重做(ctrl+shift+z)"
         disabled={data.future.length === 0}
-        onClick={() => dispatch(actions.redo())}
+        onClick={() => execCommand('redo')}
       >
         <Redo />
       </IconButton>
@@ -57,56 +56,56 @@ function Toolbar({ data, selected, scale }: PanelToolbarProps) {
       <IconButton
         title="左对齐"
         disabled={selected.length < 2}
-        onClick={() => dispatch(actions.align('left'))}
+        onClick={() => execCommand('alignLeft')}
       >
         <AlignLeft />
       </IconButton>
       <IconButton
         title="水平居中"
         disabled={selected.length < 2}
-        onClick={() => dispatch(actions.align('horizontal'))}
+        onClick={() => execCommand('alignHorizontal')}
       >
         <AlignCenter />
       </IconButton>
       <IconButton
         title="右对齐"
         disabled={selected.length < 2}
-        onClick={() => dispatch(actions.align('right'))}
+        onClick={() => execCommand('alignRight')}
       >
         <AlignRight />
       </IconButton>
       <IconButton
         title="顶对齐"
         disabled={selected.length < 2}
-        onClick={() => dispatch(actions.align('top'))}
+        onClick={() => execCommand('alignTop')}
       >
         <AlignTop />
       </IconButton>
       <IconButton
         title="垂直居中"
         disabled={selected.length < 2}
-        onClick={() => dispatch(actions.align('vertical'))}
+        onClick={() => execCommand('alignVertical')}
       >
         <AlignVerticel />
       </IconButton>
       <IconButton
         title="底对齐"
         disabled={selected.length < 2}
-        onClick={() => dispatch(actions.align('bottom'))}
+        onClick={() => execCommand('alignBottom')}
       >
         <AlignBottom />
       </IconButton>
       <IconButton
         title="水平等间距"
         disabled={selected.length < 3}
-        onClick={() => dispatch(actions.space('horizontal'))}
+        onClick={() => execCommand('spaceHorizontal')}
       >
         <HorizontalSpace />
       </IconButton>
       <IconButton
         title="垂直等间距"
         disabled={selected.length < 3}
-        onClick={() => dispatch(actions.space('vertical'))}
+        onClick={() => execCommand('spaceVertical')}
       >
         <VerticalSpace />
       </IconButton>
@@ -124,7 +123,7 @@ function Toolbar({ data, selected, scale }: PanelToolbarProps) {
           if (value < 50 || value > 150) {
             return;
           }
-          dispatch(actions.setScale(value / 100));
+          execCommand('scale', value / 100);
         }}
       />
     </div>

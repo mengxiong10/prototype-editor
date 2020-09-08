@@ -1,10 +1,9 @@
 import { useRef, useEffect } from 'react';
 import { useHotkeys } from './useHotkeys';
 import { useEditor } from './Context';
-import { actions } from './reducer';
 
 export function useShortcuts(ref: React.RefObject<HTMLElement>) {
-  const dispatch = useEditor();
+  const execCommand = useEditor();
 
   const position = useRef({ x: 0, y: 0 });
 
@@ -23,38 +22,38 @@ export function useShortcuts(ref: React.RefObject<HTMLElement>) {
   }, [ref]);
 
   useHotkeys('delete', () => {
-    dispatch(actions.del());
+    execCommand('del');
   });
 
   useHotkeys('ctrl+x', () => {
-    dispatch(actions.cut());
+    execCommand('cut');
   });
 
   useHotkeys('ctrl+c', () => {
-    dispatch(actions.copy());
+    execCommand('copy');
   });
 
   useHotkeys('ctrl+v', () => {
-    dispatch(actions.paste(position.current));
+    execCommand('paste', position.current);
   });
 
   useHotkeys('ctrl+a', () => {
-    dispatch(actions.selectAll());
+    execCommand('selectAll');
   });
 
   useHotkeys('ctrl+shift+up', () => {
-    dispatch(actions.sort(-1));
+    execCommand('sortToTop');
   });
 
   useHotkeys('ctrl+shift+down', () => {
-    dispatch(actions.sort(0));
+    execCommand('sortToBottom');
   });
 
   useHotkeys('ctrl+z', () => {
-    dispatch(actions.undo());
+    execCommand('undo');
   });
 
   useHotkeys('ctrl+shift+z', () => {
-    dispatch(actions.redo());
+    execCommand('redo');
   });
 }

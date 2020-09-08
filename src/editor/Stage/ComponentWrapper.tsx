@@ -3,7 +3,6 @@ import classnames from 'classnames';
 import Draggable, { DraggableHandler } from 'src/components/Draggable';
 import type { ComponentData } from 'src/types/editor';
 import { useEditor, ComponentIdContext } from 'src/editor/Context';
-import { actions } from 'src/editor/reducer';
 import { getComponent } from 'src/editor/componentUtil';
 import { disableClassnames } from 'src/editor/DisableEditorFeature';
 import { EventCompositeSelect } from 'src/editor/event';
@@ -18,12 +17,12 @@ export interface ComponentWrapperProps {
 function ComponentWrapper({ active, item, scale = 1 }: ComponentWrapperProps) {
   const { id, type, left, top, width, height, data } = item;
 
-  const dispatch = useEditor();
+  const execCommand = useEditor();
 
   // 选中组件
   const handleSelect = (evt: React.MouseEvent<HTMLDivElement>) => {
     if (!active) {
-      dispatch(evt.ctrlKey ? actions.selectAppend(id) : actions.select(id));
+      execCommand(evt.ctrlKey ? 'selectAppend' : 'select', id);
     }
   };
 
@@ -35,19 +34,17 @@ function ComponentWrapper({ active, item, scale = 1 }: ComponentWrapperProps) {
   // 拖动过程忽略历史记录
   const handleMove: DraggableHandler = (coreData) => {
     // TODO: 上和左边, 不让为负值
-    dispatch(
-      actions.updateWithoutHistory((prev) => {
-        return {
-          left: prev.left + coreData.deltaX,
-          top: prev.top + coreData.deltaY,
-        };
-      })
-    );
+    execCommand('updateWithoutHistory', (prev) => {
+      return {
+        left: prev.left + coreData.deltaX,
+        top: prev.top + coreData.deltaY,
+      };
+    });
   };
 
   // 停止后记录历史
   const handleStop: DraggableHandler = () => {
-    dispatch(actions.recordHistory());
+    execCommand('recordHistory');
   };
 
   const style: React.CSSProperties = {

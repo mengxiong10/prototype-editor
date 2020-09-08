@@ -2,7 +2,6 @@ import React, { useRef } from 'react';
 import type { ComponentData } from 'src/types/editor';
 import Draggable, { DraggableHandler } from 'src/components/Draggable';
 import { useEditor } from 'src/editor/Context';
-import { actions } from 'src/editor/reducer';
 
 interface ResizeHandlersProps {
   selectedData: ComponentData[];
@@ -12,7 +11,7 @@ interface ResizeHandlersProps {
 const handlers = ['n', 'e', 's', 'w', 'nw', 'ne', 'se', 'sw'];
 
 function ResizeHandlers({ selectedData, scale = 1 }: ResizeHandlersProps) {
-  const dispatch = useEditor();
+  const execCommand = useEditor();
 
   const slack = useRef({
     x: 0,
@@ -81,20 +80,18 @@ function ResizeHandlers({ selectedData, scale = 1 }: ResizeHandlersProps) {
     const radioWidth = nextOuterWidth / outerWidth;
     const radioHeight = nextOuterHeight / outerHeight;
 
-    dispatch(
-      actions.updateWithoutHistory((prev) => {
-        const width = radioWidth * prev.width;
-        const height = radioHeight * prev.height;
-        const top = radioHeight * (prev.top - outerTop) + nextOuterTop;
-        const left = radioWidth * (prev.left - outerLeft) + nextOuterLeft;
-        return { width, height, top, left };
-      })
-    );
+    execCommand('updateWithoutHistory', (prev) => {
+      const width = radioWidth * prev.width;
+      const height = radioHeight * prev.height;
+      const top = radioHeight * (prev.top - outerTop) + nextOuterTop;
+      const left = radioWidth * (prev.left - outerLeft) + nextOuterLeft;
+      return { width, height, top, left };
+    });
   };
 
   const handleStop: DraggableHandler = () => {
     document.body.style.cursor = '';
-    dispatch(actions.recordHistory());
+    execCommand('recordHistory');
   };
 
   return (

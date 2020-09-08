@@ -2,12 +2,11 @@ import React, { useState, useEffect, useCallback } from 'react';
 import DrawShape, { ShapeData } from 'src/components/DrawShape';
 import { useClickOutside } from 'src/hooks/useClickOutside';
 import { useEditor } from 'src/editor/Context';
-import { actions } from 'src/editor/reducer';
 import { EventDrawing } from 'src/editor/event';
 import { createComponentData } from '../componentUtil';
 
 function StageDrawing({ scale = 1 }: { scale?: number }) {
-  const dispatch = useEditor();
+  const execCommand = useEditor();
   const [type, setType] = useState('');
 
   const hideDrawer = useCallback(() => {
@@ -35,13 +34,13 @@ function StageDrawing({ scale = 1 }: { scale?: number }) {
           type: 'rect',
           association: richData.id,
         });
-        dispatch(actions.add(rect));
-        dispatch(actions.add(richData));
+        execCommand('add', rect);
+        execCommand('add', richData);
       } else {
-        dispatch(actions.add({ ...value, type }));
+        execCommand('add', { ...value, type });
       }
     },
-    [dispatch, hideDrawer, scale, type]
+    [execCommand, hideDrawer, scale, type]
   );
 
   useEffect(() => {
