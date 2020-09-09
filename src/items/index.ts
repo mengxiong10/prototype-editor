@@ -1,5 +1,5 @@
 import { registerComponent } from 'src/editor/componentUtil';
-import type { ComponentOptions } from 'src/types/editor';
+import type { ItemPanelTreeItem } from 'src/editor/ItemPanel';
 import { buttonOptions } from './Button';
 import { inputOptions } from './Input';
 import { richEditorOptions } from './RichEditor';
@@ -8,12 +8,6 @@ import { textareaOptions } from './TextArea';
 import { checkboxOptions } from './Checkbox';
 import { radioOptions } from './Radio';
 import { groupOptions } from './Group';
-
-interface ItemPanelTreeItem {
-  key: string;
-  name: string;
-  children: { type: string; options: ComponentOptions; name: string }[];
-}
 
 export const itemPanelTree: ItemPanelTreeItem[] = [
   {

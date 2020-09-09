@@ -23,13 +23,6 @@ export function getComponent(type: string) {
   );
 }
 
-/**
- * 时光荏苒
- * 记忆中总有这样一些人
- * 初见便定格了一生
- * 低眉浅笑间润色了时光
- * 惊艳了岁月
- */
 export const createComponentData = (
   obj: Partial<ComponentData> & Pick<ComponentData, 'type'>
 ): ComponentData => {

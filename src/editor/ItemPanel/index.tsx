@@ -1,14 +1,24 @@
 import React from 'react';
 import { Collapse } from 'antd';
-import { itemPanelTree } from 'src/items/index';
+import type { ComponentOptions } from 'src/types/editor';
 import PanelItem from './PanelItem';
 
 const { Panel } = Collapse;
 
-function ItemPanel() {
+export interface ItemPanelTreeItem {
+  key: string;
+  name: string;
+  children: { type: string; options: ComponentOptions; name: string }[];
+}
+
+export interface ItemPanelProps {
+  data: ItemPanelTreeItem[];
+}
+
+function ItemPanel({ data }: ItemPanelProps) {
   return (
-    <Collapse style={{ border: 0 }} defaultActiveKey={[itemPanelTree[0].key]}>
-      {itemPanelTree.map((item) => (
+    <Collapse style={{ border: 0 }} defaultActiveKey={[data[0].key]}>
+      {data.map((item) => (
         <Panel header={item.name} key={item.key}>
           {item.children.map((v) => (
             <PanelItem key={v.type} type={v.type}>

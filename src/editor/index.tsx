@@ -1,4 +1,5 @@
 import React, { useCallback, useReducer } from 'react';
+import { itemPanelTree } from 'src/items/index';
 import { EditorContext, EditorExecCommand } from './Context';
 import Toolbar from './Toolbar';
 import DetailPanel from './DetailPanel';
@@ -34,7 +35,7 @@ function Editor() {
   return (
     <EditorContext.Provider value={execCommand}>
       <aside className="pe-left-sider">
-        <ItemPanel />
+        <ItemPanel data={itemPanelTree} />
       </aside>
       <main className="pe-main">
         <Toolbar data={data} selected={selected} scale={scale} />
