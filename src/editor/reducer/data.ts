@@ -17,12 +17,16 @@ export const del: DataHandler = (state, payload, { selected }) => {
 
 export const cut = del;
 
-export const paste: DataHandler<{ x: number; y: number }> = (state, { x, y }, { clipboard }) => {
+export const paste: DataHandler<{ x: number; y: number }> = (
+  state,
+  { x, y },
+  { clipboard, scale }
+) => {
   if (clipboard.length === 0) return state;
   const minX = Math.min(...clipboard.map((v) => v.left));
   const minY = Math.min(...clipboard.map((v) => v.top));
-  const diffX = x - minX;
-  const diffY = y - minY;
+  const diffX = x / scale - minX;
+  const diffY = y / scale - minY;
   const newData = clipboard.map((v) => {
     return cloneComponentData(v, { left: v.left + diffX, top: v.top + diffY });
   });

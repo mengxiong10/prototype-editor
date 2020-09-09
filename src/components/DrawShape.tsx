@@ -10,7 +10,7 @@ export interface ShapeData {
 
 export type ShapeRectHandler = (data: ShapeData) => void;
 
-export interface DrawShapeProps extends React.HTMLAttributes<HTMLElement> {
+export interface DrawShapeProps {
   children: React.ReactElement;
   scale?: number;
   shapeStyle?: React.CSSProperties;
@@ -139,9 +139,7 @@ class DrawShape extends React.Component<DrawShapeProps, DrawShapeState> {
   }
 
   render() {
-    // 需要把上层的oncontextmenu 等传进来
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { children, shapeStyle, scale, onMove, onStop, onStart, ...restProps } = this.props;
+    const { children, shapeStyle } = this.props;
     const { dragging } = this.state;
 
     const shapeElement = dragging && (
@@ -157,7 +155,6 @@ class DrawShape extends React.Component<DrawShapeProps, DrawShapeState> {
     );
 
     return React.cloneElement(children, {
-      ...restProps,
       onMouseDown: this.handleMouseDown,
       children: [children.props.children, shapeElement],
     });

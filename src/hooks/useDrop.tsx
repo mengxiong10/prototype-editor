@@ -11,8 +11,8 @@ export function useDrop({ format = 'type', onDropDone }: DropZoneProps) {
   const onDrop = (evt: React.DragEvent<HTMLDivElement>) => {
     const data = evt.dataTransfer.getData(format);
     const rect = evt.currentTarget.getBoundingClientRect();
-    const y = evt.clientY - rect.top;
-    const x = evt.clientX - rect.left;
+    const y = evt.clientY - rect.top + evt.currentTarget.scrollTop;
+    const x = evt.clientX - rect.left + evt.currentTarget.scrollLeft;
     onDropDone({ x, y, data });
   };
 

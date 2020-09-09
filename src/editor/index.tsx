@@ -4,6 +4,7 @@ import Toolbar from './Toolbar';
 import DetailPanel from './DetailPanel';
 import ItemPanel from './ItemPanel';
 import Stage from './Stage';
+import EditorContextMenu from './EditorContextMenu';
 import { reducer, actions } from './reducer';
 import type { Store } from './reducer/type';
 
@@ -37,9 +38,9 @@ function Editor() {
       </aside>
       <main className="pe-main">
         <Toolbar data={data} selected={selected} scale={scale} />
-        <div className="pe-content u-scroll">
-          <Stage data={data} selected={selected} clipboard={clipboard} scale={scale} />
-        </div>
+        <EditorContextMenu selected={selected} clipboard={clipboard}>
+          <Stage data={data} selected={selected} scale={scale} />
+        </EditorContextMenu>
       </main>
       <aside className="pe-right-sider">
         <DetailPanel data={data.present} selected={selected} />

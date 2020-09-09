@@ -1,25 +1,11 @@
-import { useRef, useEffect } from 'react';
 import { useHotkeys } from './useHotkeys';
 import { useEditor } from './Context';
+import { useMouse } from '../hooks/useMouse';
 
 export function useShortcuts(ref: React.RefObject<HTMLElement>) {
   const execCommand = useEditor();
 
-  const position = useRef({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const handleMove = (evt: MouseEvent) => {
-      if (!ref.current) return;
-      const rect = ref.current.getBoundingClientRect();
-      // TODO: 还要计算ref.current 的滚动
-      position.current.x = evt.clientX - rect.left;
-      position.current.y = evt.clientY - rect.top;
-    };
-    document.addEventListener('mousemove', handleMove);
-    return () => {
-      document.addEventListener('mousemove', handleMove);
-    };
-  }, [ref]);
+  const position = useMouse();
 
   useHotkeys('delete', () => {
     execCommand('del');
@@ -34,7 +20,14 @@ export function useShortcuts(ref: React.RefObject<HTMLElement>) {
   });
 
   useHotkeys('ctrl+v', () => {
-    execCommand('paste', position.current);
+    const currentTarget = ref.current;
+    if (!currentTarget) {
+      return;
+    }
+    const rect = currentTarget.getBoundingClientRect();
+    const x = position.x - rect.left + currentTarget.scrollLeft;
+    const y = position.y - rect.top + currentTarget.scrollTop;
+    execCommand('paste', { x, y });
   });
 
   useHotkeys('ctrl+a', () => {

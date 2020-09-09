@@ -1,20 +1,25 @@
+import type { Store } from 'antd/lib/form/interface';
 import React, { useRef } from 'react';
 import type { ContextMenuOption } from 'src/components/ContextMenu';
+import ContextMenuTrigger from 'src/components/ContextMenuTrigger';
 import { useEditor } from './Context';
-import type { Store } from './reducer/type';
 
-export function useContextmenu({
-  selected,
-  clipboard,
-}: Pick<Store, 'data' | 'selected' | 'clipboard'>) {
+export interface EditorContextMenuProps extends Pick<Store, 'selected' | 'clipboard'> {
+  children: React.ReactElement;
+}
+
+function EditorContextMenu({ children, clipboard, selected }: EditorContextMenuProps) {
   const execCommand = useEditor();
 
   const position = useRef({ x: 0, y: 0 });
 
   const onOpen = (evt: React.MouseEvent) => {
-    const rect = evt.currentTarget.getBoundingClientRect();
-    position.current.x = evt.clientX - rect.left;
-    position.current.y = evt.clientY - rect.top;
+    const { currentTarget } = evt;
+    const rect = currentTarget.getBoundingClientRect();
+    const top = currentTarget.scrollTop;
+    const left = currentTarget.scrollLeft;
+    position.current.x = evt.clientX - rect.left + left;
+    position.current.y = evt.clientY - rect.top + top;
   };
 
   const getMenu = () => {
@@ -69,5 +74,11 @@ export function useContextmenu({
     return selected.length ? componentContextMenu : stageContextMenu;
   };
 
-  return { getMenu, onOpen };
+  return (
+    <ContextMenuTrigger onOpen={onOpen} getMenu={getMenu}>
+      {children}
+    </ContextMenuTrigger>
+  );
 }
+
+export default EditorContextMenu;

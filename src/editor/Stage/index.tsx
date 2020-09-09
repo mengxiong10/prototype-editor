@@ -1,9 +1,7 @@
 import React, { useCallback, useRef } from 'react';
-import ContextMenuTrigger from 'src/components/ContextMenuTrigger';
 import DrawShape, { ShapeData } from 'src/components/DrawShape';
 import { useDrop } from 'src/hooks/useDrop';
 import { useEditor } from 'src/editor/Context';
-import { useContextmenu } from 'src/editor/useContextMenu';
 import type { Store } from 'src/editor/reducer/type';
 import { isValidComponent } from 'src/editor/componentUtil';
 import { useShortcuts } from 'src/editor/useShortcuts';
@@ -12,14 +10,17 @@ import ComponentWrapper from './ComponentWrapper';
 import StageCanvas from './StageCanvas';
 import ResizeHandlers from './ResizeHandlers';
 
-export type StageProps = Pick<Store, 'data' | 'selected' | 'clipboard' | 'scale'>;
+export type StageProps = Pick<Store, 'data' | 'selected' | 'scale'>;
 
-function Stage({ data, selected, clipboard, scale }: StageProps) {
+function Stage({
+  data,
+  selected,
+  scale,
+  ...rest
+}: StageProps & React.HTMLAttributes<HTMLDivElement>) {
   const execCommand = useEditor();
 
   const selectedData = data.present.filter((v) => selected.indexOf(v.id) !== -1);
-
-  const contextmenuProps = useContextmenu({ data, selected, clipboard });
 
   const stageRef = useRef<HTMLDivElement>(null);
 
@@ -53,7 +54,7 @@ function Stage({ data, selected, clipboard, scale }: StageProps) {
   };
 
   return (
-    <ContextMenuTrigger {...contextmenuProps}>
+    <div className="pe-content u-scroll" {...rest} {...dropProps}>
       <DrawShape onStart={handleSelect} onMove={handleDragMove}>
         <div
           ref={stageRef}
@@ -62,8 +63,6 @@ function Stage({ data, selected, clipboard, scale }: StageProps) {
             width: 2000,
             height: 1000,
           }}
-          tabIndex={-1}
-          {...dropProps}
         >
           <div style={{ transform: `scale(${scale})`, transformOrigin: 'left top' }}>
             {data.present.map((item) => (
@@ -80,7 +79,7 @@ function Stage({ data, selected, clipboard, scale }: StageProps) {
           <StageDrawing scale={scale} />
         </div>
       </DrawShape>
-    </ContextMenuTrigger>
+    </div>
   );
 }
 
