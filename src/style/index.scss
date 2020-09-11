@@ -73,6 +73,18 @@ body {
   }
 }
 
+.pe-component-item__small {
+  display: flex;
+  width: 125px;
+  height: 25px;
+  flex-direction: row;
+  justify-content: left;
+  align-items: center;
+  border: 1px solid #ddd;
+  margin-bottom: 5px;
+  margin-left: 23px;
+}
+
 .pe-detail-panel {
   .ant-collapse-content-box {
     padding: 0;

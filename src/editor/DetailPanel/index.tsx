@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import type { ComponentData, ComponentId } from 'src/types/editor';
+import type { ComponentData, ComponentId } from 'src/editor/type';
 import { mergeObjectDeep } from 'src/utils/object';
 import { get } from 'dot-prop-immutable';
 import { getComponent } from 'src/editor/componentUtil';
@@ -35,18 +35,17 @@ function PanelDetail({ data, selected }: PanelDetailProps) {
 
   const config = selectedData[0];
 
-  let resolvedType = config.type;
-  let resolvedData = config.data;
-
-  let path = '';
+  let path = 'data';
+  let type = config.type;
 
   if (composite && config.id === composite.id) {
-    path = composite.path;
-    resolvedType = composite.type;
-    resolvedData = get(resolvedData, composite.path);
+    path = `${composite.path}.data`;
+    type = composite.type;
   }
 
-  const componentOption = getComponent(resolvedType);
+  let resolvedData = get(config, path);
+
+  const componentOption = getComponent(type);
 
   if (!componentOption || !componentOption.detailPanel) {
     return null;

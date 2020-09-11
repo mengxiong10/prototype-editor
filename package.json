@@ -17,8 +17,8 @@
     "format": "prettier --write src/**/*.{ts,tsx,js,jsx,scss,css}"
   },
   "dependencies": {
-    "@ant-design/icons": "^4.2.1",
-    "antd": "^4.3.5",
+    "@ant-design/icons": "^4.2.2",
+    "antd": "^4.6.3",
     "classnames": "^2.2.6",
     "core-js": "^3.4.2",
     "dot-prop-immutable": "^2.1.0",

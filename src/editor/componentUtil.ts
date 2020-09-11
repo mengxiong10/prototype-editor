@@ -1,4 +1,9 @@
-import type { ComponentOptions, ComponentEditableData, ComponentData } from 'src/types/editor';
+import type {
+  ComponentOptions,
+  ComponentEditableData,
+  ComponentData,
+  CompositeData,
+} from 'src/editor/type';
 import { randomId } from 'src/utils/randomId';
 import NotFound from './NotFound';
 
@@ -23,13 +28,32 @@ export function getComponent(type: string) {
   );
 }
 
-export const createComponentData = (
-  obj: Partial<ComponentData> & Pick<ComponentData, 'type'>
-): ComponentData => {
-  const { defaultSize } = getComponent(obj.type);
+export const createCompositeData = (type: string): CompositeData => {
+  const { children } = getComponent(type);
   const id = randomId();
+  const newData: CompositeData = { id, type, data: {} };
+  if (Array.isArray(children)) {
+    newData.children = children.map(createCompositeData);
+  }
 
-  return { id, data: {}, left: 10, top: 10, width: 200, height: 100, ...defaultSize, ...obj };
+  return newData;
+};
+
+export const createComponentData = (type: string, obj: Partial<ComponentData>): ComponentData => {
+  const { defaultSize, children } = getComponent(type);
+  const id = randomId();
+  const rect = { left: 10, top: 10, width: 200, height: 100, ...defaultSize };
+  const newData: ComponentData = {
+    id,
+    data: {},
+    ...rect,
+    ...obj,
+    type,
+  };
+  if (Array.isArray(children)) {
+    newData.children = children.map(createCompositeData);
+  }
+  return newData;
 };
 
 /**

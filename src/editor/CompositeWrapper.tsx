@@ -1,41 +1,43 @@
 import React, { useEffect, useState } from 'react';
-import { useComponentId } from './Context';
+import { CompositePathContext, useComponentId, useCompositePath } from './Context';
 import { EventCompositeSelect } from './event';
+import { useComponent } from './useComponent';
 
 export interface CompositeWrapperProps {
-  path: string;
+  index: number | string;
   type: string;
-  children: React.ReactNode;
+  data: any;
+  children?: any;
 }
 
-function CompositeWrapper({ path, type, children }: CompositeWrapperProps) {
-  const [selected, setSelected] = useState(false);
+export const compositWrapperClassName = 'js-composite-wrapper';
 
-  const id = useComponentId();
+function CompositeWrapper({ index, type, data, children }: CompositeWrapperProps) {
+  const [selected, setSelected] = useState(false);
+  const cid = useComponentId();
+  const prefixPath = useCompositePath();
+
+  const path = prefixPath ? `${prefixPath}.children.${index}` : `children.${index}`;
 
   useEffect(() => {
-    return EventCompositeSelect.on((data) => {
-      setSelected(!!data && path === data.path && type === data.type && id === data.id);
+    return EventCompositeSelect.on((option) => {
+      setSelected(!!option && path === option.path && type === option.type && cid === option.id);
     });
-  }, [id, path, type]);
+  }, [cid, path, type]);
 
-  const handleSelect = (evt: React.MouseEvent<HTMLDivElement>) => {
-    if (evt.ctrlKey) {
-      return;
-    }
-    evt.stopPropagation();
-    EventCompositeSelect.emit({ path, type, id });
-  };
+  const component = useComponent({ type, data, children });
 
   return (
-    <div
-      onClick={handleSelect}
-      style={{ outline: selected ? '1px solid red' : 'none' }}
-      data-path={path}
-      data-type={type}
-    >
-      {children}
-    </div>
+    <CompositePathContext.Provider value={path}>
+      <div
+        className={compositWrapperClassName}
+        style={{ outline: selected ? '1px solid red' : 'none' }}
+        data-type={type}
+        data-path={path}
+      >
+        {component}
+      </div>
+    </CompositePathContext.Provider>
   );
 }
 

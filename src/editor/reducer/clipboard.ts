@@ -1,5 +1,4 @@
-import type { ComponentData } from 'src/types/editor';
-import type { SliceReducerHandler } from './type';
+import type { ComponentData, SliceReducerHandler } from 'src/editor/type';
 
 /**
  * 时光荏苒

@@ -1,7 +1,6 @@
 import { castArray } from 'lodash';
-import type { ComponentId } from 'src/types/editor';
+import type { ComponentId, SliceReducerHandler } from 'src/editor/type';
 import type { ShapeData } from 'src/components/DrawShape';
-import type { SliceReducerHandler } from './type';
 
 type SelectHandler<P = void> = SliceReducerHandler<ComponentId[], P>;
 

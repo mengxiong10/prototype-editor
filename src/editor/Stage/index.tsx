@@ -1,12 +1,11 @@
 import React, { useCallback, useRef } from 'react';
 import DrawShape, { ShapeData } from 'src/components/DrawShape';
-import { useDrop } from 'src/hooks/useDrop';
 import { useEditor } from 'src/editor/Context';
-import type { Store } from 'src/editor/reducer/type';
-import { isValidComponent } from 'src/editor/componentUtil';
+import type { Store } from 'src/editor/type';
 import { useShortcuts } from 'src/editor/useShortcuts';
+import ComponentDropZone from 'src/editor/ComponentDropZone';
+import ComponentWrapper from 'src/editor/ComponentWrapper';
 import StageDrawing from './StageDrawing';
-import ComponentWrapper from './ComponentWrapper';
 import StageCanvas from './StageCanvas';
 import ResizeHandlers from './ResizeHandlers';
 
@@ -25,13 +24,6 @@ function Stage({
   const stageRef = useRef<HTMLDivElement>(null);
 
   useShortcuts(stageRef);
-
-  const dropProps = useDrop({
-    onDropDone: ({ data: type, x, y }) => {
-      if (!type || !isValidComponent(type)) return;
-      execCommand('add', { type, left: x / scale - 20, top: y / scale - 20 });
-    },
-  });
 
   const handleSelect = useCallback(
     (evt: React.MouseEvent) => {
@@ -54,32 +46,36 @@ function Stage({
   };
 
   return (
-    <div className="pe-content u-scroll" {...rest} {...dropProps}>
-      <DrawShape onStart={handleSelect} onMove={handleDragMove}>
-        <div
-          ref={stageRef}
-          className="pe-editor-stage"
-          style={{
-            width: 2000,
-            height: 1000,
-          }}
-        >
-          <div style={{ transform: `scale(${scale})`, transformOrigin: 'left top' }}>
-            {data.present.map((item) => (
-              <ComponentWrapper
-                key={item.id}
-                item={item}
-                active={selected.indexOf(item.id) !== -1}
-                scale={scale}
-              />
-            ))}
-            <StageCanvas width={2000} height={1000} data={data.present} />
+    <ComponentDropZone scale={scale}>
+      <div className="pe-content u-scroll" {...rest}>
+        <DrawShape onStart={handleSelect} onMove={handleDragMove}>
+          <div
+            ref={stageRef}
+            className="pe-editor-stage"
+            style={{
+              width: 2000,
+              height: 1000,
+            }}
+          >
+            <div style={{ transform: `scale(${scale})`, transformOrigin: 'left top' }}>
+              {data.present.map((item) => (
+                <ComponentWrapper
+                  key={item.id}
+                  item={item}
+                  active={selected.indexOf(item.id) !== -1}
+                  scale={scale}
+                />
+              ))}
+              <StageCanvas width={2000} height={1000} data={data.present} />
+            </div>
+            {selectedData.length > 0 && (
+              <ResizeHandlers scale={scale} selectedData={selectedData} />
+            )}
+            <StageDrawing scale={scale} />
           </div>
-          {selectedData.length > 0 && <ResizeHandlers scale={scale} selectedData={selectedData} />}
-          <StageDrawing scale={scale} />
-        </div>
-      </DrawShape>
-    </div>
+        </DrawShape>
+      </div>
+    </ComponentDropZone>
   );
 }
 

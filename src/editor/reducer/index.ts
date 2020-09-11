@@ -1,4 +1,5 @@
 import undoable, { ActionCreators } from 'redux-undo';
+import type { Store } from 'src/editor/type';
 import {
   combineReducers,
   createActions,
@@ -10,7 +11,6 @@ import * as selectedHandlers from './selected';
 import * as clipboardHandlers from './clipboard';
 import * as scaleHandlers from './scale';
 import * as globalCrossHandlers from './globalCross';
-import type { Store } from './type';
 
 export const actions = {
   ...ActionCreators,

@@ -1,7 +1,6 @@
 import React, { useLayoutEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { Menu } from 'antd';
-import type { ClickParam } from 'antd/lib/menu';
 import { useClickOutside } from 'src/hooks/useClickOutside';
 import 'antd/es/dropdown/style/index.css';
 
@@ -11,7 +10,7 @@ export interface ContextMenuItem {
   shortcut?: string;
   disabled?: boolean;
   key: string;
-  handler: (evt?: ClickParam) => any;
+  handler: (evt?: { key: React.Key }) => any;
 }
 
 export interface ContextMenuDivider {
@@ -31,7 +30,7 @@ export interface ContextMenuProps {
   onChangePosition: (v: MenuPosition) => void;
   getMenu: () => ContextMenuOption[];
   onClose: () => void;
-  onClick?: (evt?: ClickParam) => void;
+  onClick?: (evt: { key: React.Key }) => void;
 }
 
 function ContextMenu(props: ContextMenuProps) {
@@ -41,7 +40,7 @@ function ContextMenu(props: ContextMenuProps) {
 
   const node = useClickOutside({ onClick: onClose });
 
-  const handleMenuClick = (evt: ClickParam) => {
+  const handleMenuClick = (evt: { key: React.Key }) => {
     const { key } = evt;
     const item = menu.find((o: ContextMenuOption) => o.key === key) as ContextMenuOption;
     if (!item || item.type === 'Divider') {

@@ -13,7 +13,7 @@ import HorizontalSpace from 'src/svg/horizontal-space.svg';
 import VerticalSpace from 'src/svg/vertical-space.svg';
 import { EventDrawing } from 'src/editor/event';
 import { useEditor } from 'src/editor/Context';
-import type { Store } from 'src/editor/reducer/type';
+import type { Store } from 'src/editor/type';
 import { InputNumber } from 'antd';
 import IconButton from './IconButton';
 

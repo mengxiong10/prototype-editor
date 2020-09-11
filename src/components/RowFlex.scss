@@ -1,0 +1,40 @@
+.row-flex {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.row-flex-column {
+  flex-direction: column;
+}
+
+.row-flex-start {
+  justify-content: flex-start;
+}
+
+.row-flex-center {
+  justify-content: center;
+}
+
+.row-flex-end {
+  justify-content: flex-end;
+}
+
+.row-flex-space-between {
+  justify-content: space-between;
+}
+
+.row-flex-space-around {
+  justify-content: space-around;
+}
+
+.row-flex-top {
+  align-items: flex-start;
+}
+
+.row-flex-middle {
+  align-items: center;
+}
+
+.row-flex-bottom {
+  align-items: flex-end;
+}

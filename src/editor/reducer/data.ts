@@ -1,14 +1,15 @@
-import type { ComponentData, ComponentEditableData } from 'src/types/editor';
-import { createComponentData, cloneComponentData } from '../componentUtil';
-import type { SliceReducerHandler } from './type';
+import type {
+  ComponentData,
+  ComponentEditableData,
+  ComponentId,
+  SliceReducerHandler,
+} from 'src/editor/type';
+import { cloneComponentData } from '../componentUtil';
 
 type DataHandler<P = void> = SliceReducerHandler<ComponentData[], P>;
 
-export const add: DataHandler<Partial<ComponentData> & Pick<ComponentData, 'type'>> = (
-  state,
-  payload
-) => {
-  return state.concat(createComponentData(payload));
+export const add: DataHandler<ComponentData> = (state, payload) => {
+  return state.concat(payload);
 };
 
 export const del: DataHandler = (state, payload, { selected }) => {
@@ -38,6 +39,7 @@ type UpdatePayload =
   | Partial<ComponentEditableData>
   | ((obj: ComponentData) => Partial<ComponentEditableData>);
 
+// 默认更新当前选中的元素
 export const update: DataHandler<UpdatePayload> = (state, payload, { selected }) => {
   if (selected.length === 0) return state;
   return state.map((item) => {
@@ -48,6 +50,20 @@ export const update: DataHandler<UpdatePayload> = (state, payload, { selected })
         // return mergeDeepObject(item, updater);
         return { ...item, ...updater };
       }
+    }
+    return item;
+  });
+};
+
+export const updateById: DataHandler<{ id: ComponentId; updater: UpdatePayload }> = (
+  state,
+  payload
+) => {
+  return state.map((item) => {
+    if (item.id === payload.id) {
+      let { updater } = payload;
+      updater = typeof updater === 'function' ? updater(item) : updater;
+      return { ...item, ...updater };
     }
     return item;
   });

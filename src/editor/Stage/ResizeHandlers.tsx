@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import type { ComponentData } from 'src/types/editor';
+import type { ComponentData } from 'src/editor/type';
 import Draggable, { DraggableHandler } from 'src/components/Draggable';
 import { useEditor } from 'src/editor/Context';
 

@@ -1,30 +1,59 @@
 import React from 'react';
 import { Collapse } from 'antd';
-import type { ComponentOptions } from 'src/types/editor';
+import type { ComponentOptions } from 'src/editor/type';
 import PanelItem from './PanelItem';
 
 const { Panel } = Collapse;
 
-export interface ItemPanelTreeItem {
+export interface ItemPanelItem {
+  type: string;
+  name: string;
+  options: ComponentOptions;
+  children?: ItemPanelItem[];
+}
+
+export interface ItemPanelGroup {
   key: string;
   name: string;
-  children: { type: string; options: ComponentOptions; name: string }[];
+  children: ItemPanelItem[];
 }
 
 export interface ItemPanelProps {
-  data: ItemPanelTreeItem[];
+  data: ItemPanelGroup[];
 }
 
 function ItemPanel({ data }: ItemPanelProps) {
   return (
-    <Collapse style={{ border: 0 }} defaultActiveKey={[data[0].key]}>
+    <Collapse ghost style={{ border: 0 }} defaultActiveKey={[data[0].key]}>
       {data.map((item) => (
         <Panel header={item.name} key={item.key}>
-          {item.children.map((v) => (
-            <PanelItem key={v.type} type={v.type}>
-              {v.name}
-            </PanelItem>
-          ))}
+          {item.children.map((v) => {
+            if (v.children) {
+              return (
+                <Collapse key={v.type} ghost>
+                  <Panel
+                    header={
+                      <PanelItem key={v.type} type={v.type}>
+                        {v.name}
+                      </PanelItem>
+                    }
+                    key={v.type}
+                  >
+                    {v.children.map((q) => (
+                      <PanelItem key={q.type} type={q.type} size="small">
+                        {q.name}
+                      </PanelItem>
+                    ))}
+                  </Panel>
+                </Collapse>
+              );
+            }
+            return (
+              <PanelItem key={v.type} type={v.type}>
+                {v.name}
+              </PanelItem>
+            );
+          })}
         </Panel>
       ))}
     </Collapse>

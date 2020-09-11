@@ -1,5 +1,5 @@
 import React from 'react';
-import type { DetailPanelType } from 'src/types/editor';
+import type { DetailPanelType } from 'src/editor/type';
 import { set } from 'dot-prop-immutable';
 import { useEditor } from 'src/editor/Context';
 import DetailPanelDefault from './DetailPanelDefault';
@@ -24,7 +24,7 @@ function DetailPanelContainer({ data, detailPanel, path }: DetailPanelContainerP
 
   const handleChange: PanelChangeHandler = ({ prop, value, history = true }) => {
     execCommand(history ? 'update' : 'updateWithoutHistory', (item) => {
-      return { data: set(item.data, path ? `${path}.${prop}` : prop, value) };
+      return set(item, path ? `${path}.${prop}` : prop, value);
     });
   };
 

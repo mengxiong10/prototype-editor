@@ -1,8 +1,8 @@
 /**
  * 处理那些影响过data的action需要同时修改selected
  */
+import type { Store } from 'src/editor/type';
 import type { ReducerHandler } from './reducerHelpers';
-import type { Store } from './type';
 
 // 选中新增的id, 如果之后payload可以为数组, 相应修改长度
 export const add: ReducerHandler<Store> = (state) => {

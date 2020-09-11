@@ -1,12 +1,13 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import classnames from 'classnames';
 import Draggable, { DraggableHandler } from 'src/components/Draggable';
-import type { ComponentData } from 'src/types/editor';
+import type { ComponentData } from 'src/editor/type';
 import { useEditor, ComponentIdContext } from 'src/editor/Context';
 import { getComponent } from 'src/editor/componentUtil';
 import { disableClassnames } from 'src/editor/DisableEditorFeature';
 import { EventCompositeSelect } from 'src/editor/event';
-import { mergeObjectDeep } from 'src/utils/object';
+import { useComponent } from 'src/editor/useComponent';
+import { compositWrapperClassName } from './CompositeWrapper';
 
 export interface ComponentWrapperProps {
   active: boolean;
@@ -14,8 +15,10 @@ export interface ComponentWrapperProps {
   scale?: number;
 }
 
+export const componentWrapperClassName = 'js-component-wrapper';
+
 function ComponentWrapper({ active, item, scale = 1 }: ComponentWrapperProps) {
-  const { id, type, left, top, width, height, data } = item;
+  const { id, type, left, top, width, height, data, children } = item;
 
   const execCommand = useEditor();
 
@@ -26,9 +29,19 @@ function ComponentWrapper({ active, item, scale = 1 }: ComponentWrapperProps) {
     }
   };
 
-  const handleComponentClick = () => {
-    // 清除复合组件的状态, 其余的清除在PanelDetail里面实现
-    EventCompositeSelect.emit(null);
+  const handleComponentClick = (evt: React.MouseEvent<HTMLDivElement>) => {
+    const { currentTarget } = evt;
+    let el: HTMLElement = evt.target as HTMLElement;
+    while (el !== currentTarget && !el.classList.contains(compositWrapperClassName)) {
+      el = el.parentElement!;
+    }
+
+    if (el === currentTarget) {
+      // 清除复合组件的状态, 其余的清除在PanelDetail里面实现
+      EventCompositeSelect.emit(null);
+    } else {
+      EventCompositeSelect.emit({ path: el.dataset.path!, type: el.dataset.type!, id });
+    }
   };
 
   // 拖动过程忽略历史记录
@@ -56,18 +69,11 @@ function ComponentWrapper({ active, item, scale = 1 }: ComponentWrapperProps) {
     height,
   };
 
-  const classNames = classnames('pe-component-wrapper', {
+  const classNames = classnames('pe-component-wrapper', componentWrapperClassName, {
     active,
   });
 
-  const component = useMemo(() => {
-    const componentOption = getComponent(type);
-
-    return React.createElement(
-      componentOption.component,
-      mergeObjectDeep(componentOption.defaultData, data)
-    );
-  }, [data, type]);
+  const component = useComponent({ data, type, children });
 
   return (
     <ComponentIdContext.Provider value={id}>
@@ -78,7 +84,12 @@ function ComponentWrapper({ active, item, scale = 1 }: ComponentWrapperProps) {
         onStop={handleStop}
         scale={scale}
       >
-        <div onClick={handleComponentClick} className={classNames} style={style} data-id={item.id}>
+        <div
+          onClickCapture={handleComponentClick}
+          className={classNames}
+          style={style}
+          data-id={item.id}
+        >
           {component}
         </div>
       </Draggable>

@@ -1,5 +1,5 @@
 import type { SetStateAction } from 'react';
-import type { SliceReducerHandler } from './type';
+import type { SliceReducerHandler } from 'src/editor/type';
 
 type ScaleHandler<P = void> = SliceReducerHandler<number, P>;
 

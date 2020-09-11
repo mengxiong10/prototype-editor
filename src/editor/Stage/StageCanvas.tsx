@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import type { ComponentData } from 'src/types/editor';
+import type { ComponentData } from 'src/editor/type';
 
 export interface StageCanvasProps {
   data: ComponentData[];

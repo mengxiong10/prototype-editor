@@ -24,20 +24,18 @@ function StageDrawing({ scale = 1 }: { scale?: number }) {
         value[k] /= scale;
       });
       if (type === 'comment') {
-        const richData = createComponentData({
+        const richData = createComponentData('rich', {
           left: value.left + value.width + 200,
           top: value.top,
-          type: 'rich',
         });
-        const rect = createComponentData({
+        const rect = createComponentData('rect', {
           ...value,
-          type: 'rect',
           association: richData.id,
         });
         execCommand('add', rect);
         execCommand('add', richData);
       } else {
-        execCommand('add', { ...value, type });
+        execCommand('add', createComponentData(type, value));
       }
     },
     [execCommand, hideDrawer, scale, type]

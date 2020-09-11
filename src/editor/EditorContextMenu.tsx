@@ -1,4 +1,4 @@
-import type { Store } from 'antd/lib/form/interface';
+import type { Store } from 'src/editor/type';
 import React, { useRef } from 'react';
 import type { ContextMenuOption } from 'src/components/ContextMenu';
 import ContextMenuTrigger from 'src/components/ContextMenuTrigger';

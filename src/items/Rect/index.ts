@@ -1,4 +1,4 @@
-import type { ComponentOptions } from 'src/types/editor';
+import type { ComponentOptions } from 'src/editor/type';
 import Rect, { RectProps } from './Rect';
 
 export const rectOptions: ComponentOptions<RectProps> = {
