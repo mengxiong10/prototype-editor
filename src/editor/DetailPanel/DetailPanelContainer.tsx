@@ -7,7 +7,7 @@ import type { PanelChangeHandler } from './Helpers';
 
 export interface DetailPanelContainerProps<T = any> {
   data: T;
-  path: string;
+  path: string | null;
   detailPanel: DetailPanelType<T>;
 }
 
@@ -24,7 +24,8 @@ function DetailPanelContainer({ data, detailPanel, path }: DetailPanelContainerP
 
   const handleChange: PanelChangeHandler = ({ prop, value, history = true }) => {
     execCommand(history ? 'update' : 'updateWithoutHistory', (item) => {
-      return set(item, path ? `${path}.${prop}` : prop, value);
+      const key = path ? `${path}.data.${prop}` : `data.${prop}`;
+      return set(item, key, value);
     });
   };
 

@@ -12,40 +12,35 @@ export interface PanelDetailProps {
 }
 
 function PanelDetail({ data, selected }: PanelDetailProps) {
+  const selectedData = data.filter((v) => selected.indexOf(v.id) !== -1);
+
   const [composite, setComposite] = useState<EventCompositeSelectProps | null>(null);
 
   useEffect(() => {
     return EventCompositeSelect.on(setComposite);
   }, []);
 
-  const selectedData = data.filter((v) => selected.indexOf(v.id) !== -1);
+  useEffect(() => {
+    // 如果是多选或者当前的组件和复合组件的状态id不一致, 直接清空复合组件的状态
+    if (composite && !(selectedData.length === 1 && selectedData[0].id === composite.id)) {
+      EventCompositeSelect.emit(null);
+    }
+  });
 
   // 选择的组件都是同一个类型
   const isSelected =
     selectedData.length > 0 && selectedData.every((v) => v.type === selectedData[0].type);
 
-  // 如果是多选或者当前的组件和复合组件的状态id不一致, 直接清空复合组件的状态
-  if (composite && !(selectedData.length === 1 && selectedData[0].id === composite.id)) {
-    EventCompositeSelect.emit(null);
-  }
-
   if (!isSelected) {
     return null;
   }
 
-  const config = selectedData[0];
-
-  let path = 'data';
-  let type = config.type;
-
+  let config = selectedData[0];
   if (composite && config.id === composite.id) {
-    path = `${composite.path}.data`;
-    type = composite.type;
+    config = get(config, composite.path);
   }
 
-  let resolvedData = get(config, path);
-
-  const componentOption = getComponent(type);
+  const componentOption = getComponent(config.type);
 
   if (!componentOption || !componentOption.detailPanel) {
     return null;
@@ -53,7 +48,9 @@ function PanelDetail({ data, selected }: PanelDetailProps) {
 
   const { detailPanel, defaultData } = componentOption;
 
-  resolvedData = mergeObjectDeep(defaultData, resolvedData || {});
+  const resolvedData = mergeObjectDeep(defaultData, config.data || {});
+
+  const path = composite ? composite.path : '';
 
   return <DetailPanelContainer data={resolvedData} detailPanel={detailPanel} path={path} />;
 }

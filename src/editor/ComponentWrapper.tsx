@@ -22,14 +22,7 @@ function ComponentWrapper({ active, item, scale = 1 }: ComponentWrapperProps) {
 
   const execCommand = useEditor();
 
-  // 选中组件
-  const handleSelect = (evt: React.MouseEvent<HTMLDivElement>) => {
-    if (!active) {
-      execCommand(evt.ctrlKey ? 'selectAppend' : 'select', id);
-    }
-  };
-
-  const handleComponentClick = (evt: React.MouseEvent<HTMLDivElement>) => {
+  const setCompositeStatus = (evt: any) => {
     const { currentTarget } = evt;
     let el: HTMLElement = evt.target as HTMLElement;
     while (el !== currentTarget && !el.classList.contains(compositWrapperClassName)) {
@@ -40,8 +33,16 @@ function ComponentWrapper({ active, item, scale = 1 }: ComponentWrapperProps) {
       // 清除复合组件的状态, 其余的清除在PanelDetail里面实现
       EventCompositeSelect.emit(null);
     } else {
-      EventCompositeSelect.emit({ path: el.dataset.path!, type: el.dataset.type!, id });
+      EventCompositeSelect.emit({ path: el.dataset.path!, id });
     }
+  };
+
+  // 选中组件
+  const handleSelect = (evt: React.MouseEvent<HTMLDivElement>) => {
+    if (!active) {
+      execCommand(evt.ctrlKey ? 'selectAppend' : 'select', id);
+    }
+    setCompositeStatus(evt);
   };
 
   // 拖动过程忽略历史记录
@@ -79,13 +80,12 @@ function ComponentWrapper({ active, item, scale = 1 }: ComponentWrapperProps) {
     <ComponentIdContext.Provider value={id}>
       <Draggable
         cancel={`.${disableClassnames.drag}`}
-        onMouseDown={handleSelect}
         onMove={handleMove}
         onStop={handleStop}
         scale={scale}
       >
         <div
-          onClickCapture={handleComponentClick}
+          onMouseDownCapture={handleSelect}
           className={classNames}
           style={style}
           data-id={item.id}

@@ -113,7 +113,9 @@ class Draggable extends React.Component<DraggableProps, DraggableState> {
       x: coreData.x,
       y: coreData.y,
     });
-    this.props.onMove(coreData);
+    if (coreData.deltaX !== 0 || coreData.deltaY !== 0) {
+      this.props.onMove(coreData);
+    }
   });
 
   handleMouseUp = (evt: MouseEvent) => {

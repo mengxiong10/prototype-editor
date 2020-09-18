@@ -19,20 +19,20 @@ function CompositeWrapper({ index, type, data, children }: CompositeWrapperProps
 
   const path = prefixPath ? `${prefixPath}.children.${index}` : `children.${index}`;
 
+  const component = useComponent({ type, data, children });
+
   useEffect(() => {
     return EventCompositeSelect.on((option) => {
-      setSelected(!!option && path === option.path && type === option.type && cid === option.id);
+      const v = !!option && path === option.path && cid === option.id;
+      setSelected(v);
     });
-  }, [cid, path, type]);
-
-  const component = useComponent({ type, data, children });
+  }, [cid, path]);
 
   return (
     <CompositePathContext.Provider value={path}>
       <div
         className={compositWrapperClassName}
-        style={{ outline: selected ? '1px solid red' : 'none' }}
-        data-type={type}
+        style={{ outline: selected ? '3px solid skyblue' : 'none' }}
         data-path={path}
       >
         {component}

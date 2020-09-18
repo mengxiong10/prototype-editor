@@ -3,7 +3,6 @@ import { TypedEvent } from 'src/utils/typedEvent';
 export const EventDrawing = new TypedEvent<string>();
 
 export interface EventCompositeSelectProps {
-  type: string;
   path: string;
   id: string;
 }
