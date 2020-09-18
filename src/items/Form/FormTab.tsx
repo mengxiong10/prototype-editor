@@ -16,7 +16,7 @@ export const formTabOptions: ComponentOptions<FormTabProps> = {
   defaultData: {
     title: '标签页',
   },
-  children: ['r-form.group'],
+  children: ['r-form-group'],
   detailPanel: [
     {
       title: '组件属性',

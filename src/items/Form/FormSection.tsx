@@ -11,11 +11,11 @@ const { TabPane } = Tabs;
 
 function FormSection({ children }: FormSectionProps) {
   return (
-    <CompositeDropZone match="r-form.tab">
+    <CompositeDropZone drop="r-form-section">
       <Tabs defaultActiveKey={children[0].id}>
         {children.map((tab, i) => (
           <TabPane tab={<CompositeWrapper {...tab} index={i} />} key={tab.id}>
-            <CompositeDropZone match="r-form.group" path={`children.${i}.children`}>
+            <CompositeDropZone drop="r-form-tab" path={`children.${i}.children`}>
               {(tab.children || []).map((group, j) => (
                 <CompositeWrapper {...group} key={group.id} index={`${i}.children.${j}`} />
               ))}
@@ -29,6 +29,6 @@ function FormSection({ children }: FormSectionProps) {
 
 export const formSectionOptions: ComponentOptions<Omit<FormSectionProps, 'children'>> = {
   component: FormSection,
-  children: ['r-form.tab'],
+  children: ['r-form-tab'],
   defaultData: {},
 };

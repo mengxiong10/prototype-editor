@@ -5,12 +5,14 @@ import classNames from 'classnames';
 export interface PanelItemProps {
   children: React.ReactNode;
   type: string;
+  drop?: string;
   size?: 'default' | 'small';
 }
 
-function PanelItem({ type, children, size = 'default' }: PanelItemProps) {
+function PanelItem({ type, drop, children, size = 'default' }: PanelItemProps) {
   const handleDragStart = (evt: React.DragEvent<HTMLDivElement>) => {
     evt.dataTransfer.setData('type', type);
+    evt.dataTransfer.setData('drop', drop || '');
   };
 
   return (

@@ -12,7 +12,7 @@ export const FormGroupLabelContext = React.createContext(70);
 function FormGroup({ title, children, labelWidth }: FormGroupProps) {
   return (
     <FormGroupLabelContext.Provider value={labelWidth}>
-      <CompositeDropZone match={(type) => /^r-form\.group\./.test(type)}>
+      <CompositeDropZone drop="r-form-group">
         <div>{title}</div>
         <div>
           {children.map((item, i) => (
@@ -30,7 +30,7 @@ export const formGroupOptions: ComponentOptions<FormGroupProps> = {
     title: '分組',
     labelWidth: 70,
   },
-  children: ['r-form.group.input'],
+  children: ['r-form-input'],
   detailPanel: [
     {
       title: '组件属性',

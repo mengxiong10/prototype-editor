@@ -6,16 +6,11 @@ import { createCompositeData } from './componentUtil';
 
 export interface CompositeDropZoneProps extends React.HTMLAttributes<HTMLDivElement> {
   path?: string;
-  match: string | ((type: string) => boolean);
+  drop: string;
   children: React.ReactNode;
 }
 
-function CompositeDropZone({
-  path = 'children',
-  children,
-  match,
-  ...rest
-}: CompositeDropZoneProps) {
+function CompositeDropZone({ path = 'children', children, drop, ...rest }: CompositeDropZoneProps) {
   const execCommand = useEditor();
   const cid = useComponentId();
   const prefixPath = useCompositePath();
@@ -23,7 +18,8 @@ function CompositeDropZone({
   const onDrop = (evt: React.DragEvent<HTMLDivElement>) => {
     evt.preventDefault();
     const type = evt.dataTransfer.getData('type');
-    if (!(match === type || (typeof match === 'function' && match(type)))) {
+    const currentDrop = evt.dataTransfer.getData('drop');
+    if (drop !== currentDrop) {
       return;
     }
     evt.stopPropagation();
@@ -43,12 +39,7 @@ function CompositeDropZone({
   };
 
   return (
-    <div
-      {...rest}
-      style={{ minWidth: 100, minHeight: 100, border: '1px solid red' }}
-      onDrop={onDrop}
-      onDragOver={onDragOver}
-    >
+    <div {...rest} onDrop={onDrop} onDragOver={onDragOver}>
       {children}
     </div>
   );

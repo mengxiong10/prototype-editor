@@ -17,8 +17,10 @@ function ComponentDropZone({ children, scale }: DropZoneProps) {
   const onDrop = (evt: React.DragEvent<HTMLDivElement>) => {
     evt.preventDefault();
     const type = evt.dataTransfer.getData('type');
+    const drop = evt.dataTransfer.getData('drop');
+    console.log(drop);
     if (!type || !isValidComponent(type)) return;
-    if (type.indexOf('.') !== -1) {
+    if (drop) {
       return;
     }
     const rect = evt.currentTarget.getBoundingClientRect();

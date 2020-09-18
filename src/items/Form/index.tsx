@@ -9,7 +9,7 @@ export interface FormProps {
 
 function Form({ title, children }: FormProps) {
   return (
-    <CompositeDropZone match="r-form.section">
+    <CompositeDropZone drop="r-form">
       <h5>{title}</h5>
       {children.map((v, i) => (
         <CompositeWrapper {...v} key={v.id} index={i} />
@@ -24,7 +24,7 @@ export const formOptions: ComponentOptions<FormProps> = {
     width: 500,
     height: 300,
   },
-  children: ['r-form.section'],
+  children: ['r-form-section'],
   defaultData: {
     title: '标题',
   },

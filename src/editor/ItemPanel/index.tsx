@@ -7,6 +7,7 @@ const { Panel } = Collapse;
 
 export interface ItemPanelItem {
   type: string;
+  drop?: string;
   name: string;
   options: ComponentOptions;
   children?: ItemPanelItem[];
@@ -33,14 +34,14 @@ function ItemPanel({ data }: ItemPanelProps) {
                 <Collapse key={v.type} ghost>
                   <Panel
                     header={
-                      <PanelItem key={v.type} type={v.type}>
+                      <PanelItem key={v.type} type={v.type} drop={v.drop}>
                         {v.name}
                       </PanelItem>
                     }
                     key={v.type}
                   >
                     {v.children.map((q) => (
-                      <PanelItem key={q.type} type={q.type} size="small">
+                      <PanelItem key={q.type} type={q.type} drop={q.drop} size="small">
                         {q.name}
                       </PanelItem>
                     ))}
@@ -49,7 +50,7 @@ function ItemPanel({ data }: ItemPanelProps) {
               );
             }
             return (
-              <PanelItem key={v.type} type={v.type}>
+              <PanelItem key={v.type} type={v.type} drop={v.drop}>
                 {v.name}
               </PanelItem>
             );
