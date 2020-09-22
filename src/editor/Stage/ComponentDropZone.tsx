@@ -1,6 +1,6 @@
 import React from 'react';
 import { createComponentData, isValidComponent } from 'src/editor/componentUtil';
-import { useEditor } from './Context';
+import { useEditor } from '../Context';
 
 export type DropDoneData = { x: number; y: number; data: string };
 

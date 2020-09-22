@@ -7,7 +7,7 @@ import { getComponent } from 'src/editor/componentUtil';
 import { disableClassnames } from 'src/editor/DisableEditorFeature';
 import { EventCompositeSelect } from 'src/editor/event';
 import { useComponent } from 'src/editor/useComponent';
-import { compositWrapperClassName } from './CompositeWrapper';
+import { compositWrapperClassName } from '../CompositeWrapper';
 
 export interface ComponentWrapperProps {
   active: boolean;
