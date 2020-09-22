@@ -38,8 +38,7 @@ function ItemPanel({ data }: ItemPanelProps) {
                         {v.name}
                       </PanelItem>
                     }
-                    key={v.type}
-                  >
+                    key={v.type}>
                     {v.children.map((q) => (
                       <PanelItem key={q.type} type={q.type} drop={q.drop} size="small">
                         {q.name}

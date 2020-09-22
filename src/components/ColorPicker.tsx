@@ -18,8 +18,7 @@ function ColorPicker({ color, ...rest }: ColorPickerProps) {
           borderRadius: 1,
           boxShadow: 'rgba(0, 0, 0, 0.1) 0px 0px 0px 1px',
           cursor: 'pointer',
-        }}
-      >
+        }}>
         <div
           style={{
             width: 36,
@@ -27,8 +26,7 @@ function ColorPicker({ color, ...rest }: ColorPickerProps) {
             borderRadius: 2,
             background: color,
             boxShadow: 'rgba(0, 0, 0, 0.1) 0px 0px 0px 1px',
-          }}
-        ></div>
+          }}></div>
       </div>
     </Popover>
   );

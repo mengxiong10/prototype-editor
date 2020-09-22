@@ -55,8 +55,7 @@ function Stage({
             style={{
               width: 2000,
               height: 1000,
-            }}
-          >
+            }}>
             <div style={{ transform: `scale(${scale})`, transformOrigin: 'left top' }}>
               {data.present.map((item) => (
                 <ComponentWrapper

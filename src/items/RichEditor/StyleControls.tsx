@@ -40,8 +40,7 @@ const StyleButton = (props: StyleButtonProps) => {
         marginRight: 10,
         color: props.active ? '#108ee9' : '#333',
       }}
-      onMouseDown={handleMouseDown}
-    >
+      onMouseDown={handleMouseDown}>
       {props.label}
     </span>
   );

@@ -100,8 +100,7 @@ function ResizeHandlers({ selectedData, scale = 1 }: ResizeHandlersProps) {
       onMove={handleMove}
       onStop={handleStop}
       onStart={handleDragStart}
-      scale={scale}
-    >
+      scale={scale}>
       <div
         style={{
           position: 'absolute',
@@ -111,14 +110,12 @@ function ResizeHandlers({ selectedData, scale = 1 }: ResizeHandlersProps) {
           width: outerWidth * scale,
           height: outerHeight * scale,
           outline: '1px solid #007dfc',
-        }}
-      >
+        }}>
         {handlers.map((d) => (
           <span
             key={d}
             data-handler={d}
-            className={`resizable-handle resizable-handle-${d}`}
-          ></span>
+            className={`resizable-handle resizable-handle-${d}`}></span>
         ))}
       </div>
     </Draggable>

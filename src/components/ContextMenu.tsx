@@ -83,8 +83,7 @@ function ContextMenu(props: ContextMenuProps) {
         position: 'fixed',
         zIndex: 2000,
         ...position,
-      }}
-    >
+      }}>
       <Menu prefixCls="ant-dropdown-menu" style={{ minWidth: 180 }} onClick={handleMenuClick}>
         {menu.map((item, i) => {
           if (item.type === 'Divider') {
@@ -94,8 +93,7 @@ function ContextMenu(props: ContextMenuProps) {
             <Menu.Item
               style={{ display: 'flex', justifyContent: 'space-between' }}
               key={item.key}
-              disabled={item.disabled}
-            >
+              disabled={item.disabled}>
               <span>{item.title}</span>
               {item.shortcut !== undefined && <span>{item.shortcut}</span>}
             </Menu.Item>

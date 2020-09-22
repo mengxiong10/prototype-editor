@@ -21,8 +21,7 @@ function PanelItem({ type, drop, children, size = 'default' }: PanelItemProps) {
         'pe-component-item__small': size === 'small',
       })}
       draggable
-      onDragStart={handleDragStart}
-    >
+      onDragStart={handleDragStart}>
       <FileAddOutlined style={size === 'small' ? { margin: '0 10px' } : { marginBottom: 5 }} />
       <span style={{ fontSize: 12 }}>{children}</span>
     </div>

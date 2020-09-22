@@ -31,15 +31,13 @@ function Toolbar({ data, selected, scale }: PanelToolbarProps) {
       <IconButton
         title="撤销(ctrl+z)"
         disabled={data.past.length === 0}
-        onClick={() => execCommand('undo')}
-      >
+        onClick={() => execCommand('undo')}>
         <Undo />
       </IconButton>
       <IconButton
         title="重做(ctrl+shift+z)"
         disabled={data.future.length === 0}
-        onClick={() => execCommand('redo')}
-      >
+        onClick={() => execCommand('redo')}>
         <Redo />
       </IconButton>
       {divider}
@@ -56,57 +54,49 @@ function Toolbar({ data, selected, scale }: PanelToolbarProps) {
       <IconButton
         title="左对齐"
         disabled={selected.length < 2}
-        onClick={() => execCommand('alignLeft')}
-      >
+        onClick={() => execCommand('alignLeft')}>
         <AlignLeft />
       </IconButton>
       <IconButton
         title="水平居中"
         disabled={selected.length < 2}
-        onClick={() => execCommand('alignHorizontal')}
-      >
+        onClick={() => execCommand('alignHorizontal')}>
         <AlignCenter />
       </IconButton>
       <IconButton
         title="右对齐"
         disabled={selected.length < 2}
-        onClick={() => execCommand('alignRight')}
-      >
+        onClick={() => execCommand('alignRight')}>
         <AlignRight />
       </IconButton>
       <IconButton
         title="顶对齐"
         disabled={selected.length < 2}
-        onClick={() => execCommand('alignTop')}
-      >
+        onClick={() => execCommand('alignTop')}>
         <AlignTop />
       </IconButton>
       <IconButton
         title="垂直居中"
         disabled={selected.length < 2}
-        onClick={() => execCommand('alignVertical')}
-      >
+        onClick={() => execCommand('alignVertical')}>
         <AlignVerticel />
       </IconButton>
       <IconButton
         title="底对齐"
         disabled={selected.length < 2}
-        onClick={() => execCommand('alignBottom')}
-      >
+        onClick={() => execCommand('alignBottom')}>
         <AlignBottom />
       </IconButton>
       <IconButton
         title="水平等间距"
         disabled={selected.length < 3}
-        onClick={() => execCommand('spaceHorizontal')}
-      >
+        onClick={() => execCommand('spaceHorizontal')}>
         <HorizontalSpace />
       </IconButton>
       <IconButton
         title="垂直等间距"
         disabled={selected.length < 3}
-        onClick={() => execCommand('spaceVertical')}
-      >
+        onClick={() => execCommand('spaceVertical')}>
         <VerticalSpace />
       </IconButton>
       <span style={{ flex: 1 }}></span>

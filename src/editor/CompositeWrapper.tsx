@@ -33,8 +33,7 @@ function CompositeWrapper({ index, type, data, children }: CompositeWrapperProps
       <div
         className={compositWrapperClassName}
         style={{ outline: selected ? '3px solid skyblue' : 'none' }}
-        data-path={path}
-      >
+        data-path={path}>
         {component}
       </div>
     </CompositePathContext.Provider>

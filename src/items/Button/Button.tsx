@@ -19,8 +19,7 @@ function Button(props: ButtonProps) {
       className="ant-btn"
       type="button"
       disabled={disabled}
-      style={{ ...style, borderRadius: circle ? '50%' : undefined }}
-    >
+      style={{ ...style, borderRadius: circle ? '50%' : undefined }}>
       {textContent}
     </button>
   );

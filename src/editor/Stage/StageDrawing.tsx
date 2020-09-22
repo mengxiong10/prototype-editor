@@ -60,8 +60,7 @@ function StageDrawing({ scale = 1 }: { scale?: number }) {
           height: '100%',
           zIndex: 20,
           cursor: 'crosshair',
-        }}
-      ></div>
+        }}></div>
     </DrawShape>
   );
 }

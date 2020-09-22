@@ -27,8 +27,7 @@ function DetailPanelDefault({ groups, data, onChange, children }: DetailPanelDef
     <Collapse
       className="pe-detail-panel"
       style={{ border: 0 }}
-      defaultActiveKey={groups.map((v, i) => String(i))}
-    >
+      defaultActiveKey={groups.map((v, i) => String(i))}>
       {groups.map((group, i) => {
         return (
           <Panel header={group.title} key={String(i)}>

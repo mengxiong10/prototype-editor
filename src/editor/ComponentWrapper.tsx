@@ -82,14 +82,12 @@ function ComponentWrapper({ active, item, scale = 1 }: ComponentWrapperProps) {
         cancel={`.${disableClassnames.drag}`}
         onMove={handleMove}
         onStop={handleStop}
-        scale={scale}
-      >
+        scale={scale}>
         <div
           onMouseDownCapture={handleSelect}
           className={classNames}
           style={style}
-          data-id={item.id}
-        >
+          data-id={item.id}>
           {component}
         </div>
       </Draggable>
