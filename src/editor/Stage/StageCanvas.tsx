@@ -3,17 +3,19 @@ import type { ComponentData } from 'src/editor/type';
 
 export interface StageCanvasProps {
   data: ComponentData[];
-  width: number;
-  height: number;
+  scale: number;
 }
 
 // 主要是绘制页面上不需要响应鼠标事件的图形
 // * 标注的连接线
-function StageCanvas({ data, width, height }: StageCanvasProps) {
+function StageCanvas({ data, scale }: StageCanvasProps) {
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvas = ref.current!;
+    const parent = canvas.offsetParent!;
+    const width = parent.clientWidth;
+    const height = parent.clientHeight;
     canvas.width = width;
     canvas.height = height;
     const ctx = canvas.getContext('2d')!;
@@ -58,11 +60,11 @@ function StageCanvas({ data, width, height }: StageCanvasProps) {
     ctx.strokeStyle = 'rgb(221, 208, 0)';
     ctx.lineWidth = 2;
     lines.forEach((points) => {
-      ctx.moveTo(points[0][0], points[0][1]);
-      ctx.lineTo(points[1][0], points[1][1]);
+      ctx.moveTo(points[0][0] * scale, points[0][1] * scale);
+      ctx.lineTo(points[1][0] * scale, points[1][1] * scale);
     });
     ctx.stroke();
-  }, [data, height, width]);
+  }, [data, scale]);
 
   return (
     <canvas style={{ pointerEvents: 'none', position: 'absolute', zIndex: 10 }} ref={ref}></canvas>

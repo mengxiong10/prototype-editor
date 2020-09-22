@@ -6,19 +6,18 @@ export type DropDoneData = { x: number; y: number; data: string };
 
 export type DropDoneHandler = (v: DropDoneData) => void;
 
-export interface DropZoneProps {
-  children: React.ReactElement;
+export interface DropZoneProps extends React.HTMLAttributes<HTMLDivElement> {
+  children: React.ReactNode;
   scale: number;
 }
 
-function ComponentDropZone({ children, scale }: DropZoneProps) {
+function ComponentDropZone({ children, scale, ...rest }: DropZoneProps) {
   const execCommand = useEditor();
 
   const onDrop = (evt: React.DragEvent<HTMLDivElement>) => {
     evt.preventDefault();
     const type = evt.dataTransfer.getData('type');
     const drop = evt.dataTransfer.getData('drop');
-    console.log(drop);
     if (!type || !isValidComponent(type)) return;
     if (drop) {
       return;
@@ -33,10 +32,11 @@ function ComponentDropZone({ children, scale }: DropZoneProps) {
     evt.preventDefault();
   };
 
-  return React.cloneElement(children, {
-    onDrop,
-    onDragOver,
-  });
+  return (
+    <div onDrop={onDrop} onDragOver={onDragOver} {...rest}>
+      {children}
+    </div>
+  );
 }
 
 export default ComponentDropZone;
