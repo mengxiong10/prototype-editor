@@ -21,7 +21,7 @@ module.exports = {
     port: 2244, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: true,
     errorOverlay: false,
-    notifyOnErrors: true,
+    notifyOnErrors: false,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
 
     useLint: true,

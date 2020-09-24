@@ -56,14 +56,6 @@ export const createComponentData = (type: string, obj: Partial<ComponentData>): 
   return newData;
 };
 
-/**
- * 回忆如此玄妙
- * 她总会抹去坏的
- * 放大好的
- * 正因如此
- * 我们才得以承担过去的重负
- * -- 马尔克斯
- */
 export const cloneComponentData = (
   base: ComponentData,
   obj: Partial<ComponentEditableData>
