@@ -3,6 +3,7 @@ import DrawShape, { ShapeData } from 'src/components/DrawShape';
 import { useEditor } from 'src/editor/Context';
 import type { Store } from 'src/editor/type';
 import { useShortcuts } from 'src/editor/useShortcuts';
+import EditingTextArea from 'src/editor/EditingTextArea';
 import ComponentDropZone from 'src/editor/Stage/ComponentDropZone';
 import ComponentWrapper from 'src/editor/Stage/ComponentWrapper';
 import StageDrawing from './StageDrawing';
@@ -65,6 +66,7 @@ function Stage({
           <StageCanvas data={data.present} scale={scale} />
           {selectedData.length > 0 && <ResizeHandlers scale={scale} selectedData={selectedData} />}
           <StageDrawing scale={scale} />
+          <EditingTextArea scale={scale} />
         </div>
       </DrawShape>
     </ComponentDropZone>

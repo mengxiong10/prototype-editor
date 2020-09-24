@@ -40,8 +40,6 @@ export const itemPanelGroup: ItemPanelGroup[] = [
           { name: '标签页', type: 'r-form-tab', drop: 'r-form-section', options: formTabOptions },
           { name: '分组', type: 'r-form-group', drop: 'r-form-tab', options: formGroupOptions },
           { name: '文本', type: 'r-form-text', drop: 'r-form-group', options: formInputOptions },
-          { name: '按钮', type: 'r-form-button', drop: 'r-form-group', options: buttonOptions },
-          { name: '单行输入', type: 'r-form-input', drop: 'r-form-group', options: inputOptions },
         ],
       },
     ],

@@ -4,6 +4,7 @@ import type {
   ComponentId,
   SliceReducerHandler,
 } from 'src/editor/type';
+import { set } from 'dot-prop-immutable';
 import { cloneComponentData } from '../componentUtil';
 
 type DataHandler<P = void> = SliceReducerHandler<ComponentData[], P>;
@@ -55,15 +56,14 @@ export const update: DataHandler<UpdatePayload> = (state, payload, { selected })
   });
 };
 
-export const updateById: DataHandler<{ id: ComponentId; updater: UpdatePayload }> = (
-  state,
-  payload
-) => {
+export const updateById: DataHandler<{
+  id: ComponentId;
+  path: number | string | (string | number)[];
+  value: any;
+}> = (state, { id, path, value }) => {
   return state.map((item) => {
-    if (item.id === payload.id) {
-      let { updater } = payload;
-      updater = typeof updater === 'function' ? updater(item) : updater;
-      return { ...item, ...updater };
+    if (item.id === id) {
+      return set(item, path, value);
     }
     return item;
   });

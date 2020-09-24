@@ -1,5 +1,4 @@
 import React from 'react';
-import { set } from 'dot-prop-immutable';
 import type { CompositeData } from 'src/editor/type';
 import { useComponentId, useCompositePath, useEditor } from './Context';
 import { createCompositeData } from './componentUtil';
@@ -28,9 +27,8 @@ function CompositeDropZone({ path = 'children', children, drop, ...rest }: Compo
 
     execCommand('updateById', {
       id: cid,
-      updater: (item) => {
-        return set(item, prop, (list: CompositeData[]) => [...list, newData]);
-      },
+      path: prop,
+      value: (list: CompositeData[]) => [...list, newData],
     });
   };
 

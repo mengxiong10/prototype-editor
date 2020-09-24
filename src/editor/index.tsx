@@ -6,6 +6,7 @@ import EditorContextMenu from './EditorContextMenu';
 import CompositeDropZone from './CompositeDropZone';
 import CompositeWrapper from './CompositeWrapper';
 import DisableEditorFeature from './DisableEditorFeature';
+import Editable from './Editable';
 
 export * from './Context';
 
@@ -22,4 +23,5 @@ export {
   CompositeDropZone,
   CompositeWrapper,
   DisableEditorFeature,
+  Editable,
 };

@@ -1,5 +1,11 @@
 import React from 'react';
-import { CompositeWrapper, CompositeDropZone, ComponentOptions, CompositeData } from 'src/editor';
+import {
+  CompositeWrapper,
+  CompositeDropZone,
+  ComponentOptions,
+  CompositeData,
+  Editable,
+} from 'src/editor';
 
 export interface FormGroupProps {
   title: string;
@@ -13,7 +19,9 @@ function FormGroup({ title, children, labelWidth }: FormGroupProps) {
   return (
     <FormGroupLabelContext.Provider value={labelWidth}>
       <CompositeDropZone drop="r-form-group">
-        <div>{title}</div>
+        <Editable prop="title">
+          <div>{title}</div>
+        </Editable>
         <div>
           {children.map((item, i) => (
             <CompositeWrapper {...item} key={item.id} index={i} />
@@ -30,7 +38,7 @@ export const formGroupOptions: ComponentOptions<FormGroupProps> = {
     title: '分組',
     labelWidth: 70,
   },
-  children: ['r-form-input'],
+  children: ['r-form-text'],
   detailPanel: [
     {
       title: '组件属性',

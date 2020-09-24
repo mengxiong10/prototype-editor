@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import RowFlex from 'src/components/RowFlex';
 import type { ComponentOptions } from 'src/editor/type';
+import { Editable } from 'src/editor';
 import styles from './FormInput.module.scss';
 import { FormGroupLabelContext } from './FormGroup';
 
@@ -15,7 +16,9 @@ function FormInput({ title, value, placeholder }: FormInputProps) {
 
   return (
     <RowFlex>
-      <span style={{ width: labelWidth }}>{title}</span>
+      <Editable prop="title">
+        <span style={{ width: labelWidth }}>{title}</span>
+      </Editable>
       <input
         style={{ flex: 1 }}
         readOnly
