@@ -12,7 +12,8 @@ export const EventCompositeSelect = new TypedEvent<EventCompositeSelectProps | n
 
 export interface EditableParam {
   children: string;
-  style: Partial<React.CSSProperties> & Record<'left' | 'top' | 'width' | 'height', number>;
+  style: Partial<React.CSSProperties>;
+  rect: Record<'left' | 'top' | 'width' | 'height', number>;
   id: ComponentId;
   path: string;
 }

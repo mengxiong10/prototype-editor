@@ -22,7 +22,7 @@ function Button(props: ButtonProps) {
         type="button"
         disabled={disabled}
         style={{ ...style, borderRadius: circle ? '50%' : undefined }}>
-        <span id="test">{textContent}</span>
+        <span>{textContent}</span>
       </button>
     </Editable>
   );

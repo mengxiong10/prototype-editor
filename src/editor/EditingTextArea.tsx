@@ -36,11 +36,14 @@ function EditingTextArea({ scale = 1 }: EditingTextAreaProps) {
         return;
       }
       const { left, top } = wrapper.current.getBoundingClientRect();
-      obj.style.left -= left;
-      obj.style.top -= top;
+      obj.rect.left -= left;
+      obj.rect.top -= top;
+      Object.keys(obj.rect).forEach((k: 'left' | 'top' | 'width' | 'height') => {
+        obj.rect[k] /= scale;
+      });
       setInfo(obj);
     });
-  }, []);
+  }, [scale]);
 
   useEffect(() => {
     if (info && input.current) {
@@ -50,7 +53,10 @@ function EditingTextArea({ scale = 1 }: EditingTextAreaProps) {
   }, [info]);
 
   return (
-    <div className="pe-editing-text-area" ref={wrapper}>
+    <div
+      className="pe-editing-text-area"
+      style={{ transform: `scale(${scale})`, transformOrigin: 'left top' }}
+      ref={wrapper}>
       {info && (
         <div
           ref={input}
@@ -61,6 +67,7 @@ function EditingTextArea({ scale = 1 }: EditingTextAreaProps) {
             position: 'absolute',
             outline: 'none',
             borderColor: 'transparent',
+            ...info.rect,
             ...info.style,
           }}>
           {info.children}
