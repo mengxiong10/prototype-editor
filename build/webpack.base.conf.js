@@ -44,6 +44,12 @@ module.exports = {
     rules: [
       ...(config.dev.useLint ? [createLintingRule()] : []),
       {
+        test: /\.m?js/,
+        resolve: {
+          fullySpecified: false,
+        },
+      },
+      {
         test: /\.(t|j)sx?$/,
         include: [resolve('src'), resolve('node_modules/my-react-common')],
         use: [
@@ -113,17 +119,4 @@ module.exports = {
     ],
   },
   plugins: [new ForkTsCheckerWebpackPlugin()],
-  node: {
-    // prevent webpack from injecting useless setImmediate polyfill because Vue
-    // source contains it (although only uses it if it's native).
-    setImmediate: false,
-    Buffer: false,
-    // prevent webpack from injecting mocks to Node native modules
-    // that does not make sense for the client
-    dgram: 'empty',
-    fs: 'empty',
-    net: 'empty',
-    tls: 'empty',
-    child_process: 'empty',
-  },
 };

@@ -3,13 +3,11 @@ const path = require('path');
 const utils = require('./utils');
 const webpack = require('webpack');
 const config = require('../config');
-const merge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const baseWebpackConfig = require('./webpack.base.conf');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
-const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 
 function resolve(dir) {
   return path.join(__dirname, '..', dir);
@@ -56,7 +54,7 @@ const webpackConfig = merge(baseWebpackConfig, {
         styles: {
           chunks: 'all',
           name: 'styles',
-          test: m => m.constructor.name === 'CssModule',
+          test: (m) => m.constructor.name === 'CssModule',
           enforce: true,
         },
       },
@@ -68,20 +66,10 @@ const webpackConfig = merge(baseWebpackConfig, {
     }),
 
     new webpack.ContextReplacementPlugin(/moment[\\\/]locale$/, /^\.\/(zh-cn)$/),
-    // keep module.id stable when vendor modules does not change
-    new webpack.HashedModuleIdsPlugin(),
 
     // extract css into its own file
     new MiniCssExtractPlugin({
       filename: utils.assetsPath('css/[name].[contenthash].css'),
-    }),
-
-    // Compress extracted CSS. We are using this plugin so that possible
-    // duplicated CSS from different components can be deduped.
-    new OptimizeCSSPlugin({
-      cssProcessorOptions: config.build.productionSourceMap
-        ? { safe: true, map: { inline: false } }
-        : { safe: true },
     }),
     // generate dist index.html with correct asset hash for caching.
     // you can customize output by editing /index.html
@@ -100,18 +88,19 @@ const webpackConfig = merge(baseWebpackConfig, {
       // necessary to consistently work with multiple chunks via CommonsChunkPlugin
       chunksSortMode: 'dependency',
     }),
-    new ScriptExtHtmlWebpackPlugin({
-      inline: /(manifest|styles)\..*\.js$/,
-    }),
 
     // copy custom static assets
-    new CopyWebpackPlugin([
-      {
-        from: path.resolve(__dirname, '../static'),
-        to: config.build.assetsSubDirectory,
-        ignore: ['.*'],
-      },
-    ]),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, '../static'),
+          to: config.build.assetsSubDirectory,
+          globOptions: {
+            ignore: ['.*'],
+          },
+        },
+      ],
+    }),
   ],
 });
 

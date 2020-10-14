@@ -20,8 +20,7 @@ module.exports = {
     host: '0.0.0.0', // can be overwritten by process.env.HOST
     port: 2244, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: true,
-    errorOverlay: false,
-    notifyOnErrors: false,
+    errorOverlay: true,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
 
     useLint: true,
@@ -31,7 +30,7 @@ module.exports = {
      */
 
     // https://webpack.js.org/configuration/devtool/#development
-    devtool: 'cheap-module-eval-source-map',
+    devtool: 'eval-cheap-module-source-map',
 
     cacheBusting: true,
 
@@ -53,7 +52,7 @@ module.exports = {
 
     productionSourceMap: false,
     // https://webpack.js.org/configuration/devtool/#production
-    devtool: '#source-map',
+    devtool: 'source-map',
 
     // Run the build command with an extra argument to
     // View the bundle analyzer report after build finishes:

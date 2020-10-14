@@ -2,12 +2,11 @@
 const utils = require('./utils');
 const webpack = require('webpack');
 const config = require('../config');
-const merge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const path = require('path');
 const baseWebpackConfig = require('./webpack.base.conf');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 const portfinder = require('portfinder');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
@@ -29,6 +28,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
   // these devServer options should be customized in /config/index.js
   devServer: {
     disableHostCheck: true,
+    inline: true,
     clientLogLevel: 'warning',
     historyApiFallback: {
       rewrites: [{ from: /.*/, to: path.posix.join(config.dev.assetsPublicPath, 'index.html') }],
@@ -65,40 +65,34 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       inject: true,
     }),
     // copy custom static assets
-    new CopyWebpackPlugin([
-      {
-        from: path.resolve(__dirname, '../static'),
-        to: config.dev.assetsSubDirectory,
-        ignore: ['.*'],
-      },
-    ]),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, '../static'),
+          to: config.dev.assetsSubDirectory,
+          globOptions: {
+            ignore: ['.*'],
+          },
+        },
+      ],
+    }),
   ],
 });
 
-module.exports = new Promise((resolve, reject) => {
-  portfinder.basePort = process.env.PORT || config.dev.port;
-  portfinder.getPort((err, port) => {
-    if (err) {
-      reject(err);
-    } else {
-      // publish the new Port, necessary for e2e tests
-      process.env.PORT = port;
-      // add port to devServer config
-      devWebpackConfig.devServer.port = port;
+module.exports = () => {
+  return new Promise((resolve, reject) => {
+    portfinder.basePort = PORT;
+    portfinder.getPort((err, port) => {
+      if (err) {
+        reject(err);
+      } else {
+        // publish the new Port, necessary for e2e tests
+        process.env.PORT = port;
+        // add port to devServer config
+        devWebpackConfig.devServer.port = port;
 
-      // Add FriendlyErrorsPlugin
-      devWebpackConfig.plugins.push(
-        new FriendlyErrorsPlugin({
-          compilationSuccessInfo: {
-            messages: [
-              `Your application is running here: http://${devWebpackConfig.devServer.host}:${port}`,
-            ],
-          },
-          onErrors: config.dev.notifyOnErrors ? utils.createNotifierCallback() : undefined,
-        })
-      );
-
-      resolve(devWebpackConfig);
-    }
+        resolve(devWebpackConfig);
+      }
+    });
   });
-});
+};

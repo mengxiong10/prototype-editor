@@ -8,7 +8,7 @@ function resolve(dir) {
   return path.join(__dirname, '..', dir);
 }
 
-exports.assetsPath = function(_path) {
+exports.assetsPath = function (_path) {
   const assetsSubDirectory =
     process.env.NODE_ENV === 'production'
       ? config.build.assetsSubDirectory
@@ -17,7 +17,7 @@ exports.assetsPath = function(_path) {
   return path.posix.join(assetsSubDirectory, _path);
 };
 
-exports.cssLoaders = function(options) {
+exports.cssLoaders = function (options) {
   options = options || {};
 
   const cssLoader = {
@@ -71,7 +71,7 @@ exports.cssLoaders = function(options) {
   };
 };
 
-exports.styleLoaders = function(options) {
+exports.styleLoaders = function (options) {
   const output = [];
   const loaders = exports.cssLoaders(options);
   const moduleLoaders = exports.cssLoaders({ ...options, modules: true });
@@ -93,22 +93,4 @@ exports.styleLoaders = function(options) {
     });
   }
   return output;
-};
-
-exports.createNotifierCallback = () => {
-  const notifier = require('node-notifier');
-
-  return (severity, errors) => {
-    if (severity !== 'error') return;
-
-    const error = errors[0];
-    const filename = error.file && error.file.split('!').pop();
-
-    notifier.notify({
-      title: packageConfig.name,
-      message: severity + ': ' + error.name,
-      subtitle: filename || '',
-      icon: path.join(__dirname, 'logo.png'),
-    });
-  };
 };

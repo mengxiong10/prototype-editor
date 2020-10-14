@@ -66,6 +66,7 @@ module.exports = {
       },
     ],
     'react/static-property-placement': ['warn', 'static public field'],
+    'react/require-default-props': 0,
     'jsx-a11y/no-static-element-interactions': 0,
     'jsx-a11y/anchor-is-valid': 0,
     'jsx-a11y/click-events-have-key-events': 0,
@@ -82,5 +83,16 @@ module.exports = {
     // 必须是package.json里面的包: 1
     'import/no-extraneous-dependencies': 1,
     'import/prefer-default-export': 0,
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      {
+        js: 'never',
+        mjs: 'never',
+        jsx: 'never',
+        ts: 'never',
+        tsx: 'never',
+      },
+    ],
   },
 };
